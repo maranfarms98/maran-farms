@@ -1,6 +1,7 @@
 "use client";
 
-import { usePathname } from "next/navigation";
+import { useCallback } from "react";
+import { usePathname, useRouter } from "next/navigation";
 import {
   ChevronRight,
   MessageCircle,
@@ -10,6 +11,7 @@ import {
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCart } from "@/context/cart-context";
+import { useAuth } from "@/context/auth-context";
 import { formatMinOrder, formatPrice } from "@/lib/format";
 import { getCartOrderUrl } from "@/lib/whatsapp";
 import { Drawer } from "@/components/ui/drawer";
@@ -19,10 +21,13 @@ import { useMotionAllowed } from "@/components/motion/motion-provider";
 
 export function OrderBar() {
   const pathname = usePathname();
+  const router = useRouter();
   const isMobile = useIsMobile();
   const motionAllowed = useMotionAllowed();
   const isProductPage = pathname?.startsWith("/product/");
-  const hideChrome = isMobile && isProductPage;
+  const isCheckoutFlow =
+    pathname?.startsWith("/checkout") || pathname?.startsWith("/login");
+  const hideChrome = (isMobile && isProductPage) || isCheckoutFlow;
 
   const {
     lines,
@@ -37,6 +42,17 @@ export function OrderBar() {
     clearCart,
     hydrated,
   } = useCart();
+
+  const { user } = useAuth();
+
+  const handleOrderNow = useCallback(() => {
+    setOrderDrawerOpen(false);
+    if (!user) {
+      router.push("/login?redirect=/checkout");
+    } else {
+      router.push("/checkout");
+    }
+  }, [user, setOrderDrawerOpen, router]);
 
   if (!hydrated || itemCount === 0 || hideChrome) return null;
 
@@ -187,14 +203,13 @@ export function OrderBar() {
                 {formatPrice(total)}
               </span>
             </div>
-            <a
-              href={getCartOrderUrl(lines, total)}
-              target="_blank"
-              rel="noopener noreferrer"
+            <button
+              type="button"
+              onClick={handleOrderNow}
               className="focus-ring flex h-14 w-full items-center justify-center rounded-full bg-farm-green text-button font-semibold text-farm-green-light transition hover:bg-farm-green-dark"
             >
               Order Now
-            </a>
+            </button>
           </div>
         )}
       </Drawer>

@@ -1,5 +1,6 @@
 import { Outfit, Playfair_Display } from "next/font/google";
 import { Providers } from "@/components/chrome/providers";
+import { getAllCategories } from "@/data/categories";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -29,7 +30,9 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  const categories = await getAllCategories();
+
   return (
     <html
       lang="en"
@@ -37,7 +40,7 @@ export default function RootLayout({ children }) {
       className={`${outfit.variable} ${playfair.variable} antialiased`}
     >
       <body className="flex min-h-vvh flex-col font-sans">
-        <Providers>{children}</Providers>
+        <Providers categories={categories}>{children}</Providers>
       </body>
     </html>
   );

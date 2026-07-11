@@ -5,8 +5,6 @@ import Link from "next/link";
 import { ArrowLeft, Filter, Leaf, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { categories } from "@/data/categories";
-import { getProductsByCategory } from "@/data/products";
 import { ProductCard } from "@/components/product/product-card";
 import { TamilCaption } from "@/components/ui/tamil-caption";
 import { CategoryFilters } from "@/components/category/category-filters";
@@ -38,8 +36,8 @@ function filterProducts(list, { search, sort, special }) {
   return result;
 }
 
-export function CategoryPageClient({ category }) {
-  const all = getProductsByCategory(category.id);
+export function CategoryPageClient({ category, products, allCategories }) {
+  const all = products;
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("relevance");
   const [special, setSpecial] = useState("all");
@@ -122,7 +120,7 @@ export function CategoryPageClient({ category }) {
 
       <div className="container-farm py-6">
         <div className="hide-scrollbar flex gap-2 overflow-x-auto pb-1">
-          {categories.map((cat) => {
+          {allCategories.map((cat) => {
             const active = cat.slug === category.slug;
             return (
               <Link

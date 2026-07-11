@@ -8,9 +8,8 @@ import { ProductBadge } from "@/components/ui/product-badge";
 import { QuantityStepper } from "@/components/ui/quantity-stepper";
 import { TamilCaption } from "@/components/ui/tamil-caption";
 import { useCart } from "@/context/cart-context";
-import { useFavorites } from "@/hooks/use-favorites";
+import { useFavorites } from "@/context/favorites-context";
 import { formatMinOrder, formatPrice } from "@/lib/format";
-import { getCategoryById } from "@/data/categories";
 import { useMotionAllowed } from "@/components/motion/motion-provider";
 
 export function ProductCard({ product, compact = false, teaser = false }) {
@@ -18,10 +17,10 @@ export function ProductCard({ product, compact = false, teaser = false }) {
   const { isFavorite, toggleFavorite } = useFavorites();
   const motionAllowed = useMotionAllowed();
   const qty = getQuantity(product.id);
-  const category = getCategoryById(product.categoryId);
   const inCart = qty > 0;
   const fav = isFavorite(product.id);
   const light = teaser || compact;
+  const outOfStock = product.inStock === false;
 
   return (
     <motion.article
@@ -58,7 +57,13 @@ export function ProductCard({ product, compact = false, teaser = false }) {
                 </span>
               )}
               <div className="absolute top-3 left-3 z-10 flex flex-col gap-1.5">
-                <ProductBadge type={product.badge} />
+                {outOfStock ? (
+                  <span className="rounded-full bg-farm-green-dark/90 px-2.5 py-1 text-[0.65rem] font-semibold text-white">
+                    Out of Stock
+                  </span>
+                ) : (
+                  <ProductBadge type={product.badge} />
+                )}
                 {product.minOrder > 1 && (
                   <span className="rounded-full bg-farm-green/90 px-2.5 py-1 text-[0.65rem] font-semibold text-farm-green-light">
                     {formatMinOrder(product)}
@@ -95,7 +100,7 @@ export function ProductCard({ product, compact = false, teaser = false }) {
         <Link href={`/product/${product.id}`} className="flex-1">
           {!teaser && (
             <p className="text-eyebrow mb-1 text-[0.6rem]">
-              {category?.name || "Catalog"}
+              {product.categoryName || "Catalog"}
             </p>
           )}
           <h3 className="font-heading text-card-title font-semibold text-farm-green-dark">
@@ -125,6 +130,10 @@ export function ProductCard({ product, compact = false, teaser = false }) {
           >
             View details
           </Link>
+        ) : outOfStock ? (
+          <div className="mt-3 flex h-11 items-center justify-center rounded-full bg-farm-sage/15 text-sm font-semibold text-farm-sage">
+            Out of Stock
+          </div>
         ) : (
           <div className="mt-3">
             <QuantityStepper
@@ -133,7 +142,7 @@ export function ProductCard({ product, compact = false, teaser = false }) {
               min={product.minOrder}
               onChange={(n) => {
                 if (n === 0) setQuantity(product.id, 0);
-                else if (qty === 0) addItem(product.id, n);
+                else if (qty === 0) addItem(product, n);
                 else setQuantity(product.id, n);
               }}
             />

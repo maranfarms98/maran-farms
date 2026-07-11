@@ -1,277 +1,97 @@
-export const products = [
-  // Napier & Plants (11)
-  {
-    id: "red-napier",
-    name: "Red Napier",
-    tamilName: "ரெட் நேப்பியர்",
-    price: 1.8,
-    unit: "per stick",
-    tamilUnit: "ஒரு குச்சி",
-    minOrder: 500,
-    minOrderUnit: "sticks",
-    categoryId: "napier",
-    image: "/images/product-red-napier.png",
-    badge: "bestseller",
-    description:
-      "High-protein Red Napier sticks prized for rapid tillering, lush regrowth, and excellent milk-yield support for dairy herds.",
-  },
-  {
-    id: "super-napier",
-    name: "Super Napier",
-    tamilName: "சூப்பர் நேப்பியர்",
-    price: 1.5,
-    unit: "per stick",
-    tamilUnit: "ஒரு குச்சி",
-    minOrder: 500,
-    minOrderUnit: "sticks",
-    categoryId: "napier",
-    image: "/images/product-napier.png",
-    badge: "bulk",
-    description:
-      "Fast-growing Super Napier ideal for bulk fodder programs with strong stems and consistent harvest cycles.",
-  },
-  {
-    id: "co4-napier",
-    name: "CO-4 Napier",
-    tamilName: "CO-4 நேப்பியர்",
-    price: 1.6,
-    unit: "per stick",
-    tamilUnit: "ஒரு குச்சி",
-    minOrder: 500,
-    minOrderUnit: "sticks",
-    categoryId: "napier",
-    image: "/images/product-napier.png",
-    badge: "bestseller",
-  },
-  {
-    id: "co5-napier",
-    name: "CO-5 Napier",
-    tamilName: "CO-5 நேப்பியர்",
-    price: 1.7,
-    unit: "per stick",
-    tamilUnit: "ஒரு குச்சி",
-    minOrder: 500,
-    minOrderUnit: "sticks",
-    categoryId: "napier",
-    image: "/images/product-napier.png",
-    badge: "new",
-  },
-  {
-    id: "hybrid-napier",
-    name: "Hybrid Napier",
-    tamilName: "ஹைப்ரிட் நேப்பியர்",
-    price: 1.4,
-    unit: "per stick",
-    tamilUnit: "ஒரு குச்சி",
-    minOrder: 500,
-    minOrderUnit: "sticks",
-    categoryId: "napier",
-    image: "/images/product-napier.png",
-    badge: "bulk",
-  },
-  {
-    id: "pakchong-napier",
-    name: "Pakchong Napier",
-    tamilName: "பக்சாங் நேப்பியர்",
-    price: 2.0,
-    unit: "per stick",
-    tamilUnit: "ஒரு குச்சி",
-    minOrder: 500,
-    minOrderUnit: "sticks",
-    categoryId: "napier",
-    image: "/images/product-napier.png",
-    badge: "limited",
-  },
-  {
-    id: "bnf-napier",
-    name: "BNF Napier",
-    tamilName: "BNF நேப்பியர்",
-    price: 1.9,
-    unit: "per stick",
-    tamilUnit: "ஒரு குச்சி",
-    minOrder: 500,
-    minOrderUnit: "sticks",
-    categoryId: "napier",
-    image: "/images/product-napier.png",
-  },
-  {
-    id: "guinea-grass",
-    name: "Guinea Grass",
-    tamilName: "கினியா புல்",
-    price: 1.2,
-    unit: "per stick",
-    tamilUnit: "ஒரு குச்சி",
-    minOrder: 500,
-    minOrderUnit: "sticks",
-    categoryId: "napier",
-    image: "/images/product-napier.png",
-    badge: "bulk",
-  },
-  {
-    id: "desmanthus",
-    name: "Desmanthus",
-    tamilName: "டெஸ்மாந்தஸ்",
-    price: 2.5,
-    unit: "per plant",
-    tamilUnit: "ஒரு செடி",
-    minOrder: 500,
-    minOrderUnit: "plants",
-    categoryId: "napier",
-    image: "/images/product-napier.png",
-    badge: "new",
-  },
-  {
-    id: "subabul",
-    name: "Subabul Plants",
-    tamilName: "சுபாபுல் செடிகள்",
-    price: 3.0,
-    unit: "per plant",
-    tamilUnit: "ஒரு செடி",
-    minOrder: 500,
-    minOrderUnit: "plants",
-    categoryId: "napier",
-    image: "/images/product-napier.png",
-  },
-  {
-    id: "agathi",
-    name: "Agathi Plants",
-    tamilName: "அகத்தி செடிகள்",
-    price: 2.8,
-    unit: "per plant",
-    tamilUnit: "ஒரு செடி",
-    minOrder: 500,
-    minOrderUnit: "plants",
-    categoryId: "napier",
-    image: "/images/product-napier.png",
-    badge: "limited",
-  },
+import { getSupabaseServerClient } from "@/lib/supabase/server";
 
-  // Chicks & Birds (4)
-  {
-    id: "day-old-chick",
-    name: "Day-Old Chicks",
-    tamilName: "ஒருநாள் குஞ்சுகள்",
-    price: 45,
-    unit: "each",
-    tamilUnit: "ஒன்று",
-    minOrder: 1,
-    minOrderUnit: "chick",
-    categoryId: "chicks",
-    image: "/images/product-chick.png",
-    badge: "bestseller",
-    description:
-      "Healthy day-old chicks hatched on-farm with strong vitality, ideal for backyard flocks and small commercial starts.",
-  },
-  {
-    id: "country-chick",
-    name: "Country Chicks",
-    tamilName: "நாட்டுக் குஞ்சுகள்",
-    price: 55,
-    unit: "each",
-    tamilUnit: "ஒன்று",
-    minOrder: 1,
-    minOrderUnit: "chick",
-    categoryId: "chicks",
-    image: "/images/product-chick.png",
-    badge: "new",
-  },
-  {
-    id: "lovebird-pair",
-    name: "Lovebird Pair",
-    tamilName: "லவ் பேர்ட் ஜோடி",
-    price: 1200,
-    unit: "per pair",
-    tamilUnit: "ஒரு ஜோடி",
-    minOrder: 1,
-    minOrderUnit: "pair",
-    categoryId: "chicks",
-    image: "/images/product-bird.png",
-    badge: "limited",
-  },
-  {
-    id: "finch-pair",
-    name: "Finch Pair",
-    tamilName: "பிஞ்ச் ஜோடி",
-    price: 800,
-    unit: "per pair",
-    tamilUnit: "ஒரு ஜோடி",
-    minOrder: 1,
-    minOrderUnit: "pair",
-    categoryId: "chicks",
-    image: "/images/product-bird.png",
-    badge: "bulk",
-  },
+const PRODUCT_SELECT = "*, category:categories(name, slug)";
 
-  // Small Pets (3)
-  {
-    id: "dwarf-rabbit",
-    name: "Dwarf Rabbit",
-    tamilName: "குள்ள முயல்",
-    price: 650,
-    unit: "each",
-    tamilUnit: "ஒன்று",
-    minOrder: 1,
-    minOrderUnit: "rabbit",
-    categoryId: "pets",
-    image: "/images/product-rabbit.png",
-    badge: "bestseller",
-    description:
-      "Gentle dwarf rabbits raised in clean farm conditions — perfect family companions with calm temperament.",
-  },
-  {
-    id: "angora-rabbit",
-    name: "Angora Rabbit",
-    tamilName: "அங்கோரா முயல்",
-    price: 950,
-    unit: "each",
-    tamilUnit: "ஒன்று",
-    minOrder: 1,
-    minOrderUnit: "rabbit",
-    categoryId: "pets",
-    image: "/images/product-rabbit.png",
-    badge: "limited",
-  },
-  {
-    id: "syrian-hamster",
-    name: "Syrian Hamster",
-    tamilName: "சிரியன் ஹாம்ஸ்டர்",
-    price: 350,
-    unit: "each",
-    tamilUnit: "ஒன்று",
-    minOrder: 1,
-    minOrderUnit: "hamster",
-    categoryId: "pets",
-    image: "/images/product-rabbit.png",
-    badge: "new",
-  },
-];
-
-export const GENERIC_DESCRIPTION =
-  "Farm-quality stock cultivated and raised with natural practices at Maran Farms. Carefully selected for health, viability, and reliable performance for Tamil Nadu farmers and families.";
-
-export const FEATURED_PRODUCT_IDS = [
-  "red-napier",
-  "super-napier",
-  "co4-napier",
-  "day-old-chick",
-  "lovebird-pair",
-  "dwarf-rabbit",
-];
-
-export function getProductById(id) {
-  return products.find((p) => p.id === id);
+function mapProduct(row) {
+  const inStock = !row.track_inventory || row.stock_qty > 0;
+  return {
+    id: row.id,
+    name: row.name,
+    tamilName: row.tamil_name,
+    price: Number(row.price),
+    unit: row.unit,
+    tamilUnit: row.tamil_unit,
+    minOrder: row.min_order,
+    minOrderUnit: row.min_order_unit,
+    categoryId: row.category_id,
+    categoryName: row.category?.name,
+    categorySlug: row.category?.slug,
+    image: row.image,
+    badge: row.badge,
+    description: row.description,
+    featured: row.featured,
+    trackInventory: row.track_inventory,
+    stockQty: row.stock_qty,
+    inStock,
+  };
 }
 
-export function getProductsByCategory(categoryId) {
-  return products.filter((p) => p.categoryId === categoryId);
+export async function getAllProducts() {
+  const supabase = getSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .order("created_at", { ascending: true });
+  if (error) {
+    console.error("[getAllProducts]", error);
+    return [];
+  }
+  return data.map(mapProduct);
 }
 
-export function getFeaturedProducts() {
-  return FEATURED_PRODUCT_IDS.map(getProductById).filter(Boolean);
+export async function getProductById(id) {
+  const supabase = getSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .eq("id", id)
+    .maybeSingle();
+  if (error) {
+    console.error("[getProductById]", error);
+    return null;
+  }
+  return data ? mapProduct(data) : null;
 }
 
-export function getRelatedProducts(product, limit = 3) {
-  return products
-    .filter((p) => p.categoryId === product.categoryId && p.id !== product.id)
-    .slice(0, limit);
+export async function getProductsByCategory(categoryId) {
+  const supabase = getSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .eq("category_id", categoryId)
+    .order("created_at", { ascending: true });
+  if (error) {
+    console.error("[getProductsByCategory]", error);
+    return [];
+  }
+  return data.map(mapProduct);
+}
+
+export async function getFeaturedProducts() {
+  const supabase = getSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .eq("featured", true)
+    .order("created_at", { ascending: true });
+  if (error) {
+    console.error("[getFeaturedProducts]", error);
+    return [];
+  }
+  return data.map(mapProduct);
+}
+
+export async function getRelatedProducts(product, limit = 3) {
+  const supabase = getSupabaseServerClient();
+  const { data, error } = await supabase
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .eq("category_id", product.categoryId)
+    .neq("id", product.id)
+    .limit(limit);
+  if (error) {
+    console.error("[getRelatedProducts]", error);
+    return [];
+  }
+  return data.map(mapProduct);
 }

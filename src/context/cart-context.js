@@ -9,11 +9,11 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { getProductById } from "@/data/products";
 
 const STORAGE_KEY = "maran-farms-cart";
 const CartContext = createContext(null);
 
+// { [productId]: { quantity, snapshot: {id, name, tamilName, price, unit, image, minOrder, categoryId} } }
 const EMPTY_CART = Object.freeze({});
 let memoryCart = EMPTY_CART;
 const listeners = new Set();
@@ -77,17 +77,37 @@ export function CartProvider({ children }) {
 
   const setQuantity = useCallback((productId, quantity) => {
     const next = { ...memoryCart };
-    if (quantity <= 0) delete next[productId];
-    else next[productId] = quantity;
+    if (quantity <= 0) {
+      delete next[productId];
+    } else if (next[productId]) {
+      next[productId] = { ...next[productId], quantity };
+    }
     writeStorage(next);
   }, []);
 
-  const addItem = useCallback((productId, amount = 1) => {
-    const current = memoryCart[productId] || 0;
-    const product = getProductById(productId);
-    const min = product?.minOrder || 1;
-    const nextQty = current === 0 ? Math.max(amount, min) : current + amount;
-    writeStorage({ ...memoryCart, [productId]: nextQty });
+  // product: full product object snapshot (as returned by data/products.js)
+  const addItem = useCallback((product, amount = 1) => {
+    const existing = memoryCart[product.id];
+    const min = product.minOrder || 1;
+    const nextQty = existing
+      ? existing.quantity + amount
+      : Math.max(amount, min);
+    writeStorage({
+      ...memoryCart,
+      [product.id]: {
+        quantity: nextQty,
+        snapshot: {
+          id: product.id,
+          name: product.name,
+          tamilName: product.tamilName,
+          price: product.price,
+          unit: product.unit,
+          image: product.image,
+          minOrder: product.minOrder,
+          categoryId: product.categoryId,
+        },
+      },
+    });
     setPulse((p) => p + 1);
   }, []);
 
@@ -101,14 +121,14 @@ export function CartProvider({ children }) {
 
   const lines = useMemo(() => {
     return Object.entries(items)
-      .map(([id, quantity]) => {
-        const product = getProductById(id);
-        if (!product) return null;
+      .map(([id, entry]) => {
+        if (!entry?.snapshot) return null;
+        const product = entry.snapshot;
         return {
           product,
-          quantity,
-          lineTotal: product.price * quantity,
-          belowMin: quantity < product.minOrder,
+          quantity: entry.quantity,
+          lineTotal: product.price * entry.quantity,
+          belowMin: entry.quantity < (product.minOrder || 1),
         };
       })
       .filter(Boolean);
@@ -144,7 +164,7 @@ export function CartProvider({ children }) {
       setQuantity,
       removeItem,
       clearCart,
-      getQuantity: (id) => items[id] || 0,
+      getQuantity: (id) => items[id]?.quantity || 0,
     }),
     [
       items,

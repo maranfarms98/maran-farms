@@ -14,12 +14,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { getCategoryById } from "@/data/categories";
-import {
-  GENERIC_DESCRIPTION,
-  getRelatedProducts,
-} from "@/data/products";
-import { getDetailContent } from "@/data/product-detail-content";
+import { GENERIC_DESCRIPTION } from "@/data/constants";
 import { ProductBadge } from "@/components/ui/product-badge";
 import { QuantityStepper } from "@/components/ui/quantity-stepper";
 import { TamilCaption } from "@/components/ui/tamil-caption";
@@ -55,11 +50,8 @@ const THUMB_FALLBACKS = {
   ],
 };
 
-export function ProductPageClient({ product }) {
-  const category = getCategoryById(product.categoryId);
-  const content = getDetailContent(product.categoryId);
-  const related = getRelatedProducts(product, 3);
-  const { getQuantity, setQuantity, setOrderDrawerOpen } = useCart();
+export function ProductPageClient({ product, category, related, content }) {
+  const { getQuantity, setQuantity, addItem, setOrderDrawerOpen } = useCart();
   const { toast } = useToast();
   const motionAllowed = useMotionAllowed();
   const cartQty = getQuantity(product.id);
@@ -92,7 +84,7 @@ export function ProductPageClient({ product }) {
       setOrderDrawerOpen(true);
       return;
     }
-    setQuantity(product.id, Math.max(qty, product.minOrder || 1));
+    addItem(product, Math.max(qty, product.minOrder || 1));
     setOrderDrawerOpen(true);
   };
 

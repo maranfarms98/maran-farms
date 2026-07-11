@@ -1,11 +1,10 @@
 "use client";
 
-import { categories } from "@/data/categories";
 import { CategoryCard } from "@/components/product/category-card";
 import { SectionHeader } from "@/components/ui/section-header";
 import { StaggerChildren, StaggerItem } from "@/components/motion/motion-reveal";
 
-export function CategoriesGrid() {
+export function CategoriesGrid({ categories = [] }) {
   return (
     <section
       id="categories"

@@ -1,18 +1,184 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { ChevronDown, Leaf, Menu, ShoppingBag, X } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import {
+  ChevronDown,
+  Leaf,
+  LogOut,
+  Menu,
+  Package,
+  ShieldCheck,
+  ShoppingBag,
+  User,
+  X,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { categories } from "@/data/categories";
 import { useCart } from "@/context/cart-context";
+import { useAuth } from "@/context/auth-context";
 import { formatPrice } from "@/lib/format";
 import { getGenericInquiryUrl } from "@/lib/whatsapp";
 import { Drawer } from "@/components/ui/drawer";
+import { Spinner } from "@/components/ui/spinner";
 import { useMotionAllowed } from "@/components/motion/motion-provider";
 
-export function Header() {
+function AccountMenu({ textClass }) {
+  const { user, hydrated, logout } = useAuth();
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const menuRef = useRef(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e) => {
+      if (menuRef.current && !menuRef.current.contains(e.target)) setOpen(false);
+    };
+    window.addEventListener("mousedown", onClick);
+    return () => window.removeEventListener("mousedown", onClick);
+  }, [open]);
+
+  if (!hydrated) return <div className="hidden h-11 w-24 md:block" />;
+
+  if (!user) {
+    return (
+      <Link
+        href="/login"
+        className={`focus-ring hidden h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold md:inline-flex ${
+          textClass === "text-white"
+            ? "bg-white/15 text-white backdrop-blur-sm"
+            : "bg-farm-green/8 text-farm-green"
+        }`}
+      >
+        <User className="size-4" />
+        Login
+      </Link>
+    );
+  }
+
+  return (
+    <div className="relative hidden md:block" ref={menuRef}>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className={`focus-ring inline-flex h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold ${
+          textClass === "text-white"
+            ? "bg-white/15 text-white backdrop-blur-sm"
+            : "bg-farm-green/8 text-farm-green"
+        }`}
+      >
+        <User className="size-4" />
+        {user.name?.split(" ")[0]}
+        <ChevronDown className={`size-4 transition ${open ? "rotate-180" : ""}`} />
+      </button>
+      {open && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          className="absolute top-full right-0 z-50 mt-3 w-56 rounded-3xl border border-farm-green-dark/8 bg-farm-cream p-2 shadow-elevated"
+        >
+          <Link
+            href="/account/orders"
+            className="focus-ring flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-farm-green-dark hover:bg-farm-accent-light"
+            onClick={() => setOpen(false)}
+          >
+            <Package className="size-4" />
+            My Orders
+          </Link>
+          {user.isAdmin && (
+            <Link
+              href="/admin"
+              className="focus-ring flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-farm-green-dark hover:bg-farm-accent-light"
+              onClick={() => setOpen(false)}
+            >
+              <ShieldCheck className="size-4" />
+              Admin Dashboard
+            </Link>
+          )}
+          <button
+            type="button"
+            disabled={loggingOut}
+            onClick={async () => {
+              setLoggingOut(true);
+              await logout();
+              router.push("/");
+            }}
+            className="focus-ring flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium text-farm-accent hover:bg-farm-accent-light disabled:opacity-60"
+          >
+            {loggingOut ? <Spinner className="size-4" /> : <LogOut className="size-4" />}
+            {loggingOut ? "Logging out…" : "Logout"}
+          </button>
+        </motion.div>
+      )}
+    </div>
+  );
+}
+
+function MobileAccountLinks({ onNavigate }) {
+  const { user, hydrated, logout } = useAuth();
+  const router = useRouter();
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  if (!hydrated) return null;
+
+  if (!user) {
+    return (
+      <Link
+        href="/login"
+        onClick={onNavigate}
+        className="focus-ring mb-2 flex items-center gap-3 rounded-2xl bg-farm-green/8 px-4 py-3 font-medium text-farm-green hover:bg-farm-accent-light"
+      >
+        <User className="size-4" />
+        Login
+      </Link>
+    );
+  }
+
+  return (
+    <div className="mb-2 rounded-2xl bg-farm-green/8 p-1">
+      <p className="px-3 py-2 text-sm font-semibold text-farm-green-dark">
+        {user.name}
+      </p>
+      <Link
+        href="/account/orders"
+        className="focus-ring flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-farm-green-dark hover:bg-farm-accent-light"
+        onClick={onNavigate}
+      >
+        <Package className="size-4" />
+        My Orders
+      </Link>
+      {user.isAdmin && (
+        <Link
+          href="/admin"
+          className="focus-ring flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-farm-green-dark hover:bg-farm-accent-light"
+          onClick={onNavigate}
+        >
+          <ShieldCheck className="size-4" />
+          Admin Dashboard
+        </Link>
+      )}
+      <button
+        type="button"
+        disabled={loggingOut}
+        onClick={async () => {
+          setLoggingOut(true);
+          await logout();
+          onNavigate();
+          router.push("/");
+        }}
+        className="focus-ring flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium text-farm-accent hover:bg-farm-accent-light disabled:opacity-60"
+      >
+        {loggingOut ? <Spinner className="size-4" /> : <LogOut className="size-4" />}
+        {loggingOut ? "Logging out…" : "Logout"}
+      </button>
+    </div>
+  );
+}
+
+export function Header({ categories = [] }) {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
@@ -225,6 +391,8 @@ export function Header() {
             WhatsApp Booking
           </a>
 
+          <AccountMenu textClass={textClass} />
+
           <button
             type="button"
             className={`focus-ring flex size-11 items-center justify-center rounded-full md:hidden ${textClass}`}
@@ -255,6 +423,7 @@ export function Header() {
           </button>
         </div>
         <div className="flex flex-1 flex-col space-y-1 overflow-y-auto p-4">
+          <MobileAccountLinks onNavigate={() => setMobileOpen(false)} />
           <Link
             href="/"
             className="focus-ring block rounded-2xl px-4 py-3 font-medium text-farm-green-dark hover:bg-farm-accent-light"

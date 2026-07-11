@@ -7,7 +7,10 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const nextConfig = {
   reactCompiler: true,
   // Phone/LAN: open http://<your-mac-ip>:3000 — not 0.0.0.0
+  // Must match the IP you type in the browser, or /_next assets return 403.
   allowedDevOrigins: [
+    "192.168.1.12",
+    "192.168.1.12:3000",
     "192.168.0.107",
     "192.168.0.107:3000",
     "127.0.0.1",

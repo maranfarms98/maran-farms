@@ -5,11 +5,9 @@ import { useRef } from "react";
 import { motion } from "framer-motion";
 import { ProductCard } from "@/components/product/product-card";
 import { SectionHeader } from "@/components/ui/section-header";
-import { getFeaturedProducts } from "@/data/products";
 import { useMotionAllowed } from "@/components/motion/motion-provider";
 
-export function FeaturedProducts() {
-  const products = getFeaturedProducts();
+export function FeaturedProducts({ products = [] }) {
   const scrollerRef = useRef(null);
   const motionAllowed = useMotionAllowed();
 

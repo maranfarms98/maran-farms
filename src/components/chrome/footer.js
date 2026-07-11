@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { ArrowUpRight, Leaf, MessageCircle } from "lucide-react";
 import { useState } from "react";
-import { categories } from "@/data/categories";
 import { useToast } from "@/context/toast-context";
 import {
   CONTACT_EMAIL,
@@ -15,7 +14,7 @@ import { TamilCaption } from "@/components/ui/tamil-caption";
 import { InstagramIcon } from "@/components/ui/instagram-icon";
 import { MotionReveal } from "@/components/motion/motion-reveal";
 
-export function Footer() {
+export function Footer({ categories = [] }) {
   const [email, setEmail] = useState("");
   const { toast } = useToast();
   const year = new Date().getFullYear();
