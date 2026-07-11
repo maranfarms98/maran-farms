@@ -28,6 +28,10 @@ export const metadata = {
     email: false,
     address: false,
   },
+  icons: {
+    icon: "/images/logo.png",
+    apple: "/images/logo.png",
+  },
 };
 
 export default async function RootLayout({ children }) {

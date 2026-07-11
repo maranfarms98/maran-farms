@@ -35,7 +35,6 @@ export async function verifySession(token) {
 }
 
 export const SESSION_COOKIE_NAME = COOKIE_NAME;
-export const SESSION_MAX_AGE = MAX_AGE_SECONDS;
 
 export function sessionCookieOptions() {
   return {

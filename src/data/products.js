@@ -26,19 +26,6 @@ function mapProduct(row) {
   };
 }
 
-export async function getAllProducts() {
-  const supabase = getSupabaseServerClient();
-  const { data, error } = await supabase
-    .from("products")
-    .select(PRODUCT_SELECT)
-    .order("created_at", { ascending: true });
-  if (error) {
-    console.error("[getAllProducts]", error);
-    return [];
-  }
-  return data.map(mapProduct);
-}
-
 export async function getProductById(id) {
   const supabase = getSupabaseServerClient();
   const { data, error } = await supabase

@@ -1,10 +1,10 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   ChevronDown,
-  Leaf,
   LogOut,
   Menu,
   Package,
@@ -289,8 +289,8 @@ export function Header({ categories = [] }) {
         }`}
       >
         <Link href="/" className={`focus-ring group flex items-center gap-2.5 ${textClass}`}>
-          <span className="flex size-10 items-center justify-center rounded-full bg-farm-green text-farm-green-light transition group-hover:rotate-12">
-            <Leaf className="size-5" />
+          <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full shadow-soft transition group-hover:rotate-12">
+            <Image src="/images/logo.png" alt="Maran Farms" fill className="object-cover" sizes="40px" />
           </span>
           <span className="font-heading text-lg tracking-tight sm:text-xl">
             Maran Farms

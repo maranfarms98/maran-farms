@@ -28,12 +28,6 @@ export function useIsMobile(breakpoint = 768) {
   return useMediaQuery(`(max-width: ${breakpoint - 1}px)`);
 }
 
-export function useCanAnimate() {
-  const reduced = useReducedMotion();
-  const coarse = useCoarsePointer();
-  return !reduced && !coarse;
-}
-
 /** Keeps --vvh in sync with the live visual viewport (all screens). */
 export function useViewportHeightSync() {
   useEffect(() => {

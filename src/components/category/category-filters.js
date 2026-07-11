@@ -110,5 +110,3 @@ export function CategoryFilters({
     </aside>
   );
 }
-
-export { SPECIAL_FILTERS, SORT_OPTIONS };

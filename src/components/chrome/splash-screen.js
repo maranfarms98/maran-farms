@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
-import { Leaf } from "lucide-react";
 import { useMotionAllowed } from "@/components/motion/motion-provider";
 import { SITE_NAME } from "@/lib/site";
 
@@ -85,12 +85,19 @@ export function SplashScreen() {
             transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
             <motion.span
-              className="mb-6 flex size-14 items-center justify-center rounded-full bg-[#f0d2a8] text-farm-green-dark"
+              className="relative mb-6 flex size-16 shrink-0 items-center justify-center overflow-hidden rounded-full shadow-elevated"
               initial={motionAllowed ? { scale: 0.7, opacity: 0 } : false}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ delay: 0.15, type: "spring", stiffness: 280, damping: 18 }}
             >
-              <Leaf className="size-7" strokeWidth={1.75} aria-hidden />
+              <Image
+                src="/images/logo.png"
+                alt=""
+                fill
+                className="object-cover"
+                sizes="64px"
+                priority
+              />
             </motion.span>
 
             <motion.p

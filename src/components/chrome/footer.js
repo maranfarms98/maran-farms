@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowUpRight, Leaf, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/context/toast-context";
@@ -77,8 +78,8 @@ export function Footer({ categories = [] }) {
         <div className="container-farm grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <div className="flex items-center gap-2.5">
-              <span className="flex size-10 items-center justify-center rounded-full bg-farm-accent text-white">
-                <Leaf className="size-5" />
+              <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full">
+                <Image src="/images/logo.png" alt="Maran Farms" fill className="object-cover" sizes="40px" />
               </span>
               <span className="font-heading text-xl text-white">Maran Farms</span>
             </div>

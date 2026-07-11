@@ -3,7 +3,7 @@
 import { Suspense, useCallback, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { Leaf } from "lucide-react";
+import Image from "next/image";
 import { useAuth } from "@/context/auth-context";
 import { useToast } from "@/context/toast-context";
 import { Spinner } from "@/components/ui/spinner";
@@ -91,8 +91,8 @@ function LoginForm() {
     <div className="flex min-h-screen items-center justify-center bg-farm-warm px-4 py-28">
       <div className="w-full max-w-md rounded-[2rem] border border-farm-green-dark/8 bg-farm-cream p-8 shadow-soft">
         <Link href="/" className="flex items-center gap-2.5">
-          <span className="flex size-10 items-center justify-center rounded-full bg-farm-green text-farm-green-light">
-            <Leaf className="size-5" />
+          <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full shadow-soft">
+            <Image src="/images/logo.png" alt="Maran Farms" fill className="object-cover" sizes="40px" />
           </span>
           <span className="font-heading text-lg text-farm-green-dark">Maran Farms</span>
         </Link>

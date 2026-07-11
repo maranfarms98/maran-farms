@@ -1,36 +1,57 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Maran Farms
 
-## Getting Started
+Tamil Nadu farm storefront — Napier plants, chicks & birds, and small pets. Orders via WhatsApp / Razorpay checkout with Supabase-backed catalog, auth, and admin.
 
-First, run the development server:
+## Requirements
+
+- Node.js **22+** recommended (Node 20 works with a Supabase deprecation warning)
+- npm
+- A filled-in `.env.local` (Supabase, Razorpay, `AUTH_SECRET`)
+
+## Setup
+
+```bash
+npm install
+```
+
+Ensure `.env.local` exists in the project root with:
+
+- `NEXT_PUBLIC_SUPABASE_URL`
+- `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+- `SUPABASE_SERVICE_ROLE_KEY`
+- `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` / `NEXT_PUBLIC_RAZORPAY_KEY_ID`
+- `AUTH_SECRET`
+
+Optional — seed catalog data:
+
+```bash
+npm run seed
+```
+
+## Develop
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Local: http://localhost:3000  
+- LAN: `http://<your-mac-ip>:3000` (server binds to `0.0.0.0`)
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+If LAN `/_next` assets return 403, add your current IP to `allowedDevOrigins` in `next.config.mjs` and restart.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Production build
 
-## Learn More
+```bash
+npm run build
+npm start
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Scripts
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Script | Purpose |
+|--------|---------|
+| `npm run dev` | Dev server on all interfaces |
+| `npm run build` | Production build |
+| `npm start` | Serve production build |
+| `npm run lint` | ESLint |
+| `npm run seed` | Seed Supabase from `scripts/seed-supabase.mjs` |

@@ -50,7 +50,6 @@ export async function POST(request) {
   }
 
   // In production, send the OTP via SMS here
-  console.log(`[OTP] ${phone} → ${otp}`);
 
   const { data: existingProfile } = await supabase
     .from("profiles")
