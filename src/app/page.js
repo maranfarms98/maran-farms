@@ -1,6 +1,6 @@
 import { Hero } from "@/components/home/hero";
+import { HarvestPaths } from "@/components/home/harvest-paths";
 import { StorySection } from "@/components/home/story-section";
-import { CategoriesGrid } from "@/components/home/categories-grid";
 import { FeaturedProducts } from "@/components/home/featured-products";
 import { TrustDashboard } from "@/components/home/trust-dashboard";
 import { Testimonials } from "@/components/home/testimonials";
@@ -18,8 +18,8 @@ export default async function HomePage() {
   return (
     <>
       <Hero />
+      <HarvestPaths categories={categories} />
       <StorySection />
-      <CategoriesGrid categories={categories} />
       <FeaturedProducts products={featuredProducts} />
       <TrustDashboard />
       <Testimonials />

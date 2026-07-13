@@ -1,13 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { ChevronDown, RotateCcw, XCircle } from "lucide-react";
+import { ChevronDown, MessageCircle, RotateCcw, XCircle } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/context/toast-context";
 import { formatPrice } from "@/lib/format";
 import { StatusTracker } from "@/app/account/orders/status-tracker";
 import { Spinner } from "@/components/ui/spinner";
+import { WHATSAPP_NUMBER } from "@/lib/site";
 
 export function OrderCard({ order, onCancelled }) {
   const [expanded, setExpanded] = useState(false);
@@ -15,7 +15,6 @@ export function OrderCard({ order, onCancelled }) {
   const [cancelling, setCancelling] = useState(false);
   const { addItem, setOrderDrawerOpen } = useCart();
   const { toast } = useToast();
-  const router = useRouter();
 
   const handleReorder = async (e) => {
     e.stopPropagation();
@@ -119,6 +118,18 @@ export function OrderCard({ order, onCancelled }) {
               {reordering ? <Spinner className="size-4" /> : <RotateCcw className="size-4" />}
               {reordering ? "Adding…" : "Reorder"}
             </button>
+            <a
+              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+                `Hello Maran Farms! I have a question about order ${order.id}.`,
+              )}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="focus-ring inline-flex h-10 items-center gap-2 rounded-full border border-farm-green px-4 text-sm font-semibold text-farm-green"
+            >
+              <MessageCircle className="size-4" />
+              WhatsApp
+            </a>
             {order.status === "pending" && (
               <button
                 type="button"

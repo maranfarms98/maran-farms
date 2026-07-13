@@ -1,19 +1,21 @@
 "use client";
 
 import { InstagramIcon } from "@/components/ui/instagram-icon";
-import Image from "next/image";
 import { INSTAGRAM_URL } from "@/lib/site";
 import { MotionReveal, StaggerChildren, StaggerItem } from "@/components/motion/motion-reveal";
 import { Pressable } from "@/components/motion/pressable";
+import { useMotionAllowed } from "@/components/motion/motion-provider";
 
 const POSTS = [
-  { src: "/images/category-napier.png", alt: "Napier fields" },
-  { src: "/images/category-chicks.png", alt: "Day old chicks" },
-  { src: "/images/product-bird.png", alt: "Farm birds" },
-  { src: "/images/category-pets.png", alt: "Small pets" },
+  { src: "/images/Journey01.MP4", alt: "Napier harvest from the farm" },
+  { src: "/images/Journey02.MP4", alt: "Day-old chicks at Maran Farms" },
+  { src: "/images/Journey03.MP4", alt: "Farm birds on the branch" },
+  { src: "/images/Journey04.MP4", alt: "Small pets raised with care" },
 ];
 
 export function InstagramSection() {
+  const motionAllowed = useMotionAllowed();
+
   return (
     <section className="section-pad-sm border-t border-farm-green-dark/8 bg-farm-warm">
       <div className="container-farm">
@@ -48,14 +50,17 @@ export function InstagramSection() {
                 href={INSTAGRAM_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative block aspect-square overflow-hidden"
+                className="group relative block aspect-square overflow-hidden bg-farm-green-dark"
               >
-                <Image
+                <video
+                  className="absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-105"
                   src={post.src}
-                  alt={post.alt}
-                  fill
-                  className="object-cover transition duration-500 group-hover:scale-105"
-                  sizes="(max-width:768px) 50vw, 25vw"
+                  autoPlay={motionAllowed}
+                  muted
+                  loop
+                  playsInline
+                  preload="metadata"
+                  aria-label={post.alt}
                 />
               </a>
             </StaggerItem>

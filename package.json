@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev --hostname 0.0.0.0",
+    "dev": "node -e \"const {networkInterfaces:n}=require('os');const a=Object.values(n()).flat().find(i=>i.family==='IPv4'&&!i.internal);if(a)console.log('\\n  → Phone/LAN: http://'+a.address+':3000\\n');\" && next dev --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.2",
+    "animejs": "^4.5.0",
     "framer-motion": "^12.42.2",
     "gsap": "^3.15.0",
     "jose": "^6.2.3",

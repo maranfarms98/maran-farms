@@ -6,7 +6,21 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useMotionAllowed } from "@/components/motion/motion-provider";
 import { SITE_NAME } from "@/lib/site";
 
+export const SPLASH_DONE_EVENT = "mf-splash-done";
 const SESSION_KEY = "mf-splash-seen";
+
+let splashDoneFlag = false;
+
+export function hasSplashCompleted() {
+  return splashDoneFlag;
+}
+
+function notifySplashDone() {
+  if (typeof window === "undefined") return;
+  if (splashDoneFlag) return;
+  splashDoneFlag = true;
+  window.dispatchEvent(new CustomEvent(SPLASH_DONE_EVENT));
+}
 
 export function SplashScreen() {
   const motionAllowed = useMotionAllowed();
@@ -17,7 +31,8 @@ export function SplashScreen() {
     const seen = sessionStorage.getItem(SESSION_KEY);
     if (seen) {
       setReady(true);
-      return;
+      const t = window.setTimeout(notifySplashDone, 40);
+      return () => window.clearTimeout(t);
     }
     setVisible(true);
     setReady(true);
@@ -56,6 +71,7 @@ export function SplashScreen() {
     <AnimatePresence
       onExitComplete={() => {
         document.body.style.overflow = "";
+        notifySplashDone();
       }}
     >
       {visible && (

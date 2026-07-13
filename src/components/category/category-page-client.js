@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Filter, Leaf, SlidersHorizontal } from "lucide-react";
+import { ArrowLeft, MessageCircle, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ProductCard } from "@/components/product/product-card";
@@ -15,6 +15,7 @@ import {
   useMotionAllowed,
 } from "@/components/motion/motion-provider";
 import { useGsapContext } from "@/components/motion/use-gsap-context";
+import { getGenericInquiryUrl } from "@/lib/whatsapp";
 
 function filterProducts(list, { search, sort, special }) {
   let result = [...list];
@@ -102,14 +103,11 @@ export function CategoryPageClient({ category, products, allCategories }) {
             <ArrowLeft className="size-4" />
             Back to Home
           </Link>
-          <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full bg-white/15 px-3 py-1.5 text-white backdrop-blur-sm">
-            <Leaf className="size-4" />
-            <span className="text-eyebrow text-white">Maran Farms Catalog</span>
-          </div>
-          <h1 className="font-heading text-section text-white">
+          <p className="text-eyebrow text-[#f0d2a8]">Category</p>
+          <h1 className="font-heading text-section mt-2 text-white">
             {category.name}
           </h1>
-          <TamilCaption className="mt-2 text-farm-ochre">
+          <TamilCaption className="mt-2 text-[#f0d2a8]">
             {category.tamilName}
           </TamilCaption>
           <p className="mt-3 max-w-xl text-farm-green-light/85">
@@ -119,21 +117,30 @@ export function CategoryPageClient({ category, products, allCategories }) {
       </section>
 
       <div className="container-farm py-6">
-        <div className="hide-scrollbar flex gap-2 overflow-x-auto pb-1">
+        <p className="mb-3 text-eyebrow text-farm-sage">Other categories</p>
+        <div className="hide-scrollbar flex gap-3 overflow-x-auto pb-1">
           {allCategories.map((cat) => {
             const active = cat.slug === category.slug;
             return (
               <Link
                 key={cat.id}
                 href={`/category/${cat.slug}`}
-                className={`focus-ring inline-flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-sm font-semibold transition ${
-                  active
-                    ? "bg-farm-accent text-white"
-                    : "bg-farm-warm text-farm-green-dark hover:bg-farm-accent-light"
+                className={`focus-ring group relative flex h-16 w-[min(200px,70vw)] shrink-0 items-end overflow-hidden rounded-2xl ${
+                  active ? "ring-2 ring-farm-accent ring-offset-2 ring-offset-farm-cream" : ""
                 }`}
               >
-                <Leaf className="size-4" />
-                {cat.name}
+                <Image
+                  src={cat.image || cat.heroImage}
+                  alt=""
+                  fill
+                  unoptimized
+                  className="object-cover transition duration-500 group-hover:scale-105"
+                  sizes="200px"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-farm-green-dark/85 via-farm-green-dark/30 to-transparent" />
+                <span className="relative z-10 p-3 text-sm font-semibold text-white">
+                  {cat.name}
+                </span>
               </Link>
             );
           })}
@@ -178,21 +185,34 @@ export function CategoryPageClient({ category, products, allCategories }) {
           </div>
 
           {filtered.length === 0 ? (
-            <div className="rounded-3xl border border-dashed border-farm-green-dark/20 bg-farm-warm px-6 py-16 text-center">
-              <Filter className="mx-auto size-10 text-farm-sage" />
-              <h3 className="font-heading mt-4 text-2xl text-farm-green-dark">
-                No Products Found
+            <div className="bg-farm-warm px-6 py-16 text-center">
+              <h3 className="font-heading text-2xl text-farm-green-dark">
+                No products found
               </h3>
-              <p className="mt-2 text-farm-sage">
-                Try adjusting your search or special filters.
+              <TamilCaption className="mt-2">
+                பொருட்கள் கிடைக்கவில்லை
+              </TamilCaption>
+              <p className="mx-auto mt-3 max-w-md text-farm-sage">
+                Try adjusting your search or filters, or message us on WhatsApp.
               </p>
-              <button
-                type="button"
-                onClick={reset}
-                className="focus-ring mt-6 inline-flex h-11 items-center rounded-full bg-farm-accent px-6 text-sm font-semibold text-white"
-              >
-                Reset Filters
-              </button>
+              <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+                <button
+                  type="button"
+                  onClick={reset}
+                  className="focus-ring inline-flex h-11 items-center rounded-full bg-farm-accent px-6 text-sm font-semibold text-white"
+                >
+                  Reset Filters
+                </button>
+                <a
+                  href={getGenericInquiryUrl()}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="focus-ring inline-flex h-11 items-center gap-2 rounded-full bg-farm-green px-6 text-sm font-semibold text-farm-green-light"
+                >
+                  <MessageCircle className="size-4" />
+                  WhatsApp
+                </a>
+              </div>
             </div>
           ) : (
             <motion.div

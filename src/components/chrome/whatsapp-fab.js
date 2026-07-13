@@ -1,7 +1,7 @@
 "use client";
 
 import { MessageCircle } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useCart } from "@/context/cart-context";
@@ -39,29 +39,41 @@ export function WhatsAppFAB() {
   }, []);
 
   if (isMobile && isProductPage) return null;
+  if (hydrated && itemCount > 0) return null;
 
-  const hasOrderBar = hydrated && itemCount > 0 && !(isMobile && isProductPage);
-  const bottom = hasOrderBar
-    ? isMobile
-      ? "calc(env(safe-area-inset-bottom, 0px) + 5.5rem)"
-      : "6.5rem"
-    : "calc(env(safe-area-inset-bottom, 0px) + 1.25rem)";
+  const bottom = "calc(env(safe-area-inset-bottom, 0px) + 1.25rem)";
 
   return (
-    <motion.a
-      href={getGenericInquiryUrl()}
-      target="_blank"
-      rel="noopener noreferrer"
-      aria-label="Chat on WhatsApp"
-      className={`focus-ring fixed right-5 z-40 flex size-14 items-center justify-center rounded-full bg-farm-green text-farm-green-light shadow-elevated md:right-6 ${
-        pulse ? "animate-fab-pulse" : ""
-      } ${hasOrderBar ? "max-md:hidden" : ""}`}
+    <div
+      className="fixed right-5 z-40 flex flex-col items-end gap-2 md:right-6"
       style={{ bottom }}
-      whileHover={motionAllowed ? { scale: 1.08 } : undefined}
-      whileTap={motionAllowed ? { scale: 0.94 } : undefined}
-      transition={{ type: "spring", stiffness: 400, damping: 22 }}
     >
-      <MessageCircle className="size-6" />
-    </motion.a>
+      <AnimatePresence>
+        {pulse && (
+          <motion.span
+            initial={motionAllowed ? { opacity: 0, y: 6 } : false}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 4 }}
+            className="rounded-full bg-farm-cream px-3 py-1.5 text-xs font-semibold text-farm-green-dark shadow-soft"
+          >
+            Chat on WhatsApp
+          </motion.span>
+        )}
+      </AnimatePresence>
+      <motion.a
+        href={getGenericInquiryUrl()}
+        target="_blank"
+        rel="noopener noreferrer"
+        aria-label="Chat on WhatsApp"
+        className={`focus-ring flex size-14 items-center justify-center rounded-full bg-farm-green text-farm-green-light shadow-elevated ${
+          pulse ? "animate-fab-pulse" : ""
+        }`}
+        whileHover={motionAllowed ? { scale: 1.08 } : undefined}
+        whileTap={motionAllowed ? { scale: 0.94 } : undefined}
+        transition={{ type: "spring", stiffness: 400, damping: 22 }}
+      >
+        <MessageCircle className="size-6" />
+      </motion.a>
+    </div>
   );
 }

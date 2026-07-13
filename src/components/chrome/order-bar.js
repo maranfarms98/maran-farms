@@ -203,13 +203,24 @@ export function OrderBar() {
                 {formatPrice(total)}
               </span>
             </div>
-            <button
-              type="button"
-              onClick={handleOrderNow}
-              className="focus-ring flex h-14 w-full items-center justify-center rounded-full bg-farm-green text-button font-semibold text-farm-green-light transition hover:bg-farm-green-dark"
-            >
-              Order Now
-            </button>
+            <div className="flex flex-col gap-3">
+              <a
+                href={getCartOrderUrl(lines, total)}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="focus-ring flex h-14 w-full items-center justify-center gap-2 rounded-full bg-farm-green text-button font-semibold text-farm-green-light transition hover:bg-farm-green-dark"
+              >
+                <MessageCircle className="size-4" />
+                Order on WhatsApp
+              </a>
+              <button
+                type="button"
+                onClick={handleOrderNow}
+                className="focus-ring flex h-14 w-full items-center justify-center rounded-full border border-farm-green-dark/15 bg-farm-cream text-button font-semibold text-farm-green-dark transition hover:bg-farm-warm"
+              >
+                Checkout
+              </button>
+            </div>
           </div>
         )}
       </Drawer>

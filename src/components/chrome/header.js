@@ -251,7 +251,7 @@ export function Header({ categories = [] }) {
   }, []);
 
   const textClass = transparent
-    ? "text-white"
+    ? "text-white drop-shadow-[0_1px_12px_rgba(0,0,0,0.55)]"
     : "text-farm-green-dark";
 
   return (
@@ -325,6 +325,9 @@ export function Header({ categories = [] }) {
                 transition={{ duration: 0.22 }}
                 className="absolute top-full left-1/2 z-50 mt-3 w-72 -translate-x-1/2 rounded-3xl border border-farm-green-dark/8 bg-farm-cream p-2 shadow-elevated"
               >
+                <p className="px-4 pt-2 pb-1 text-eyebrow text-farm-sage">
+                  Categories
+                </p>
                 {categories.map((cat) => {
                   const active = pathname === `/category/${cat.slug}`;
                   return (
@@ -431,7 +434,7 @@ export function Header({ categories = [] }) {
           >
             Home
           </Link>
-          <p className="text-eyebrow px-4 pt-3 pb-1">Catalog Categories</p>
+          <p className="text-eyebrow px-4 pt-3 pb-1">Categories</p>
           {categories.map((cat) => (
             <Link
               key={cat.id}

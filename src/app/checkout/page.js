@@ -3,12 +3,15 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, MessageCircle } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/context/toast-context";
 import { formatPrice } from "@/lib/format";
+import { getCartOrderUrl } from "@/lib/whatsapp";
 import { Spinner } from "@/components/ui/spinner";
+import { FarmPageIntro } from "@/components/ui/farm-page-intro";
+import { TamilCaption } from "@/components/ui/tamil-caption";
 
 function loadRazorpayScript() {
   return new Promise((resolve) => {
@@ -130,8 +133,17 @@ export default function CheckoutPage() {
   if (!authHydrated || !cartHydrated || !user || lines.length === 0) return null;
 
   return (
-    <div className="min-h-screen bg-farm-warm px-4 pt-28 pb-16 md:px-8">
-      <div className="mx-auto max-w-2xl">
+    <div className="relative min-h-screen overflow-hidden bg-farm-warm px-4 pt-28 pb-16 md:px-8">
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.07]"
+        style={{
+          backgroundImage:
+            "radial-gradient(ellipse 80% 50% at 10% 20%, #15321f 0%, transparent 55%), radial-gradient(ellipse 60% 40% at 90% 80%, #8b5e3c 0%, transparent 50%)",
+        }}
+        aria-hidden
+      />
+
+      <div className="relative mx-auto max-w-2xl">
         <Link
           href="/"
           className="focus-ring mb-6 inline-flex items-center gap-2 text-sm font-medium text-farm-green hover:text-farm-accent"
@@ -140,19 +152,34 @@ export default function CheckoutPage() {
           Back to shopping
         </Link>
 
-        <div className="rounded-[2rem] border border-farm-green-dark/8 bg-farm-cream p-6 shadow-soft md:p-8">
-          <h1 className="font-heading text-3xl text-farm-green-dark">Checkout</h1>
-          <p className="mt-1 text-sm text-farm-sage">
-            {user?.name} · +91 {user?.phone}
-          </p>
+        <div className="rounded-[2rem] border border-farm-green-dark/8 bg-farm-cream/95 p-6 shadow-soft backdrop-blur-sm md:p-8">
+          <FarmPageIntro
+            eyebrow="Order"
+            title="Checkout"
+            tamil="ஆர்டர் உறுதிப்படுத்தல்"
+          >
+            <p className="mt-3 text-sm text-farm-sage">
+              {user?.name} · +91 {user?.phone}
+            </p>
+          </FarmPageIntro>
 
           <div className="mt-6 rounded-2xl border border-farm-green-dark/8 bg-farm-warm p-4">
-            <p className="mb-3 text-sm font-semibold text-farm-green-dark">Order Summary</p>
+            <p className="mb-1 text-sm font-semibold text-farm-green-dark">
+              Order Summary
+            </p>
+            <TamilCaption className="mb-3">ஆர்டர் விவரம்</TamilCaption>
             <ul className="space-y-2">
               {lines.map((l) => (
-                <li key={l.product.id} className="flex justify-between text-sm text-farm-sage">
-                  <span>{l.product.name} × {l.quantity}</span>
-                  <span className="tabular-nums text-farm-green-dark">{formatPrice(l.lineTotal)}</span>
+                <li
+                  key={l.product.id}
+                  className="flex justify-between text-sm text-farm-sage"
+                >
+                  <span>
+                    {l.product.name} × {l.quantity}
+                  </span>
+                  <span className="tabular-nums text-farm-green-dark">
+                    {formatPrice(l.lineTotal)}
+                  </span>
                 </li>
               ))}
             </ul>
@@ -163,9 +190,15 @@ export default function CheckoutPage() {
           </div>
 
           <div className="mt-6 flex flex-col gap-1.5">
-            <label className="text-sm font-medium text-farm-green-dark" htmlFor="checkout-address">
-              Delivery Address
+            <label
+              className="text-sm font-medium text-farm-green-dark"
+              htmlFor="checkout-address"
+            >
+              Delivery address
             </label>
+            <TamilCaption className="mb-1">
+              கதவு எண், தெரு, கிராமம், மாவட்டம், அஞ்சல் குறியீடு
+            </TamilCaption>
             <textarea
               id="checkout-address"
               rows={3}
@@ -182,15 +215,26 @@ export default function CheckoutPage() {
             </p>
           )}
 
-          <button
-            type="button"
-            disabled={loading}
-            onClick={handlePay}
-            className="focus-ring mt-6 flex h-14 w-full items-center justify-center gap-2 rounded-full bg-farm-green text-button font-semibold text-farm-green-light transition hover:bg-farm-green-dark disabled:opacity-60"
-          >
-            {loading && <Spinner className="size-4" />}
-            {loading ? "Opening payment…" : `Pay ${formatPrice(total)}`}
-          </button>
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+            <button
+              type="button"
+              disabled={loading}
+              onClick={handlePay}
+              className="focus-ring flex h-14 flex-1 items-center justify-center gap-2 rounded-full bg-farm-green text-button font-semibold text-farm-green-light transition hover:bg-farm-green-dark disabled:opacity-60"
+            >
+              {loading && <Spinner className="size-4" />}
+              {loading ? "Opening payment…" : `Pay ${formatPrice(total)}`}
+            </button>
+            <a
+              href={getCartOrderUrl(lines, total)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus-ring inline-flex h-14 flex-1 items-center justify-center gap-2 rounded-full border border-farm-green bg-transparent text-button font-semibold text-farm-green transition hover:bg-farm-green/5"
+            >
+              <MessageCircle className="size-4" />
+              Order on WhatsApp
+            </a>
+          </div>
         </div>
       </div>
     </div>
