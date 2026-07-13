@@ -29,7 +29,7 @@ export function CategoryFilters({
   return (
     <aside className={`space-y-6 ${className}`}>
       <div>
-        <label className="text-eyebrow mb-2 block" htmlFor="cat-search">
+        <label className="text-eyebrow mb-2 block text-farm-green" htmlFor="cat-search">
           Search
         </label>
         <div className="relative">
@@ -56,7 +56,7 @@ export function CategoryFilters({
       </div>
 
       <div>
-        <label className="text-eyebrow mb-2 block" htmlFor="cat-sort">
+        <label className="text-eyebrow mb-2 block text-farm-green" htmlFor="cat-sort">
           Sort
         </label>
         <select
@@ -74,7 +74,7 @@ export function CategoryFilters({
       </div>
 
       <div>
-        <p className="text-eyebrow mb-2">Special Filters</p>
+        <p className="text-eyebrow mb-2 text-farm-green">Special Filters</p>
         <ul className="space-y-1">
           {SPECIAL_FILTERS.map((f) => {
             const active = special === f.id;

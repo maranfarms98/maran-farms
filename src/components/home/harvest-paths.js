@@ -146,7 +146,7 @@ export function HarvestPaths({ categories = [] }) {
           >
             Browse what we grow
           </h2>
-          <TamilCaption className="mt-2 text-[#f0d2a8]">
+          <TamilCaption tone="light" className="mt-2">
             எங்கள் வகைகள்
           </TamilCaption>
         </MotionReveal>

@@ -140,7 +140,7 @@ export function ProductPageClient({ product, category, related, content }) {
             variant="right"
             className="sticky top-24 rounded-[2rem] border border-farm-green-dark/8 bg-farm-warm p-6 shadow-soft md:p-8"
           >
-            <p className="text-eyebrow">{category?.name || "Product"}</p>
+            <p className="text-eyebrow text-farm-green">{category?.name || "Product"}</p>
             <div className="mt-2 flex items-start justify-between gap-3">
               <h1 className="font-heading text-3xl text-farm-green-dark md:text-4xl">
                 {product.name}

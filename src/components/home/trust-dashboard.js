@@ -63,7 +63,7 @@ export function TrustDashboard() {
     >
       <div className="container-farm">
         <MotionReveal className="mx-auto max-w-2xl text-center">
-          <p className="text-eyebrow">Credibility & Trust</p>
+          <p className="text-eyebrow text-farm-green">Credibility & Trust</p>
           <h2 className="font-heading text-section mt-3 font-semibold text-farm-green-dark">
             Trusted across Tamil Nadu
           </h2>

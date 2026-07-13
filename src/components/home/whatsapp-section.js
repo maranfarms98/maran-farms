@@ -36,7 +36,7 @@ export function WhatsAppSection() {
     <section ref={sectionRef} className="section-pad container-farm">
       <div className="grid items-center gap-12 lg:grid-cols-2">
         <MotionReveal>
-          <p className="text-eyebrow">Instant Ordering Handoff</p>
+          <p className="text-eyebrow text-farm-green">Instant Ordering Handoff</p>
           <h2 className="font-heading text-section mt-3 font-semibold text-farm-green-dark">
             Order Instantly
             <br />

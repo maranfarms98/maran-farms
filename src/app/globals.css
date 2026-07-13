@@ -11,7 +11,7 @@
   --farm-ochre: #b88e52;
   --farm-cream: #fcf8f4;
   --farm-warm: #faf6ee;
-  --farm-sage: #8b9b88;
+  --farm-sage: #5c6b59;
 
   --radius: 1rem;
   --shadow-soft: 0 10px 36px rgba(45, 90, 61, 0.07);
@@ -164,7 +164,6 @@ body {
   font-weight: 600;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--farm-green);
 }
 
 .container-farm {
@@ -273,11 +272,11 @@ body {
 }
 
 .animate-marquee {
-  animation: marquee 50s linear infinite;
+  animation: marquee 55s linear infinite;
 }
 
 .animate-marquee-reverse {
-  animation: marquee-reverse 50s linear infinite;
+  animation: marquee-reverse 55s linear infinite;
 }
 
 .marquee-paused .animate-marquee,

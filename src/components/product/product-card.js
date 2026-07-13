@@ -99,7 +99,7 @@ export function ProductCard({ product, compact = false, teaser = false }) {
       <div className="flex flex-1 flex-col p-3 sm:p-4">
         <Link href={`/product/${product.id}`} className="flex-1">
           {!teaser && (
-            <p className="text-eyebrow mb-1 text-[0.6rem]">
+            <p className="text-eyebrow mb-1 text-[0.6rem] text-farm-green">
               {product.categoryName || "Catalog"}
             </p>
           )}

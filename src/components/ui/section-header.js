@@ -26,7 +26,11 @@ export function SectionHeader({
       className={`flex max-w-2xl flex-col ${alignClass} ${borderLeft ? "max-w-none border-l-4 border-farm-accent pl-4" : ""} ${className}`}
     >
       {eyebrow && (
-        <p className={`text-eyebrow ${eyebrowClassName}`}>{eyebrow}</p>
+        <p
+          className={`text-eyebrow ${eyebrowClassName || "text-farm-green"}`}
+        >
+          {eyebrow}
+        </p>
       )}
       <h2
         className={`font-heading text-section mt-3 font-semibold tracking-tight ${titleClassName}`}

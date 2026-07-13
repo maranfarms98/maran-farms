@@ -107,7 +107,7 @@ export function CategoryPageClient({ category, products, allCategories }) {
           <h1 className="font-heading text-section mt-2 text-white">
             {category.name}
           </h1>
-          <TamilCaption className="mt-2 text-[#f0d2a8]">
+          <TamilCaption tone="light" className="mt-2">
             {category.tamilName}
           </TamilCaption>
           <p className="mt-3 max-w-xl text-farm-green-light/85">

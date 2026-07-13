@@ -434,7 +434,7 @@ export function Header({ categories = [] }) {
           >
             Home
           </Link>
-          <p className="text-eyebrow px-4 pt-3 pb-1">Categories</p>
+          <p className="text-eyebrow px-4 pt-3 pb-1 text-farm-green">Categories</p>
           {categories.map((cat) => (
             <Link
               key={cat.id}

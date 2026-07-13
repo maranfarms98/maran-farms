@@ -19,7 +19,7 @@ export default async function HomePage() {
     <>
       <Hero />
       <HarvestPaths categories={categories} />
-      <StorySection />
+      {/* <StorySection /> */}
       <FeaturedProducts products={featuredProducts} />
       <TrustDashboard />
       <Testimonials />

@@ -268,7 +268,7 @@ export function Hero() {
 
           <p
             data-hero-line
-            className="font-heading mt-4 text-[clamp(1.15rem,2.8vw,1.65rem)] font-medium text-[#f0d2a8] italic drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)]"
+            className="font-heading mt-4 text-[clamp(1.15rem,2.8vw,1.65rem)] font-medium text-[#f0d2a8] italic drop-shadow-[0_2px_16px_rgba(0,0,0,0.75)]"
           >
             Rooted in integrity
           </p>
@@ -294,7 +294,10 @@ export function Hero() {
           </p>
 
           <div data-hero-line>
-            <TamilCaption className="mt-2 text-[#f0d2a8] drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]">
+            <TamilCaption
+              tone="light"
+              className="mt-2 drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
+            >
               தரமான நேப்பியர் · பண்ணை குஞ்சுகள் · செல்லப்பிராணிகள்
             </TamilCaption>
           </div>

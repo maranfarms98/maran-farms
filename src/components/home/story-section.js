@@ -33,7 +33,7 @@ export function StorySection() {
       <div className="section-pad container-farm relative">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           <MotionReveal>
-            <p className="text-eyebrow">Rooted in Heritage</p>
+            <p className="text-eyebrow text-farm-green">Rooted in Heritage</p>
             <h2 className="font-heading text-section mt-3 font-semibold text-farm-green-dark">
               From our fields
               <br />

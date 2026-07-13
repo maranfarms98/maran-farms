@@ -90,7 +90,7 @@ export function Footer({ categories = [] }) {
             <p className="mt-5 text-sm italic text-farm-ochre" lang="ta">
               விதைத்தால் விளையும்; உழைத்தால் உயரும்.
             </p>
-            <TamilCaption className="mt-1 text-farm-green-light/60">
+            <TamilCaption tone="muted" className="mt-1">
               Sow with care, rise with labour.
             </TamilCaption>
           </div>
@@ -107,7 +107,7 @@ export function Footer({ categories = [] }) {
                     <span className="block text-white transition group-hover:text-farm-ochre">
                       {cat.name}
                     </span>
-                    <span className="text-xs text-farm-green-light/55" lang="ta">
+                    <span className="text-xs text-farm-green-light/70" lang="ta">
                       {cat.tamilName}
                     </span>
                   </Link>
@@ -140,7 +140,7 @@ export function Footer({ categories = [] }) {
               <MessageCircle className="size-4" />
               WhatsApp {WHATSAPP_DISPLAY}
             </a>
-            <p className="mt-4 text-sm text-farm-green-light/55">
+            <p className="mt-4 text-sm text-farm-green-light/70">
               Social & Trust Proof — 2,000+ followers · 500+ WhatsApp orders
             </p>
           </div>
