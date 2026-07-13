@@ -33,10 +33,14 @@ export function WhatsAppSection() {
   const inView = useInView(sectionRef, { once: true, amount: 0.25 });
 
   return (
-    <section ref={sectionRef} className="section-pad container-farm">
-      <div className="grid items-center gap-12 lg:grid-cols-2">
-        <MotionReveal>
-          <p className="text-eyebrow text-farm-green">Instant Ordering Handoff</p>
+    <section
+      ref={sectionRef}
+      className="section-pad border-t border-farm-green-dark/6 bg-farm-warm"
+    >
+      <div className="container-farm">
+        <div className="grid items-center gap-12 lg:grid-cols-2">
+          <MotionReveal>
+            <p className="text-eyebrow text-farm-green">Instant Ordering Handoff</p>
           <h2 className="font-heading text-section mt-3 font-semibold text-farm-green-dark">
             Order Instantly
             <br />
@@ -55,7 +59,7 @@ export function WhatsAppSection() {
             {STEPS.map((step, i) => (
               <li
                 key={step}
-                className="rounded-2xl border border-farm-green-dark/8 bg-farm-warm p-4"
+                className="rounded-2xl border border-farm-green-dark/8 bg-farm-cream p-4"
               >
                 <span className="font-heading text-2xl text-farm-accent">
                   0{i + 1}
@@ -168,6 +172,7 @@ export function WhatsAppSection() {
             </div>
           </div>
         </MotionReveal>
+      </div>
       </div>
     </section>
   );

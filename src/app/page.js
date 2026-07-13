@@ -1,11 +1,10 @@
-import { Hero } from "@/components/home/hero";
-import { HarvestPaths } from "@/components/home/harvest-paths";
-import { StorySection } from "@/components/home/story-section";
 import { FeaturedProducts } from "@/components/home/featured-products";
-import { TrustDashboard } from "@/components/home/trust-dashboard";
-import { Testimonials } from "@/components/home/testimonials";
-import { WhatsAppSection } from "@/components/home/whatsapp-section";
+import { HarvestPaths } from "@/components/home/harvest-paths";
+import { Hero } from "@/components/home/hero";
 import { InstagramSection } from "@/components/home/instagram-section";
+import { Testimonials } from "@/components/home/testimonials";
+import { TrustDashboard } from "@/components/home/trust-dashboard";
+import { WhatsAppSection } from "@/components/home/whatsapp-section";
 import { getAllCategories } from "@/data/categories";
 import { getFeaturedProducts } from "@/data/products";
 
@@ -19,7 +18,6 @@ export default async function HomePage() {
     <>
       <Hero />
       <HarvestPaths categories={categories} />
-      {/* <StorySection /> */}
       <FeaturedProducts products={featuredProducts} />
       <TrustDashboard />
       <Testimonials />

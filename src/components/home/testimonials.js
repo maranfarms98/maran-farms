@@ -9,14 +9,14 @@ import { Marquee } from "@/components/ui/marquee";
 import { useReducedMotion } from "@/hooks/use-media";
 import { useMotionAllowed } from "@/components/motion/motion-provider";
 
-function TestimonialQuote({ t }) {
+function TestimonialQuote({ t, className = "" }) {
   const motionAllowed = useMotionAllowed();
 
   return (
     <motion.blockquote
-      whileHover={motionAllowed ? { y: -4 } : undefined}
+      whileHover={motionAllowed ? { y: -3 } : undefined}
       transition={{ type: "spring", stiffness: 400, damping: 30 }}
-      className="relative flex h-full w-[min(17.5rem,78vw)] shrink-0 flex-col gap-4 border-l border-farm-ochre/40 pl-5 md:w-[20rem] md:gap-5 md:pl-6"
+      className={`relative flex w-full flex-col gap-3 border-l border-farm-ochre/45 pl-4 sm:gap-4 sm:pl-5 ${className}`}
     >
       <div className="flex gap-0.5" aria-label={`${t.rating} out of 5 stars`}>
         {Array.from({ length: t.rating }).map((_, i) => (
@@ -28,18 +28,18 @@ function TestimonialQuote({ t }) {
         ))}
       </div>
 
-      <p className="font-heading text-[1.05rem] leading-[1.45] text-farm-green-light md:text-[1.2rem]">
+      <p className="font-heading text-[1.05rem] leading-snug text-farm-green-light sm:text-[1.15rem]">
         {t.review}
       </p>
 
       <p
-        className="text-[0.8125rem] leading-relaxed text-[#f0d2a8]/90 italic"
+        className="text-[0.8125rem] leading-relaxed text-[#f0d2a8] italic"
         lang="ta"
       >
         {t.tamilReview}
       </p>
 
-      <footer className="mt-auto space-y-2 pt-2">
+      <footer className="space-y-1.5 pt-1">
         <cite className="not-italic">
           <span className="block text-sm font-semibold text-white">
             {t.name}
@@ -48,11 +48,21 @@ function TestimonialQuote({ t }) {
             {t.role} · {t.location}
           </span>
         </cite>
-        <span className="block text-[0.625rem] font-semibold tracking-[0.18em] text-farm-ochre/65 uppercase">
+        <span className="block text-[0.625rem] font-semibold tracking-[0.18em] text-farm-ochre/70 uppercase">
           {t.source}
         </span>
       </footer>
     </motion.blockquote>
+  );
+}
+
+function TestimonialStack({ items, className = "" }) {
+  return (
+    <div className={`container-farm grid gap-8 sm:grid-cols-2 lg:grid-cols-3 ${className}`}>
+      {items.map((t) => (
+        <TestimonialQuote key={t.id} t={t} />
+      ))}
+    </div>
   );
 }
 
@@ -70,10 +80,10 @@ export function Testimonials() {
         aria-hidden
       />
 
-      <div className="section-pad relative">
+      <div className="relative py-12 md:py-[5.5rem] xl:py-[7.5rem]">
         <div className="container-farm">
           <MotionReveal className="flex max-w-xl flex-col items-start text-left">
-      <p className="text-[0.6875rem] font-semibold tracking-[0.2em] text-farm-ochre uppercase">
+            <p className="text-[0.6875rem] font-semibold tracking-[0.2em] text-farm-ochre uppercase">
               Customer Voice
             </p>
             <h2 className="font-heading text-section mt-3 font-semibold text-farm-green-light">
@@ -82,24 +92,34 @@ export function Testimonials() {
             <TamilCaption tone="light" className="mt-2">
               விவசாயிகள் சொல்வது
             </TamilCaption>
-            <p className="mt-5 max-w-sm text-sm leading-relaxed text-farm-green-light/75 md:text-base">
+            <p className="mt-4 max-w-sm text-sm leading-relaxed text-farm-green-light/75 md:mt-5 md:text-base">
               Feedback from dairy growers, poultry starters, and homestead
               keepers across Tamil Nadu.
             </p>
           </MotionReveal>
         </div>
 
+        {/* Mobile: full readable stack — marquee clips badly on small screens */}
+        <TestimonialStack
+          items={testimonials.slice(0, 4)}
+          className="mt-8 md:hidden"
+        />
+
+        {/* Desktop */}
         {reduced ? (
-          <div className="container-farm mt-12 grid gap-10 md:grid-cols-3 md:gap-8">
-            {testimonials.slice(0, 3).map((t) => (
-              <TestimonialQuote key={t.id} t={t} />
-            ))}
-          </div>
+          <TestimonialStack
+            items={testimonials.slice(0, 3)}
+            className="mt-12 hidden md:grid"
+          />
         ) : (
-          <div className="mt-12 md:mt-14">
-            <Marquee gapClassName="gap-8 md:gap-12">
+          <div className="mt-12 hidden md:block md:mt-14">
+            <Marquee gapClassName="gap-10 md:gap-14">
               {testimonials.map((t) => (
-                <TestimonialQuote key={t.id} t={t} />
+                <TestimonialQuote
+                  key={t.id}
+                  t={t}
+                  className="w-[20rem] shrink-0 md:w-[22rem]"
+                />
               ))}
             </Marquee>
           </div>

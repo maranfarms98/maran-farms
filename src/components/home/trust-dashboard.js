@@ -59,7 +59,7 @@ export function TrustDashboard() {
   return (
     <section
       ref={ref}
-      className="section-pad-sm border-y border-farm-green-dark/8 bg-farm-warm"
+      className="section-pad-sm bg-farm-accent-light"
     >
       <div className="container-farm">
         <MotionReveal className="mx-auto max-w-2xl text-center">

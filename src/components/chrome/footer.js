@@ -28,7 +28,7 @@ export function Footer({ categories = [] }) {
   };
 
   return (
-    <footer className="grain-overlay relative overflow-hidden bg-dark-diagonal text-farm-green-light">
+    <footer className="grain-overlay relative overflow-hidden border-t border-[#f0d2a8]/30 bg-dark-diagonal text-farm-green-light">
       <Leaf
         className="pointer-events-none absolute -top-8 -left-8 size-40 rotate-12 text-white/5"
         strokeWidth={1}
