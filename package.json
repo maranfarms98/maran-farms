@@ -3,15 +3,25 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "node -e \"const {networkInterfaces:n}=require('os');const a=Object.values(n()).flat().find(i=>i.family==='IPv4'&&!i.internal);if(a)console.log('\\n  → Phone/LAN: http://'+a.address+':3000\\n');\" && next dev --hostname 0.0.0.0",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "seed": "node scripts/seed-supabase.mjs"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.110.2",
+    "animejs": "^4.5.0",
+    "framer-motion": "^12.42.2",
+    "gsap": "^3.15.0",
+    "jose": "^6.2.3",
+    "lucide-react": "^1.24.0",
     "next": "16.2.10",
+    "razorpay": "^2.9.6",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "recharts": "^3.9.2",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
