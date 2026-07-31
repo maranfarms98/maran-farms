@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { getProductById, getRelatedProducts } from "@/data/products";
 import { getCategoryById } from "@/data/categories";
 import { getDetailContent } from "@/data/product-detail-content";
-import { ProductPageClient } from "@/components/product/product-page-client";
+import { ProductThemeGate } from "@/components/product/product-theme-gate";
 
 export async function generateMetadata({ params }) {
   const { id } = await params;
@@ -26,7 +26,7 @@ export default async function ProductPage({ params }) {
   ]);
 
   return (
-    <ProductPageClient
+    <ProductThemeGate
       product={product}
       category={category}
       related={related}

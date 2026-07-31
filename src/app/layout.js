@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { Outfit, Playfair_Display } from "next/font/google";
 import { Providers } from "@/components/chrome/providers";
 import { getAllCategories } from "@/data/categories";
@@ -35,7 +36,11 @@ export const metadata = {
 };
 
 export default async function RootLayout({ children }) {
-  const categories = await getAllCategories();
+  const [categories, cookieStore] = await Promise.all([
+    getAllCategories(),
+    cookies(),
+  ]);
+  const initialTheme = cookieStore.get("mf-theme")?.value === "canopy" ? "canopy" : "classic";
 
   return (
     <html
@@ -44,7 +49,9 @@ export default async function RootLayout({ children }) {
       className={`${outfit.variable} ${playfair.variable} antialiased`}
     >
       <body className="flex min-h-vvh flex-col font-sans">
-        <Providers categories={categories}>{children}</Providers>
+        <Providers categories={categories} initialTheme={initialTheme}>
+          {children}
+        </Providers>
       </body>
     </html>
   );

@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import { getAllCategories, getCategoryBySlug } from "@/data/categories";
 import { getProductsByCategory } from "@/data/products";
-import { CategoryPageClient } from "@/components/category/category-page-client";
+import { CategoryThemeGate } from "@/components/category/category-theme-gate";
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
@@ -24,7 +24,7 @@ export default async function CategoryPage({ params }) {
   ]);
 
   return (
-    <CategoryPageClient
+    <CategoryThemeGate
       category={category}
       products={products}
       allCategories={allCategories}

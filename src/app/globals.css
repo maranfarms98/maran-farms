@@ -22,6 +22,17 @@
 
   --background: var(--farm-cream);
   --foreground: var(--farm-green-dark);
+
+  /* Canopy theme — alternate organic/greenery skin, additive only */
+  --canopy-forest: #08170e;
+  --canopy-deep: #0f2a1a;
+  --canopy-moss: #2f6b3f;
+  --canopy-leaf: #4f9b5c;
+  --canopy-leaf-light: #8fd39c;
+  --canopy-gold: #d9a441;
+  --canopy-gold-light: #f0cf8a;
+  --canopy-mist: #eef6ee;
+  --canopy-bark: #3c2a1e;
 }
 
 @theme inline {
@@ -59,6 +70,16 @@
   --text-button: clamp(0.875rem, 0.25vw + 0.8125rem, 1rem);
   --text-caption: 0.85rem;
   --text-eyebrow: 0.6875rem;
+
+  --color-canopy-forest: var(--canopy-forest);
+  --color-canopy-deep: var(--canopy-deep);
+  --color-canopy-moss: var(--canopy-moss);
+  --color-canopy-leaf: var(--canopy-leaf);
+  --color-canopy-leaf-light: var(--canopy-leaf-light);
+  --color-canopy-gold: var(--canopy-gold);
+  --color-canopy-gold-light: var(--canopy-gold-light);
+  --color-canopy-mist: var(--canopy-mist);
+  --color-canopy-bark: var(--canopy-bark);
 }
 
 * {
@@ -68,6 +89,7 @@
 html {
   scroll-behavior: smooth;
   min-height: var(--vvh);
+  overflow-x: hidden;
 }
 
 h1,
@@ -90,6 +112,7 @@ body {
   letter-spacing: 0.012em;
   line-height: 1.75;
   min-height: var(--vvh);
+  overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -344,6 +367,35 @@ a,
   touch-action: manipulation;
 }
 
+/* Canopy theme keyframes */
+@keyframes canopy-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, -14px, 0) rotate(4deg);
+  }
+}
+
+.animate-canopy-drift {
+  animation: canopy-drift 6s ease-in-out infinite;
+}
+
+@keyframes canopy-glow {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.animate-canopy-glow {
+  animation: canopy-glow 3.2s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
@@ -360,7 +412,9 @@ a,
   .animate-marquee,
   .animate-marquee-reverse,
   .animate-light-sweep,
-  .animate-fab-pulse {
+  .animate-fab-pulse,
+  .animate-canopy-drift,
+  .animate-canopy-glow {
     animation: none !important;
   }
 }

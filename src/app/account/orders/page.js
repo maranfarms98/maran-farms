@@ -2,12 +2,22 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { MessageCircle, Search } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
+import { useTheme } from "@/context/theme-context";
 import { OrderCard } from "@/app/account/orders/order-card";
 import { FarmPageIntro } from "@/components/ui/farm-page-intro";
 import { TamilCaption } from "@/components/ui/tamil-caption";
 import { getGenericInquiryUrl } from "@/lib/whatsapp";
+
+const OrdersPageCanopy = dynamic(
+  () =>
+    import("@/components/theme-canopy/account/orders-page-canopy").then(
+      (m) => m.OrdersPageCanopy,
+    ),
+  { ssr: false },
+);
 
 const STATUS_FILTERS = [
   { value: "all", label: "All" },
@@ -20,6 +30,7 @@ const STATUS_FILTERS = [
 
 export default function MyOrdersPage() {
   const { user, hydrated } = useAuth();
+  const { theme } = useTheme();
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
@@ -49,6 +60,12 @@ export default function MyOrdersPage() {
       return matchesId || matchesItem;
     });
   }, [orders, search, statusFilter]);
+
+  if (theme === "canopy") {
+    return (
+      <OrdersPageCanopy user={user} orders={orders} loading={loading} onCancelled={handleCancelled} />
+    );
+  }
 
   return (
     <div className="relative min-h-screen overflow-hidden bg-farm-warm px-4 pt-28 pb-16 md:px-8">

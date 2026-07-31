@@ -5,6 +5,7 @@ import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import {
   ChevronDown,
+  Leaf,
   LogOut,
   Menu,
   Package,
@@ -24,7 +25,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useMotionAllowed } from "@/components/motion/motion-provider";
 import { ThemeSwitcher } from "@/components/chrome/theme-switcher";
 
-function AccountMenu({ textClass }) {
+function AccountMenuCanopy() {
   const { user, hydrated, logout } = useAuth();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -46,11 +47,7 @@ function AccountMenu({ textClass }) {
     return (
       <Link
         href="/login"
-        className={`focus-ring hidden h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold md:inline-flex ${
-          textClass === "text-white"
-            ? "bg-white/15 text-white backdrop-blur-sm"
-            : "bg-farm-green/8 text-farm-green"
-        }`}
+        className="focus-ring hidden h-11 items-center gap-2 rounded-full bg-canopy-moss/40 px-4 text-sm font-semibold text-canopy-mist backdrop-blur-sm md:inline-flex"
       >
         <User className="size-4" />
         Login
@@ -64,11 +61,7 @@ function AccountMenu({ textClass }) {
         type="button"
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
-        className={`focus-ring inline-flex h-11 items-center gap-2 rounded-full px-4 text-sm font-semibold ${
-          textClass === "text-white"
-            ? "bg-white/15 text-white backdrop-blur-sm"
-            : "bg-farm-green/8 text-farm-green"
-        }`}
+        className="focus-ring inline-flex h-11 items-center gap-2 rounded-full bg-canopy-moss/40 px-4 text-sm font-semibold text-canopy-mist backdrop-blur-sm"
       >
         <User className="size-4" />
         {user.name?.split(" ")[0]}
@@ -79,11 +72,11 @@ function AccountMenu({ textClass }) {
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.2 }}
-          className="absolute top-full right-0 z-50 mt-3 w-56 rounded-3xl border border-farm-green-dark/8 bg-farm-cream p-2 shadow-elevated"
+          className="absolute top-full right-0 z-50 mt-3 w-56 rounded-3xl border border-canopy-leaf-light/20 bg-canopy-deep p-2 shadow-elevated"
         >
           <Link
             href="/account/orders"
-            className="focus-ring flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-farm-green-dark hover:bg-farm-accent-light"
+            className="focus-ring flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-canopy-mist hover:bg-canopy-moss/30"
             onClick={() => setOpen(false)}
           >
             <Package className="size-4" />
@@ -92,7 +85,7 @@ function AccountMenu({ textClass }) {
           {user.isAdmin && (
             <Link
               href="/admin"
-              className="focus-ring flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-farm-green-dark hover:bg-farm-accent-light"
+              className="focus-ring flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-canopy-mist hover:bg-canopy-moss/30"
               onClick={() => setOpen(false)}
             >
               <ShieldCheck className="size-4" />
@@ -107,7 +100,7 @@ function AccountMenu({ textClass }) {
               await logout();
               router.push("/");
             }}
-            className="focus-ring flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium text-farm-accent hover:bg-farm-accent-light disabled:opacity-60"
+            className="focus-ring flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium text-canopy-gold-light hover:bg-canopy-moss/30 disabled:opacity-60"
           >
             {loggingOut ? <Spinner className="size-4" /> : <LogOut className="size-4" />}
             {loggingOut ? "Logging out…" : "Logout"}
@@ -118,7 +111,7 @@ function AccountMenu({ textClass }) {
   );
 }
 
-function MobileAccountLinks({ onNavigate }) {
+function MobileAccountLinksCanopy({ onNavigate }) {
   const { user, hydrated, logout } = useAuth();
   const router = useRouter();
   const [loggingOut, setLoggingOut] = useState(false);
@@ -130,7 +123,7 @@ function MobileAccountLinks({ onNavigate }) {
       <Link
         href="/login"
         onClick={onNavigate}
-        className="focus-ring mb-2 flex items-center gap-3 rounded-2xl bg-farm-green/8 px-4 py-3 font-medium text-farm-green hover:bg-farm-accent-light"
+        className="focus-ring mb-2 flex items-center gap-3 rounded-2xl bg-canopy-moss/30 px-4 py-3 font-medium text-canopy-mist"
       >
         <User className="size-4" />
         Login
@@ -139,13 +132,11 @@ function MobileAccountLinks({ onNavigate }) {
   }
 
   return (
-    <div className="mb-2 rounded-2xl bg-farm-green/8 p-1">
-      <p className="px-3 py-2 text-sm font-semibold text-farm-green-dark">
-        {user.name}
-      </p>
+    <div className="mb-2 rounded-2xl bg-canopy-moss/30 p-1">
+      <p className="px-3 py-2 text-sm font-semibold text-canopy-mist">{user.name}</p>
       <Link
         href="/account/orders"
-        className="focus-ring flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-farm-green-dark hover:bg-farm-accent-light"
+        className="focus-ring flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-canopy-mist hover:bg-canopy-moss/40"
         onClick={onNavigate}
       >
         <Package className="size-4" />
@@ -154,7 +145,7 @@ function MobileAccountLinks({ onNavigate }) {
       {user.isAdmin && (
         <Link
           href="/admin"
-          className="focus-ring flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-farm-green-dark hover:bg-farm-accent-light"
+          className="focus-ring flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium text-canopy-mist hover:bg-canopy-moss/40"
           onClick={onNavigate}
         >
           <ShieldCheck className="size-4" />
@@ -170,7 +161,7 @@ function MobileAccountLinks({ onNavigate }) {
           onNavigate();
           router.push("/");
         }}
-        className="focus-ring flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium text-farm-accent hover:bg-farm-accent-light disabled:opacity-60"
+        className="focus-ring flex w-full items-center gap-3 rounded-2xl px-4 py-3 text-left text-sm font-medium text-canopy-gold-light hover:bg-canopy-moss/40 disabled:opacity-60"
       >
         {loggingOut ? <Spinner className="size-4" /> : <LogOut className="size-4" />}
         {loggingOut ? "Logging out…" : "Logout"}
@@ -179,23 +170,16 @@ function MobileAccountLinks({ onNavigate }) {
   );
 }
 
-export function Header({ categories = [] }) {
+export function HeaderCanopy({ categories = [] }) {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [scrolled, setScrolled] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [catalogOpen, setCatalogOpen] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [cartPulse, setCartPulse] = useState(false);
   const [menuPath, setMenuPath] = useState(pathname);
   const catalogRef = useRef(null);
-  const {
-    itemCount,
-    total,
-    pulse,
-    setOrderDrawerOpen,
-    hydrated,
-  } = useCart();
+  const { itemCount, total, pulse, setOrderDrawerOpen, hydrated } = useCart();
   const prevPulse = useRef(pulse);
   const motionAllowed = useMotionAllowed();
 
@@ -208,13 +192,7 @@ export function Header({ categories = [] }) {
   const transparent = isHome && !scrolled && !mobileOpen;
 
   useEffect(() => {
-    const onScroll = () => {
-      const y = window.scrollY;
-      setScrolled(y > 40);
-      const doc = document.documentElement;
-      const max = doc.scrollHeight - window.innerHeight;
-      setProgress(max > 0 ? (y / max) * 100 : 0);
-    };
+    const onScroll = () => setScrolled(window.scrollY > 40);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -251,60 +229,32 @@ export function Header({ categories = [] }) {
     };
   }, []);
 
-  const textClass = transparent
-    ? "text-white drop-shadow-[0_1px_12px_rgba(0,0,0,0.55)]"
-    : "text-farm-green-dark";
-
   return (
     <motion.header
-      className={`fixed inset-x-0 top-0 z-50 ${
+      className={`fixed inset-x-0 top-0 z-50 text-canopy-mist ${
         transparent
           ? "bg-transparent"
-          : "border-b border-farm-green-dark/8 bg-farm-cream/90 shadow-soft backdrop-blur-md"
+          : "border-b border-canopy-leaf-light/10 bg-canopy-forest/85 shadow-soft backdrop-blur-md"
       }`}
-      animate={{
-        backgroundColor: transparent
-          ? "rgba(252, 248, 244, 0)"
-          : "rgba(252, 248, 244, 0.9)",
-      }}
-      transition={{ duration: 0.35 }}
-      style={{
-        paddingTop: "env(safe-area-inset-top, 0px)",
-        ["--header-offset"]: transparent
-          ? "calc(env(safe-area-inset-top, 0px) + 4.5rem)"
-          : "calc(env(safe-area-inset-top, 0px) + 3.75rem)",
-      }}
+      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
-      {!transparent && (
-        <div className="absolute top-0 right-0 left-0 h-0.5 bg-farm-accent-light">
-          <div
-            className="h-full bg-farm-accent transition-[width] duration-150"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-      )}
-
       <div
         className={`container-farm flex items-center justify-between gap-3 ${
           transparent ? "h-[4.5rem]" : "h-[3.75rem]"
         }`}
       >
-        <Link href="/" className={`focus-ring group flex items-center gap-2.5 ${textClass}`}>
-          <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full shadow-soft transition group-hover:rotate-12">
+        <Link href="/" className="focus-ring group flex items-center gap-2.5">
+          <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full shadow-soft ring-2 ring-canopy-leaf/40 transition group-hover:rotate-12">
             <Image src="/images/logo.png" alt="Maran Farms" fill className="object-cover" sizes="40px" />
           </span>
-          <span className="font-heading text-lg tracking-tight sm:text-xl">
+          <span className="font-heading flex items-center gap-1.5 text-lg tracking-tight sm:text-xl">
+            <Leaf className="size-4 text-canopy-leaf-light animate-canopy-drift" />
             Maran Farms
           </span>
         </Link>
 
-        <nav className={`hidden items-center gap-8 md:flex ${textClass}`}>
-          <Link
-            href="/"
-            className={`focus-ring relative py-1 text-sm font-medium after:absolute after:right-0 after:bottom-0 after:left-0 after:h-0.5 after:origin-left after:bg-current after:transition after:content-[''] ${
-              isHome ? "after:scale-x-100" : "after:scale-x-0 hover:after:scale-x-100"
-            }`}
-          >
+        <nav className="hidden items-center gap-8 md:flex">
+          <Link href="/" className="focus-ring py-1 text-sm font-medium">
             Home
           </Link>
           <div className="relative" ref={catalogRef}>
@@ -315,39 +265,28 @@ export function Header({ categories = [] }) {
               onClick={() => setCatalogOpen((o) => !o)}
             >
               Our Catalog
-              <ChevronDown
-                className={`size-4 transition ${catalogOpen ? "rotate-180" : ""}`}
-              />
+              <ChevronDown className={`size-4 transition ${catalogOpen ? "rotate-180" : ""}`} />
             </button>
             {catalogOpen && (
               <motion.div
                 initial={motionAllowed ? { opacity: 0, y: -8 } : false}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.22 }}
-                className="absolute top-full left-1/2 z-50 mt-3 w-72 -translate-x-1/2 rounded-3xl border border-farm-green-dark/8 bg-farm-cream p-2 shadow-elevated"
+                className="absolute top-full left-1/2 z-50 mt-3 w-72 -translate-x-1/2 rounded-3xl border border-canopy-leaf-light/20 bg-canopy-deep p-2 shadow-elevated"
               >
-                <p className="px-4 pt-2 pb-1 text-eyebrow text-farm-sage">
-                  Categories
-                </p>
-                {categories.map((cat) => {
-                  const active = pathname === `/category/${cat.slug}`;
-                  return (
-                    <Link
-                      key={cat.id}
-                      href={`/category/${cat.slug}`}
-                      className={`focus-ring block rounded-2xl px-4 py-3 transition hover:bg-farm-accent-light ${
-                        active ? "bg-farm-accent-light" : ""
-                      }`}
-                    >
-                      <span className="block font-medium text-farm-green-dark">
-                        {cat.name}
-                      </span>
-                      <span className="text-xs text-farm-accent" lang="ta">
-                        {cat.tamilName}
-                      </span>
-                    </Link>
-                  );
-                })}
+                <p className="px-4 pt-2 pb-1 text-eyebrow text-canopy-leaf-light">Categories</p>
+                {categories.map((cat) => (
+                  <Link
+                    key={cat.id}
+                    href={`/category/${cat.slug}`}
+                    className="focus-ring block rounded-2xl px-4 py-3 transition hover:bg-canopy-moss/30"
+                  >
+                    <span className="block font-medium text-canopy-mist">{cat.name}</span>
+                    <span className="text-xs text-canopy-gold-light" lang="ta">
+                      {cat.tamilName}
+                    </span>
+                  </Link>
+                ))}
               </motion.div>
             )}
           </div>
@@ -357,31 +296,19 @@ export function Header({ categories = [] }) {
           <motion.button
             type="button"
             onClick={() => setOrderDrawerOpen(true)}
-            animate={
-              cartPulse && motionAllowed
-                ? { scale: [1, 1.08, 1], y: [0, -2, 0] }
-                : { scale: 1 }
-            }
+            animate={cartPulse && motionAllowed ? { scale: [1, 1.08, 1], y: [0, -2, 0] } : { scale: 1 }}
             transition={{ duration: 0.4 }}
             className={`focus-ring inline-flex h-11 items-center gap-2 rounded-full px-3 text-sm font-semibold sm:px-4 ${
-              itemCount > 0
-                ? "bg-farm-accent text-white"
-                : transparent
-                  ? "bg-white/15 text-white backdrop-blur-sm"
-                  : "bg-farm-green/8 text-farm-green"
+              itemCount > 0 ? "bg-canopy-gold text-canopy-forest" : "bg-canopy-moss/40 text-canopy-mist"
             }`}
           >
             <ShoppingBag className="size-4" />
             <span className="tabular-nums">{hydrated ? itemCount : 0}</span>
-            <span className="hidden min-[400px]:inline">
-              Item{itemCount === 1 ? "" : "s"}
-            </span>
+            <span className="hidden min-[400px]:inline">Item{itemCount === 1 ? "" : "s"}</span>
             {itemCount > 0 && (
               <>
                 <span className="hidden h-4 w-px bg-current/30 sm:block" />
-                <span className="hidden tabular-nums sm:inline">
-                  {formatPrice(total)}
-                </span>
+                <span className="hidden tabular-nums sm:inline">{formatPrice(total)}</span>
               </>
             )}
           </motion.button>
@@ -390,20 +317,20 @@ export function Header({ categories = [] }) {
             href={getGenericInquiryUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="focus-ring hidden h-11 items-center rounded-full bg-farm-green px-5 text-button font-semibold text-farm-green-light transition hover:bg-farm-green-dark md:inline-flex"
+            className="focus-ring hidden h-11 items-center rounded-full bg-canopy-leaf px-5 text-button font-semibold text-canopy-forest transition hover:bg-canopy-leaf-light md:inline-flex"
           >
             WhatsApp Booking
           </a>
 
-          <AccountMenu textClass={textClass} />
+          <AccountMenuCanopy />
 
           <div className="hidden md:block">
-            <ThemeSwitcher variant="classic" />
+            <ThemeSwitcher variant="canopy" />
           </div>
 
           <button
             type="button"
-            className={`focus-ring flex size-11 items-center justify-center rounded-full md:hidden ${textClass}`}
+            className="focus-ring flex size-11 items-center justify-center rounded-full md:hidden"
             aria-label={mobileOpen ? "Close menu" : "Open menu"}
             onClick={() => setMobileOpen((o) => !o)}
           >
@@ -412,48 +339,40 @@ export function Header({ categories = [] }) {
         </div>
       </div>
 
-      <Drawer
-        open={mobileOpen}
-        onClose={() => setMobileOpen(false)}
-        placement="right"
-      >
-        <div className="flex items-center justify-between border-b border-farm-green-dark/8 px-5 py-4">
-          <span className="font-heading text-lg text-farm-green-dark">
-            Menu
-          </span>
+      <Drawer open={mobileOpen} onClose={() => setMobileOpen(false)} placement="right">
+        <div className="flex items-center justify-between border-b border-canopy-leaf-light/15 bg-canopy-deep px-5 py-4">
+          <span className="font-heading text-lg text-canopy-mist">Menu</span>
           <button
             type="button"
             aria-label="Close menu"
-            className="focus-ring flex size-11 items-center justify-center rounded-full text-farm-green hover:bg-farm-accent-light"
+            className="focus-ring flex size-11 items-center justify-center rounded-full text-canopy-mist hover:bg-canopy-moss/30"
             onClick={() => setMobileOpen(false)}
           >
             <X className="size-5" />
           </button>
         </div>
-        <div className="flex flex-1 flex-col space-y-1 overflow-y-auto p-4">
+        <div className="flex flex-1 flex-col space-y-1 overflow-y-auto bg-canopy-deep p-4">
           <div className="mb-2">
-            <ThemeSwitcher variant="classic" />
+            <ThemeSwitcher variant="canopy" />
           </div>
-          <MobileAccountLinks onNavigate={() => setMobileOpen(false)} />
+          <MobileAccountLinksCanopy onNavigate={() => setMobileOpen(false)} />
           <Link
             href="/"
-            className="focus-ring block rounded-2xl px-4 py-3 font-medium text-farm-green-dark hover:bg-farm-accent-light"
+            className="focus-ring block rounded-2xl px-4 py-3 font-medium text-canopy-mist hover:bg-canopy-moss/30"
             onClick={() => setMobileOpen(false)}
           >
             Home
           </Link>
-          <p className="text-eyebrow px-4 pt-3 pb-1 text-farm-green">Categories</p>
+          <p className="text-eyebrow px-4 pt-3 pb-1 text-canopy-leaf-light">Categories</p>
           {categories.map((cat) => (
             <Link
               key={cat.id}
               href={`/category/${cat.slug}`}
-              className="focus-ring block rounded-2xl px-4 py-3 hover:bg-farm-accent-light"
+              className="focus-ring block rounded-2xl px-4 py-3 text-canopy-mist hover:bg-canopy-moss/30"
               onClick={() => setMobileOpen(false)}
             >
-              <span className="block font-medium text-farm-green-dark">
-                {cat.name}
-              </span>
-              <span className="text-xs text-farm-accent" lang="ta">
+              <span className="block font-medium">{cat.name}</span>
+              <span className="text-xs text-canopy-gold-light" lang="ta">
                 {cat.tamilName}
               </span>
             </Link>
@@ -462,7 +381,7 @@ export function Header({ categories = [] }) {
             href={getGenericInquiryUrl()}
             target="_blank"
             rel="noopener noreferrer"
-            className="focus-ring mt-auto flex h-12 w-full items-center justify-center rounded-full bg-farm-green text-button font-semibold text-farm-green-light"
+            className="focus-ring mt-auto flex h-12 w-full items-center justify-center rounded-full bg-canopy-leaf text-button font-semibold text-canopy-forest"
             onClick={() => setMobileOpen(false)}
           >
             WhatsApp Order
