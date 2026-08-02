@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/require-admin";
-import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const FIELD_MAP = {
   slug: "slug",
@@ -28,7 +28,7 @@ export async function PATCH(request, { params }) {
     if (body[key] !== undefined) update[column] = body[key];
   }
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
   const { data, error } = await supabase
     .from("categories")
     .update(update)
@@ -49,7 +49,7 @@ export async function DELETE(_request, { params }) {
   if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
 
   // products.category_id references categories(id) on delete restrict —
   // Postgres will reject this if products still exist for the category.

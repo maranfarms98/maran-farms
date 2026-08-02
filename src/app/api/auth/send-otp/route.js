@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const ADMIN_PHONE = "9600267271";
 const ADMIN_OTP = "1122";
@@ -16,7 +16,7 @@ export async function POST(request) {
     );
   }
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
 
   const { data: existing } = await supabase
     .from("otp_codes")

@@ -19,6 +19,7 @@ function mapCategory(row) {
 
 export async function getAllCategories() {
   const supabase = getSupabaseServerClient();
+  if (!supabase) return [];
   const { data, error } = await supabase
     .from("categories")
     .select("*")
@@ -32,6 +33,7 @@ export async function getAllCategories() {
 
 export async function getCategoryBySlug(slug) {
   const supabase = getSupabaseServerClient();
+  if (!supabase) return null;
   const { data, error } = await supabase
     .from("categories")
     .select("*")
@@ -46,6 +48,7 @@ export async function getCategoryBySlug(slug) {
 
 export async function getCategoryById(id) {
   const supabase = getSupabaseServerClient();
+  if (!supabase) return null;
   const { data, error } = await supabase
     .from("categories")
     .select("*")

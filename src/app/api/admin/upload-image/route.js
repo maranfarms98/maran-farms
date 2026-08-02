@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { requireAdmin } from "@/lib/auth/require-admin";
-import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const MAX_SIZE = 5 * 1024 * 1024; // 5MB
 const BUCKET = "product-images";
@@ -26,7 +26,7 @@ export async function POST(request) {
   const ext = file.name?.split(".").pop() || "jpg";
   const filename = `${crypto.randomUUID()}.${ext}`;
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
   const buffer = Buffer.from(await file.arrayBuffer());
 
   const { error } = await supabase.storage

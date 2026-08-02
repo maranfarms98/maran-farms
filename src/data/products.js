@@ -28,6 +28,7 @@ function mapProduct(row) {
 
 export async function getProductById(id) {
   const supabase = getSupabaseServerClient();
+  if (!supabase) return null;
   const { data, error } = await supabase
     .from("products")
     .select(PRODUCT_SELECT)
@@ -42,6 +43,7 @@ export async function getProductById(id) {
 
 export async function getProductsByCategory(categoryId) {
   const supabase = getSupabaseServerClient();
+  if (!supabase) return [];
   const { data, error } = await supabase
     .from("products")
     .select(PRODUCT_SELECT)
@@ -56,6 +58,7 @@ export async function getProductsByCategory(categoryId) {
 
 export async function getFeaturedProducts() {
   const supabase = getSupabaseServerClient();
+  if (!supabase) return [];
   const { data, error } = await supabase
     .from("products")
     .select(PRODUCT_SELECT)
@@ -70,6 +73,7 @@ export async function getFeaturedProducts() {
 
 export async function getRelatedProducts(product, limit = 3) {
   const supabase = getSupabaseServerClient();
+  if (!supabase) return [];
   const { data, error } = await supabase
     .from("products")
     .select(PRODUCT_SELECT)

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { verifySession, SESSION_COOKIE_NAME } from "@/lib/auth/session";
-import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export async function GET() {
   const cookieStore = await cookies();
@@ -12,7 +12,7 @@ export async function GET() {
     return NextResponse.json({ error: "Please sign in" }, { status: 401 });
   }
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
   const { data, error } = await supabase
     .from("orders")
     .select("*")

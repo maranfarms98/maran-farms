@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
-import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 import { signSession, SESSION_COOKIE_NAME, sessionCookieOptions } from "@/lib/auth/session";
 
 const ADMIN_PHONE = "9600267271";
@@ -15,7 +15,7 @@ export async function POST(request) {
     );
   }
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
 
   const { data: existingProfile } = await supabase
     .from("profiles")

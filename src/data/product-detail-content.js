@@ -4,6 +4,7 @@ const EMPTY_CONTENT = { specs: [], care: [], origin: [], faqs: [] };
 
 export async function getDetailContent(categoryId) {
   const supabase = getSupabaseServerClient();
+  if (!supabase) return EMPTY_CONTENT;
   const { data, error } = await supabase
     .from("category_content")
     .select("*")

@@ -3,8 +3,23 @@ import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const REVENUE_STATUSES = ["paid", "shipped", "delivered"];
 
+const EMPTY_ANALYTICS = {
+  revenue: 0,
+  orderCount: 0,
+  aov: 0,
+  trend: [],
+  topProducts: [],
+  revenueByCategory: [],
+  statusBreakdown: [],
+  newCustomers: 0,
+  returningCustomers: 0,
+  topCustomers: [],
+  totalCustomers: 0,
+};
+
 export async function getAnalytics() {
   const supabase = getSupabaseAdminClient();
+  if (!supabase) return EMPTY_ANALYTICS;
 
   const [{ data: orders }, { data: products }, { data: profiles }] = await Promise.all([
     supabase

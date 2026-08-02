@@ -11,6 +11,18 @@ export default async function AdminOrdersPage({ searchParams }) {
   const search = params?.search || "";
 
   const supabase = getSupabaseAdminClient();
+  if (!supabase) {
+    return (
+      <div>
+        <h1 className="font-heading text-3xl text-farm-green-dark">Orders</h1>
+        <p className="mt-4 text-sm text-farm-sage">
+          Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and
+          SUPABASE_SERVICE_ROLE_KEY in the deployment environment.
+        </p>
+      </div>
+    );
+  }
+
   let query = supabase
     .from("orders")
     .select("*", { count: "exact" })

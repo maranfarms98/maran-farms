@@ -5,6 +5,17 @@ const REVENUE_STATUSES = ["paid", "shipped", "delivered"];
 
 export default async function AdminCustomersPage() {
   const supabase = getSupabaseAdminClient();
+  if (!supabase) {
+    return (
+      <div>
+        <h1 className="font-heading text-3xl text-farm-green-dark">Customers</h1>
+        <p className="mt-4 text-sm text-farm-sage">
+          Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and
+          SUPABASE_SERVICE_ROLE_KEY in the deployment environment.
+        </p>
+      </div>
+    );
+  }
 
   const [{ data: profiles }, { data: orders }] = await Promise.all([
     supabase.from("profiles").select("*").order("created_at", { ascending: false }),

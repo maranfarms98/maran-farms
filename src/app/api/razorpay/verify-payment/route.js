@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import crypto from "crypto";
 import { cookies } from "next/headers";
 import { verifySession, SESSION_COOKIE_NAME } from "@/lib/auth/session";
-import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(request) {
   const cookieStore = await cookies();
@@ -35,7 +35,7 @@ export async function POST(request) {
     );
   }
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
 
   const { data: order, error: fetchError } = await supabase
     .from("orders")

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { verifySession, SESSION_COOKIE_NAME } from "@/lib/auth/session";
-import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 
 async function getSession() {
   const cookieStore = await cookies();
@@ -13,7 +13,7 @@ export async function GET() {
   const session = await getSession();
   if (!session) return NextResponse.json({ favorites: [] });
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
   const { data, error } = await supabase
     .from("favorites")
     .select("product_id")
@@ -34,7 +34,7 @@ export async function POST(request) {
   const { productId } = await request.json();
   if (!productId) return NextResponse.json({ error: "productId required" }, { status: 400 });
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
   const { error } = await supabase
     .from("favorites")
     .upsert({ profile_id: session.id, product_id: productId });
@@ -54,7 +54,7 @@ export async function DELETE(request) {
   const { productId } = await request.json();
   if (!productId) return NextResponse.json({ error: "productId required" }, { status: 400 });
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
   const { error } = await supabase
     .from("favorites")
     .delete()

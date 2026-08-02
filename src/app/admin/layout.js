@@ -13,6 +13,9 @@ import {
 import { verifySession, SESSION_COOKIE_NAME } from "@/lib/auth/session";
 import { AdminLogoutButton } from "@/app/admin/logout-button";
 
+// Admin reads cookies + Supabase; never statically prerender without env.
+export const dynamic = "force-dynamic";
+
 const NAV = [
   { href: "/admin", label: "Overview", icon: LayoutDashboard },
   { href: "/admin/orders", label: "Orders", icon: ListOrdered },

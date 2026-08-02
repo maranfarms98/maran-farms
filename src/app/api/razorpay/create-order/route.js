@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import Razorpay from "razorpay";
 import { verifySession, SESSION_COOKIE_NAME } from "@/lib/auth/session";
-import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export async function POST(request) {
   const cookieStore = await cookies();
@@ -22,7 +22,7 @@ export async function POST(request) {
     );
   }
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
 
   // Re-fetch authoritative prices/stock — never trust client-submitted totals.
   const productIds = items.map((i) => i.productId);

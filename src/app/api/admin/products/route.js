@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/require-admin";
-import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export async function GET(request) {
   const admin = await requireAdmin();
@@ -11,7 +11,7 @@ export async function GET(request) {
   const pageSize = 25;
   const from = (page - 1) * pageSize;
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
   const { data, count, error } = await supabase
     .from("products")
     .select("*, category:categories(name)", { count: "exact" })
@@ -40,7 +40,7 @@ export async function POST(request) {
     );
   }
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
   const { data, error } = await supabase
     .from("products")
     .insert({

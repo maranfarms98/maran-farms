@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/require-admin";
-import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const VALID_STATUSES = ["pending", "paid", "shipped", "delivered", "cancelled"];
 
@@ -17,7 +17,7 @@ export async function PATCH(request, { params }) {
     return NextResponse.json({ error: "Invalid status" }, { status: 400 });
   }
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
   const { data, error } = await supabase
     .from("orders")
     .update({ status })

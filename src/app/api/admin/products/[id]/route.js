@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/require-admin";
-import { getSupabaseAdminClient } from "@/lib/supabase/admin";
+import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 
 const FIELD_MAP = {
   name: "name",
@@ -32,7 +32,7 @@ export async function PATCH(request, { params }) {
   }
   update.updated_at = new Date().toISOString();
 
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
   const { data, error } = await supabase
     .from("products")
     .update(update)
@@ -53,7 +53,7 @@ export async function DELETE(_request, { params }) {
   if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const { id } = await params;
-  const supabase = getSupabaseAdminClient();
+  const supabase = requireSupabaseAdminClient();
   const { error } = await supabase.from("products").delete().eq("id", id);
 
   if (error) {
