@@ -32,23 +32,6 @@ const TABS = [
   { id: "origin", label: "Farm Origin & packaging" },
 ];
 
-const THUMB_FALLBACKS = {
-  napier: [
-    "/images/product-napier.png",
-    "/images/product-red-napier.png",
-    "/images/category-napier.png",
-  ],
-  chicks: [
-    "/images/product-chick.png",
-    "/images/product-bird.png",
-    "/images/category-chicks.png",
-  ],
-  pets: [
-    "/images/product-rabbit.png",
-    "/images/category-pets.png",
-  ],
-};
-
 export function ProductPageClient({ product, category, related, content }) {
   const { getQuantity, setQuantity, addItem, setOrderDrawerOpen } = useCart();
   const { toast } = useToast();
@@ -60,11 +43,10 @@ export function ProductPageClient({ product, category, related, content }) {
   const [tab, setTab] = useState("specs");
   const [activeImage, setActiveImage] = useState(product.image);
 
+  // Catalog uses a single Storage/DB image today; thumbs appear only if more are added later.
   const thumbs = useMemo(() => {
-    const pool = THUMB_FALLBACKS[product.categoryId] || THUMB_FALLBACKS.napier;
-    const unique = [product.image, ...pool.filter((p) => p !== product.image)];
-    return unique.slice(0, 3);
-  }, [product]);
+    return product.image ? [product.image] : [];
+  }, [product.image]);
 
   const inCart = cartQty > 0;
   const lineTotal = product.price * qty;
@@ -117,22 +99,24 @@ export function ProductPageClient({ product, category, related, content }) {
               )}
             </div>
           </div>
-          <div className="mt-3 grid grid-cols-3 gap-2 md:gap-3">
-            {thumbs.map((src) => (
-              <button
-                key={src}
-                type="button"
-                onClick={() => setActiveImage(src)}
-                className={`focus-ring relative aspect-square overflow-hidden ${
-                  activeImage === src
-                    ? "ring-2 ring-farm-accent"
-                    : "opacity-80 hover:opacity-100"
-                }`}
-              >
-                <Image src={src} alt="" fill className="object-cover" sizes="120px" />
-              </button>
-            ))}
-          </div>
+          {thumbs.length > 1 && (
+            <div className="mt-3 grid grid-cols-3 gap-2 md:gap-3">
+              {thumbs.map((src) => (
+                <button
+                  key={src}
+                  type="button"
+                  onClick={() => setActiveImage(src)}
+                  className={`focus-ring relative aspect-square overflow-hidden ${
+                    activeImage === src
+                      ? "ring-2 ring-farm-accent"
+                      : "opacity-80 hover:opacity-100"
+                  }`}
+                >
+                  <Image src={src} alt="" fill className="object-cover" sizes="120px" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="lg:col-span-6">

@@ -9,30 +9,6 @@ import { TamilCaption } from "@/components/ui/tamil-caption";
 import { MotionReveal } from "@/components/motion/motion-reveal";
 import { useMotionAllowed } from "@/components/motion/motion-provider";
 
-const FALLBACK_PATHS = [
-  {
-    slug: "napier",
-    name: "Napier Grass",
-    tamilName: "நேப்பியர் புல்",
-    image: "/images/category-napier.png",
-    line: "Dense, nutrient-rich fodder grown for yield.",
-  },
-  {
-    slug: "chicks",
-    name: "Farm Chicks",
-    tamilName: "பண்ணை குஞ்சுகள்",
-    image: "/images/category-chicks.png",
-    line: "Healthy day-olds, ready for your flock.",
-  },
-  {
-    slug: "pets",
-    name: "Small Pets",
-    tamilName: "செல்லப்பிராணிகள்",
-    image: "/images/category-pets.png",
-    line: "Gentle companions raised with care.",
-  },
-];
-
 function shortLine(description, fallback) {
   if (!description) return fallback;
   const first = description.split(".")[0]?.trim() || description.trim();
@@ -41,14 +17,17 @@ function shortLine(description, fallback) {
 }
 
 function toPaths(categories) {
-  if (!categories?.length) return FALLBACK_PATHS;
-  return categories.slice(0, 3).map((cat, i) => ({
-    slug: cat.slug,
-    name: cat.name,
-    tamilName: cat.tamilName,
-    image: cat.heroImage || cat.image || FALLBACK_PATHS[i]?.image,
-    line: shortLine(cat.description, FALLBACK_PATHS[i]?.line || "View products"),
-  }));
+  if (!categories?.length) return [];
+  return categories
+    .slice(0, 3)
+    .map((cat) => ({
+      slug: cat.slug,
+      name: cat.name,
+      tamilName: cat.tamilName,
+      image: cat.heroImage || cat.image || null,
+      line: shortLine(cat.description, "View products"),
+    }))
+    .filter((path) => path.image);
 }
 
 function PathPanel({ path, isActive, showDivider, motionAllowed, onActivate }) {
@@ -131,6 +110,8 @@ export function HarvestPaths({ categories = [] }) {
   const motionAllowed = useMotionAllowed();
   const [active, setActive] = useState(0);
 
+  if (!paths.length) return null;
+
   return (
     <section
       id="harvest-paths"
@@ -204,8 +185,6 @@ export function HarvestPaths({ categories = [] }) {
           </Link>
         ))}
       </div>
-
-      <div className="h-10 bg-farm-warm [clip-path:ellipse(60%_100%_at_50%_100%)]" />
     </section>
   );
 }

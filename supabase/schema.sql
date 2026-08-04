@@ -109,8 +109,12 @@ alter table otp_codes enable row level security;       -- no public policies —
 alter table orders enable row level security;          -- no public policies — service role only
 alter table favorites enable row level security;       -- no public policies — service role only
 
--- Storage: run this after creating a "product-images" bucket (Storage → New bucket → public)
--- via the Supabase dashboard UI (bucket creation isn't reliably scriptable in SQL across
--- versions), then writes are restricted to the service role by default (no INSERT/UPDATE/
--- DELETE storage policies for anon/authenticated roles are created here, so browser uploads
--- are blocked; only our server routes using the service-role key can write).
+-- Storage: create a public bucket named "product-images" in the dashboard
+-- (Storage → New bucket → Public). Object layout used by the app:
+--   products/{filename}   — catalog product images
+--   categories/{filename} — category / hero images
+-- Local seed/migrate sources live in scripts/catalog-images/ (not public/).
+-- Brand assets (logo, hero, Journey videos) stay in public/images/.
+-- Do not add anon/authenticated INSERT/UPDATE/DELETE policies — uploads go only
+-- through Next.js admin API routes using the service-role key. Public read is enough
+-- for storefront next/image (configure remotePatterns from NEXT_PUBLIC_SUPABASE_URL).

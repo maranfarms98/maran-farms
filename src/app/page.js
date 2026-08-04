@@ -21,7 +21,7 @@ export default async function HomePage() {
       <FeaturedProducts products={featuredProducts} />
       <TrustDashboard />
       <Testimonials />
-      <WhatsAppSection />
+      <WhatsAppSection demoImage={featuredProducts[0]?.image} />
       <InstagramSection />
     </>
   );

@@ -25,6 +25,7 @@ export default function AdminCategoriesPage() {
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
+  const [uploadingField, setUploadingField] = useState(null);
   const [error, setError] = useState("");
 
   const load = useCallback(async () => {
@@ -62,6 +63,25 @@ export default function AdminCategoriesPage() {
     });
     setError("");
     setFormOpen(true);
+  };
+
+  const handleUpload = async (e, field) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setUploadingField(field);
+    setError("");
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("folder", "categories");
+      const res = await fetch("/api/admin/upload-image", { method: "POST", body: fd });
+      const data = await res.json();
+      if (!res.ok) return setError(data.error || "Upload failed");
+      setForm((f) => ({ ...f, [field]: data.url }));
+    } finally {
+      setUploadingField(null);
+      e.target.value = "";
+    }
   };
 
   const handleSave = async () => {
@@ -166,18 +186,6 @@ export default function AdminCategoriesPage() {
               onChange={(e) => setForm({ ...form, minOrderUnit: e.target.value })}
               className="h-11 w-full min-w-0 rounded-xl border border-farm-green-dark/15 bg-white px-3 text-sm"
             />
-            <input
-              placeholder="Image path/URL"
-              value={form.image}
-              onChange={(e) => setForm({ ...form, image: e.target.value })}
-              className="h-11 w-full min-w-0 rounded-xl border border-farm-green-dark/15 bg-white px-3 text-sm"
-            />
-            <input
-              placeholder="Hero image path/URL"
-              value={form.heroImage}
-              onChange={(e) => setForm({ ...form, heroImage: e.target.value })}
-              className="h-11 w-full min-w-0 rounded-xl border border-farm-green-dark/15 bg-white px-3 text-sm"
-            />
             <textarea
               placeholder="Description"
               value={form.description}
@@ -190,6 +198,46 @@ export default function AdminCategoriesPage() {
               onChange={(e) => setForm({ ...form, tamilDescription: e.target.value })}
               className="h-11 rounded-xl border border-farm-green-dark/15 bg-white px-3 py-2 text-sm md:col-span-2"
             />
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-farm-green-dark">
+                Category Image
+              </label>
+              <div className="flex items-center gap-3">
+                {form.image && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={form.image} alt="" className="size-16 rounded-xl object-cover" />
+                )}
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/avif"
+                  onChange={(e) => handleUpload(e, "image")}
+                  disabled={Boolean(uploadingField)}
+                />
+                {uploadingField === "image" && (
+                  <span className="text-xs text-farm-sage">Uploading…</span>
+                )}
+              </div>
+            </div>
+            <div>
+              <label className="mb-1.5 block text-sm font-medium text-farm-green-dark">
+                Hero Image
+              </label>
+              <div className="flex items-center gap-3">
+                {form.heroImage && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img src={form.heroImage} alt="" className="size-16 rounded-xl object-cover" />
+                )}
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/avif"
+                  onChange={(e) => handleUpload(e, "heroImage")}
+                  disabled={Boolean(uploadingField)}
+                />
+                {uploadingField === "heroImage" && (
+                  <span className="text-xs text-farm-sage">Uploading…</span>
+                )}
+              </div>
+            </div>
           </div>
           {error && (
             <p className="mt-3 rounded-xl bg-farm-accent/10 px-3 py-2 text-sm text-farm-accent-dark">

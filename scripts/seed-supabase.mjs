@@ -1,30 +1,16 @@
-// One-time migration: populates Supabase from the original static data files.
-// Run with: node scripts/seed-supabase.mjs
+// One-time / re-runnable seed: populates Supabase from catalog data.
+// Catalog images live in scripts/catalog-images/ and are uploaded to the
+// public product-images Storage bucket before rows are upserted.
+//
+// Run with: npm run seed
 // Requires NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env.local
 
 import { createClient } from "@supabase/supabase-js";
-import { readFileSync } from "fs";
-import { fileURLToPath } from "url";
-import { dirname, join } from "path";
+import {
+  createCatalogUploader,
+  loadEnvLocal,
+} from "./lib/catalog-storage.mjs";
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-function loadEnvLocal() {
-  try {
-    const raw = readFileSync(join(__dirname, "..", ".env.local"), "utf-8");
-    for (const line of raw.split("\n")) {
-      const trimmed = line.trim();
-      if (!trimmed || trimmed.startsWith("#")) continue;
-      const eq = trimmed.indexOf("=");
-      if (eq === -1) continue;
-      const key = trimmed.slice(0, eq).trim();
-      const value = trimmed.slice(eq + 1).trim();
-      if (!process.env[key]) process.env[key] = value;
-    }
-  } catch {
-    /* no .env.local, rely on real env vars */
-  }
-}
 loadEnvLocal();
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -38,6 +24,7 @@ if (!supabaseUrl || !serviceKey) {
 }
 
 const supabase = createClient(supabaseUrl, serviceKey);
+const upload = createCatalogUploader(supabase);
 
 const categories = [
   {
@@ -217,12 +204,31 @@ const categoryContent = {
 };
 
 async function main() {
+  console.log("Uploading category images to Storage...");
+  const categoryRows = [];
+  for (const cat of categories) {
+    categoryRows.push({
+      ...cat,
+      image: (await upload(cat.image, "categories")) || cat.image,
+      hero_image: (await upload(cat.hero_image, "categories")) || cat.hero_image,
+    });
+  }
+
+  console.log("Uploading product images to Storage...");
+  const productRows = [];
+  for (const product of products) {
+    productRows.push({
+      ...product,
+      image: (await upload(product.image, "products")) || product.image,
+    });
+  }
+
   console.log("Seeding categories...");
-  const { error: catError } = await supabase.from("categories").upsert(categories);
+  const { error: catError } = await supabase.from("categories").upsert(categoryRows);
   if (catError) throw catError;
 
   console.log("Seeding products...");
-  const { error: prodError } = await supabase.from("products").upsert(products);
+  const { error: prodError } = await supabase.from("products").upsert(productRows);
   if (prodError) throw prodError;
 
   console.log("Seeding category content...");
@@ -237,7 +243,7 @@ async function main() {
   if (contentError) throw contentError;
 
   console.log(
-    `Done. Seeded ${categories.length} categories, ${products.length} products, ${contentRows.length} content rows.`,
+    `Done. Seeded ${categoryRows.length} categories, ${productRows.length} products, ${contentRows.length} content rows.`,
   );
 }
 

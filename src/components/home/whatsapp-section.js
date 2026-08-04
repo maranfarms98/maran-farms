@@ -27,10 +27,11 @@ const MESSAGES = [
   { from: "user", text: "Perfect — booking confirmed. Thank you!" },
 ];
 
-export function WhatsAppSection() {
+export function WhatsAppSection({ demoImage }) {
   const motionAllowed = useMotionAllowed();
   const sectionRef = useRef(null);
   const inView = useInView(sectionRef, { once: true, amount: 0.25 });
+  const messages = demoImage ? MESSAGES : MESSAGES.filter((m) => !m.image);
 
   return (
     <section
@@ -120,7 +121,7 @@ export function WhatsAppSection() {
                 Messages are end-to-end simulated for demo. Real orders open in
                 WhatsApp.
               </div>
-              {MESSAGES.map((m, i) => {
+              {messages.map((m, i) => {
                 const show = !motionAllowed || inView;
                 return (
                   <motion.div
@@ -144,7 +145,7 @@ export function WhatsAppSection() {
                     {m.image ? (
                       <div className="relative mb-1 aspect-video w-40 overflow-hidden rounded-lg">
                         <Image
-                          src="/images/product-napier.png"
+                          src={demoImage}
                           alt="Harvest photo"
                           fill
                           className="object-cover"

@@ -86,15 +86,18 @@ export default function AdminProductsPage() {
     const file = e.target.files?.[0];
     if (!file) return;
     setUploading(true);
+    setError("");
     try {
       const fd = new FormData();
       fd.append("file", file);
+      fd.append("folder", "products");
       const res = await fetch("/api/admin/upload-image", { method: "POST", body: fd });
       const data = await res.json();
       if (!res.ok) return setError(data.error || "Upload failed");
       setForm((f) => ({ ...f, image: data.url }));
     } finally {
       setUploading(false);
+      e.target.value = "";
     }
   };
 
@@ -267,7 +270,12 @@ export default function AdminProductsPage() {
                   // eslint-disable-next-line @next/next/no-img-element
                   <img src={form.image} alt="" className="size-16 rounded-xl object-cover" />
                 )}
-                <input type="file" accept="image/*" onChange={handleUpload} disabled={uploading} />
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp,image/avif"
+                  onChange={handleUpload}
+                  disabled={uploading}
+                />
                 {uploading && <span className="text-xs text-farm-sage">Uploading…</span>}
               </div>
             </div>

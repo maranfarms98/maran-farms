@@ -3,6 +3,18 @@ import { fileURLToPath } from "url";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
+function supabaseImageHost() {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!url) return null;
+  try {
+    return new URL(url).hostname;
+  } catch {
+    return null;
+  }
+}
+
+const supabaseHost = supabaseImageHost();
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactCompiler: true,
@@ -11,6 +23,15 @@ const nextConfig = {
   allowedDevOrigins: ["192.168.*.*", "127.0.0.1"],
   images: {
     qualities: [75, 90, 95, 100],
+    remotePatterns: supabaseHost
+      ? [
+          {
+            protocol: "https",
+            hostname: supabaseHost,
+            pathname: "/storage/v1/object/public/**",
+          },
+        ]
+      : [],
   },
   turbopack: {
     // Absolute project root — avoids picking up /Users/arun/package-lock.json

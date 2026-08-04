@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
+import { deleteStorageObject, replaceStorageObject } from "@/lib/supabase/storage";
 
 const FIELD_MAP = {
   slug: "slug",
@@ -29,6 +30,17 @@ export async function PATCH(request, { params }) {
   }
 
   const supabase = requireSupabaseAdminClient();
+
+  let previous = null;
+  if (body.image !== undefined || body.heroImage !== undefined) {
+    const { data: existing } = await supabase
+      .from("categories")
+      .select("image, hero_image")
+      .eq("id", id)
+      .maybeSingle();
+    previous = existing;
+  }
+
   const { data, error } = await supabase
     .from("categories")
     .update(update)
@@ -41,6 +53,13 @@ export async function PATCH(request, { params }) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  if (body.image !== undefined) {
+    await replaceStorageObject(previous?.image, body.image);
+  }
+  if (body.heroImage !== undefined) {
+    await replaceStorageObject(previous?.hero_image, body.heroImage);
+  }
+
   return NextResponse.json({ category: data });
 }
 
@@ -50,6 +69,12 @@ export async function DELETE(_request, { params }) {
 
   const { id } = await params;
   const supabase = requireSupabaseAdminClient();
+
+  const { data: existing } = await supabase
+    .from("categories")
+    .select("image, hero_image")
+    .eq("id", id)
+    .maybeSingle();
 
   // products.category_id references categories(id) on delete restrict —
   // Postgres will reject this if products still exist for the category.
@@ -62,6 +87,9 @@ export async function DELETE(_request, { params }) {
       { status: 409 },
     );
   }
+
+  await deleteStorageObject(existing?.image);
+  await deleteStorageObject(existing?.hero_image);
 
   return NextResponse.json({ success: true });
 }

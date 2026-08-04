@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/auth/require-admin";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
+import { deleteStorageObject, replaceStorageObject } from "@/lib/supabase/storage";
 
 const FIELD_MAP = {
   name: "name",
@@ -33,6 +34,17 @@ export async function PATCH(request, { params }) {
   update.updated_at = new Date().toISOString();
 
   const supabase = requireSupabaseAdminClient();
+
+  let previousImage = null;
+  if (body.image !== undefined) {
+    const { data: existing } = await supabase
+      .from("products")
+      .select("image")
+      .eq("id", id)
+      .maybeSingle();
+    previousImage = existing?.image ?? null;
+  }
+
   const { data, error } = await supabase
     .from("products")
     .update(update)
@@ -45,6 +57,10 @@ export async function PATCH(request, { params }) {
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
+  if (body.image !== undefined) {
+    await replaceStorageObject(previousImage, body.image);
+  }
+
   return NextResponse.json({ product: data });
 }
 
@@ -54,12 +70,21 @@ export async function DELETE(_request, { params }) {
 
   const { id } = await params;
   const supabase = requireSupabaseAdminClient();
+
+  const { data: existing } = await supabase
+    .from("products")
+    .select("image")
+    .eq("id", id)
+    .maybeSingle();
+
   const { error } = await supabase.from("products").delete().eq("id", id);
 
   if (error) {
     console.error("[admin/products DELETE]", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
+
+  await deleteStorageObject(existing?.image);
 
   return NextResponse.json({ success: true });
 }
