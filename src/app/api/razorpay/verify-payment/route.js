@@ -3,6 +3,7 @@ import crypto from "crypto";
 import { cookies } from "next/headers";
 import { verifySession, SESSION_COOKIE_NAME } from "@/lib/auth/session";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
+import { finalizePaidOrder } from "@/lib/orders/finalize-paid-order";
 
 export async function POST(request) {
   const cookieStore = await cookies();
@@ -39,7 +40,7 @@ export async function POST(request) {
 
   const { data: order, error: fetchError } = await supabase
     .from("orders")
-    .select("*")
+    .select("id, profile_id")
     .eq("id", dbOrderId)
     .eq("profile_id", session.id)
     .maybeSingle();
@@ -48,27 +49,12 @@ export async function POST(request) {
     return NextResponse.json({ error: "Order not found" }, { status: 404 });
   }
 
-  // Best-effort, floor-clamped stock decrement (accepts rare oversell on
-  // concurrent checkout rather than blocking an already-captured payment).
-  for (const item of order.items) {
-    const { error: stockError } = await supabase.rpc("decrement_stock", {
-      p_product_id: item.productId,
-      p_qty: item.quantity,
-    });
-    if (stockError) console.error("[verify-payment] stock decrement", stockError);
-  }
+  const result = await finalizePaidOrder(supabase, dbOrderId, {
+    razorpayPaymentId,
+  });
 
-  const { error: updateError } = await supabase
-    .from("orders")
-    .update({
-      status: "paid",
-      razorpay_payment_id: razorpayPaymentId,
-    })
-    .eq("id", dbOrderId);
-
-  if (updateError) {
-    console.error("[verify-payment] order update", updateError);
-    return NextResponse.json({ error: "Failed to finalize order" }, { status: 500 });
+  if (!result.ok) {
+    return NextResponse.json({ error: result.error }, { status: result.status });
   }
 
   return NextResponse.json({ verified: true, orderId: dbOrderId });

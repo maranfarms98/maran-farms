@@ -70,6 +70,10 @@ create table orders (
   total numeric not null,
   razorpay_order_id text,
   razorpay_payment_id text,
+  origin text not null default 'website'
+    check (origin in ('website','phone')),
+  payment_method text,           -- razorpay | cash | cash_on_delivery | manual_upi
+  notes text,
   status text not null default 'pending'
     check (status in ('pending','paid','shipped','delivered','cancelled')),
   created_at timestamptz default now()

@@ -8,7 +8,8 @@ export async function GET(request) {
 
   const { searchParams } = new URL(request.url);
   const page = Math.max(1, Number(searchParams.get("page")) || 1);
-  const pageSize = 25;
+  const requestedSize = Number(searchParams.get("pageSize")) || 25;
+  const pageSize = Math.min(Math.max(1, requestedSize), 500);
   const from = (page - 1) * pageSize;
 
   const supabase = requireSupabaseAdminClient();

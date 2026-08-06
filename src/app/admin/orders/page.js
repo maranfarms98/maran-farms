@@ -1,6 +1,10 @@
+import Link from "next/link";
+import { Plus } from "lucide-react";
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { formatPrice } from "@/lib/format";
+import { PAYMENT_METHOD_LABELS } from "@/lib/orders/payment-methods";
 import { OrderStatusSelect } from "@/app/admin/orders/order-status-select";
+import { MarkPaidButton } from "@/app/admin/orders/mark-paid-button";
 
 const PAGE_SIZE = 25;
 
@@ -40,8 +44,19 @@ export default async function AdminOrdersPage({ searchParams }) {
 
   return (
     <div>
-      <h1 className="font-heading text-3xl text-farm-green-dark">Orders</h1>
-      <p className="mt-1 text-sm text-farm-sage">{count || 0} total orders</p>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <h1 className="font-heading text-3xl text-farm-green-dark">Orders</h1>
+          <p className="mt-1 text-sm text-farm-sage">{count || 0} total orders</p>
+        </div>
+        <Link
+          href="/admin/orders/new"
+          className="focus-ring inline-flex h-11 items-center gap-2 rounded-full bg-farm-green px-5 text-sm font-semibold text-farm-green-light"
+        >
+          <Plus className="size-4" />
+          New phone order
+        </Link>
+      </div>
 
       <form className="mt-6 flex flex-wrap gap-3" method="get">
         <input
@@ -76,6 +91,7 @@ export default async function AdminOrdersPage({ searchParams }) {
               <th className="px-5 py-4">Customer</th>
               <th className="px-5 py-4">Items</th>
               <th className="px-5 py-4 text-right">Total</th>
+              <th className="px-5 py-4">Channel</th>
               <th className="px-5 py-4">Status</th>
               <th className="px-5 py-4">Date</th>
             </tr>
@@ -97,12 +113,32 @@ export default async function AdminOrdersPage({ searchParams }) {
                   {(order.items || []).map((it) => (
                     <div key={it.productId}>{it.name} × {it.quantity}</div>
                   ))}
+                  {order.notes ? (
+                    <p className="mt-1 text-xs italic text-farm-sage/80">{order.notes}</p>
+                  ) : null}
                 </td>
                 <td className="px-5 py-4 text-right font-semibold tabular-nums text-farm-green-dark">
                   {formatPrice(order.total)}
                 </td>
                 <td className="px-5 py-4">
+                  <span
+                    className={`inline-block rounded-full px-2.5 py-0.5 text-[11px] font-semibold ${
+                      order.origin === "phone"
+                        ? "bg-farm-accent/15 text-farm-accent"
+                        : "bg-farm-green/10 text-farm-green-dark"
+                    }`}
+                  >
+                    {order.origin === "phone" ? "Phone" : "Web"}
+                  </span>
+                  {order.payment_method ? (
+                    <p className="mt-1 text-[11px] text-farm-sage">
+                      {PAYMENT_METHOD_LABELS[order.payment_method] || order.payment_method}
+                    </p>
+                  ) : null}
+                </td>
+                <td className="px-5 py-4">
                   <OrderStatusSelect orderId={order.id} status={order.status} />
+                  {order.status === "pending" && <MarkPaidButton orderId={order.id} />}
                 </td>
                 <td className="px-5 py-4 text-xs text-farm-sage">
                   {new Date(order.created_at).toLocaleDateString("en-IN", {
@@ -115,7 +151,7 @@ export default async function AdminOrdersPage({ searchParams }) {
             ))}
             {(orders || []).length === 0 && (
               <tr>
-                <td colSpan={6} className="px-5 py-10 text-center text-farm-sage">
+                <td colSpan={7} className="px-5 py-10 text-center text-farm-sage">
                   No orders found.
                 </td>
               </tr>
