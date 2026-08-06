@@ -1,15 +1,15 @@
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/auth/require-admin";
+import { withAdmin } from "@/lib/api/with-admin";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 
-export async function GET(request) {
-  const admin = await requireAdmin();
-  if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+const DEFAULT_PAGE_SIZE = 25;
+const MAX_PAGE_SIZE = 500;
 
+export const GET = withAdmin(async (request) => {
   const { searchParams } = new URL(request.url);
   const page = Math.max(1, Number(searchParams.get("page")) || 1);
-  const requestedSize = Number(searchParams.get("pageSize")) || 25;
-  const pageSize = Math.min(Math.max(1, requestedSize), 500);
+  const requestedSize = Number(searchParams.get("pageSize")) || DEFAULT_PAGE_SIZE;
+  const pageSize = Math.min(Math.max(1, requestedSize), MAX_PAGE_SIZE);
   const from = (page - 1) * pageSize;
 
   const supabase = requireSupabaseAdminClient();
@@ -25,12 +25,9 @@ export async function GET(request) {
   }
 
   return NextResponse.json({ products: data, count, page, pageSize });
-}
+});
 
-export async function POST(request) {
-  const admin = await requireAdmin();
-  if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
+export const POST = withAdmin(async (request) => {
   const body = await request.json();
   const { id, name, categoryId, price } = body;
 
@@ -70,4 +67,4 @@ export async function POST(request) {
   }
 
   return NextResponse.json({ product: data });
-}
+});

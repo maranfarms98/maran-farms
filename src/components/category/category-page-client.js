@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, MessageCircle, SlidersHorizontal } from "lucide-react";
+import { ArrowLeft, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ProductCard } from "@/components/product/product-card";
@@ -16,6 +16,7 @@ import {
 } from "@/components/motion/motion-provider";
 import { useGsapContext } from "@/components/motion/use-gsap-context";
 import { getGenericInquiryUrl } from "@/lib/whatsapp";
+import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 
 function filterProducts(list, { search, sort, special }) {
   let result = [...list];
@@ -203,15 +204,7 @@ export function CategoryPageClient({ category, products, allCategories }) {
                 >
                   Reset Filters
                 </button>
-                <a
-                  href={getGenericInquiryUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="focus-ring inline-flex h-11 items-center gap-2 rounded-full bg-farm-green px-6 text-sm font-semibold text-farm-green-light"
-                >
-                  <MessageCircle className="size-4" />
-                  WhatsApp
-                </a>
+                <WhatsAppButton href={getGenericInquiryUrl()} variant="solid" />
               </div>
             </div>
           ) : (

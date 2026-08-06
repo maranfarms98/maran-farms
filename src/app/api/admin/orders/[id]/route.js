@@ -1,15 +1,10 @@
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/auth/require-admin";
+import { withAdmin } from "@/lib/api/with-admin";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 import { finalizePaidOrder } from "@/lib/orders/finalize-paid-order";
 import { isPhonePaymentMethod } from "@/lib/orders/payment-methods";
 
-export async function PATCH(request, { params }) {
-  const admin = await requireAdmin();
-  if (!admin) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export const PATCH = withAdmin(async (request, { params }) => {
   const { id } = await params;
   const body = await request.json();
   const { markPaid, paymentMethod, notes } = body;
@@ -82,4 +77,4 @@ export async function PATCH(request, { params }) {
   }
 
   return NextResponse.json({ order: updated });
-}
+});

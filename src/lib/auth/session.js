@@ -1,5 +1,6 @@
 import "server-only";
 import { SignJWT, jwtVerify } from "jose";
+import { cookies } from "next/headers";
 
 const COOKIE_NAME = "maran_session";
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 14; // 14 days
@@ -35,6 +36,12 @@ export async function verifySession(token) {
 }
 
 export const SESSION_COOKIE_NAME = COOKIE_NAME;
+
+/** Reads and verifies the session from the request cookies. Null when signed out. */
+export async function getSessionFromCookies() {
+  const cookieStore = await cookies();
+  return verifySession(cookieStore.get(COOKIE_NAME)?.value);
+}
 
 export function sessionCookieOptions() {
   return {

@@ -1,14 +1,11 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { cookies } from "next/headers";
-import { verifySession, SESSION_COOKIE_NAME } from "@/lib/auth/session";
+import { getSessionFromCookies } from "@/lib/auth/session";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 import { finalizePaidOrder } from "@/lib/orders/finalize-paid-order";
 
 export async function POST(request) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-  const session = await verifySession(token);
+  const session = await getSessionFromCookies();
   if (!session) {
     return NextResponse.json({ error: "Please sign in first" }, { status: 401 });
   }

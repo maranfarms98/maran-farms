@@ -1,28 +1,14 @@
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/auth/require-admin";
+import { withAdmin } from "@/lib/api/with-admin";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
+import { isValidMobile, normalizePhone, PHONE_ERROR } from "@/lib/phone";
 
-function normalizePhone(raw) {
-  const digits = String(raw || "").replace(/\D/g, "");
-  if (digits.length === 12 && digits.startsWith("91")) return digits.slice(2);
-  if (digits.length === 11 && digits.startsWith("0")) return digits.slice(1);
-  return digits;
-}
-
-export async function GET(request) {
-  const admin = await requireAdmin();
-  if (!admin) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export const GET = withAdmin(async (request) => {
   const { searchParams } = new URL(request.url);
   const phone = normalizePhone(searchParams.get("phone"));
 
-  if (!/^\d{10}$/.test(phone)) {
-    return NextResponse.json(
-      { error: "Phone must be a 10-digit Indian mobile number" },
-      { status: 400 },
-    );
+  if (!isValidMobile(phone)) {
+    return NextResponse.json({ error: PHONE_ERROR }, { status: 400 });
   }
 
   const supabase = requireSupabaseAdminClient();
@@ -42,4 +28,4 @@ export async function GET(request) {
     found: Boolean(profile),
     profile: profile || null,
   });
-}
+});

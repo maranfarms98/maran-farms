@@ -11,6 +11,10 @@ export function getGenericInquiryUrl() {
   return waUrl(text);
 }
 
+export function getOrderInquiryUrl(orderId) {
+  return waUrl(`Hello Maran Farms! I have a question about order ${orderId}.`);
+}
+
 export function getProductOrderUrl(product, quantity) {
   const unit = pluralizeUnit(
     product.minOrderUnit || product.unit.replace("per ", ""),

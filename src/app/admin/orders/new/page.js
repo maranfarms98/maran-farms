@@ -10,6 +10,8 @@ import {
   defaultPaidNow,
 } from "@/lib/orders/payment-methods";
 import { Spinner } from "@/components/ui/spinner";
+import { PageLoader } from "@/components/ui/page-loader";
+import { isValidMobile, toPhoneInput } from "@/lib/phone";
 
 export default function AdminNewPhoneOrderPage() {
   const [products, setProducts] = useState([]);
@@ -50,10 +52,10 @@ export default function AdminNewPhoneOrderPage() {
     };
   }, []);
 
-  const normalizedPhone = phone.replace(/\D/g, "").slice(0, 10);
+  const normalizedPhone = toPhoneInput(phone);
 
   const lookupCustomer = useCallback(async () => {
-    if (normalizedPhone.length !== 10) {
+    if (!isValidMobile(normalizedPhone)) {
       setError("Enter a 10-digit phone number");
       return;
     }
@@ -136,7 +138,7 @@ export default function AdminNewPhoneOrderPage() {
     setError("");
     setSuccess(null);
 
-    if (normalizedPhone.length !== 10) {
+    if (!isValidMobile(normalizedPhone)) {
       setError("Enter a 10-digit phone number");
       return;
     }
@@ -196,6 +198,22 @@ export default function AdminNewPhoneOrderPage() {
       setSaving(false);
     }
   };
+
+  if (loadingProducts) {
+    return (
+      <div className="mx-auto max-w-3xl">
+        <Link
+          href="/admin/orders"
+          className="focus-ring inline-flex items-center gap-2 text-sm font-medium text-farm-sage hover:text-farm-green-dark"
+        >
+          <ArrowLeft className="size-4" />
+          Back to orders
+        </Link>
+        <h1 className="mt-4 font-heading text-3xl text-farm-green-dark">New phone order</h1>
+        <PageLoader label="Loading catalog…" />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto max-w-3xl">
@@ -262,7 +280,7 @@ export default function AdminNewPhoneOrderPage() {
                   inputMode="numeric"
                   value={phone}
                   onChange={(e) => {
-                    setPhone(e.target.value.replace(/\D/g, "").slice(0, 10));
+                    setPhone(toPhoneInput(e.target.value));
                     setLookupDone(false);
                     setExistingCustomer(null);
                   }}
@@ -275,7 +293,7 @@ export default function AdminNewPhoneOrderPage() {
               <button
                 type="button"
                 onClick={lookupCustomer}
-                disabled={lookingUp || normalizedPhone.length !== 10}
+                disabled={lookingUp || !isValidMobile(normalizedPhone)}
                 className="focus-ring inline-flex h-11 w-full items-center justify-center gap-2 rounded-full bg-farm-green px-5 text-sm font-semibold text-farm-green-light disabled:opacity-60 sm:w-auto"
               >
                 {lookingUp ? <Spinner className="size-4" /> : <Search className="size-4" />}

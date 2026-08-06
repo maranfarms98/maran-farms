@@ -5,6 +5,12 @@ import { formatPrice } from "@/lib/format";
 import { PAYMENT_METHOD_LABELS } from "@/lib/orders/payment-methods";
 import { OrderStatusSelect } from "@/app/admin/orders/order-status-select";
 import { MarkPaidButton } from "@/app/admin/orders/mark-paid-button";
+import { AdminTable, AdminTableRow } from "@/components/admin/admin-table";
+import {
+  AdminPageHeader,
+  adminPrimaryButton,
+  SupabaseNotConfigured,
+} from "@/components/admin/admin-page-header";
 
 const PAGE_SIZE = 25;
 
@@ -16,15 +22,7 @@ export default async function AdminOrdersPage({ searchParams }) {
 
   const supabase = getSupabaseAdminClient();
   if (!supabase) {
-    return (
-      <div>
-        <h1 className="font-heading text-3xl text-farm-green-dark">Orders</h1>
-        <p className="mt-4 text-sm text-farm-sage">
-          Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and
-          SUPABASE_SERVICE_ROLE_KEY in the deployment environment.
-        </p>
-      </div>
-    );
+    return <SupabaseNotConfigured title="Orders" />;
   }
 
   let query = supabase
@@ -44,19 +42,16 @@ export default async function AdminOrdersPage({ searchParams }) {
 
   return (
     <div>
-      <div className="flex flex-wrap items-end justify-between gap-4">
-        <div>
-          <h1 className="font-heading text-3xl text-farm-green-dark">Orders</h1>
-          <p className="mt-1 text-sm text-farm-sage">{count || 0} total orders</p>
-        </div>
-        <Link
-          href="/admin/orders/new"
-          className="focus-ring inline-flex h-11 items-center gap-2 rounded-full bg-farm-green px-5 text-sm font-semibold text-farm-green-light"
-        >
-          <Plus className="size-4" />
-          New phone order
-        </Link>
-      </div>
+      <AdminPageHeader
+        title="Orders"
+        subtitle={`${count || 0} total orders`}
+        action={
+          <Link href="/admin/orders/new" className={adminPrimaryButton}>
+            <Plus className="size-4" />
+            New phone order
+          </Link>
+        }
+      />
 
       <form className="mt-6 flex flex-wrap gap-3" method="get">
         <input
@@ -83,25 +78,21 @@ export default async function AdminOrdersPage({ searchParams }) {
         </button>
       </form>
 
-      <div className="mt-6 overflow-x-auto rounded-3xl border border-farm-green-dark/10 bg-farm-cream">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-farm-green-dark/8 text-left text-xs font-semibold uppercase tracking-wider text-farm-sage">
-              <th className="px-5 py-4">Order ID</th>
-              <th className="px-5 py-4">Customer</th>
-              <th className="px-5 py-4">Items</th>
-              <th className="px-5 py-4 text-right">Total</th>
-              <th className="px-5 py-4">Channel</th>
-              <th className="px-5 py-4">Status</th>
-              <th className="px-5 py-4">Date</th>
-            </tr>
-          </thead>
-          <tbody>
-            {(orders || []).map((order, i) => (
-              <tr
-                key={order.id}
-                className={`border-b border-farm-green-dark/6 last:border-0 ${i % 2 ? "bg-farm-warm/40" : ""}`}
-              >
+      <AdminTable
+        columns={[
+          "Order ID",
+          "Customer",
+          "Items",
+          { label: "Total", align: "right" },
+          "Channel",
+          "Status",
+          "Date",
+        ]}
+        isEmpty={(orders || []).length === 0}
+        empty="No orders found."
+      >
+        {(orders || []).map((order, i) => (
+              <AdminTableRow key={order.id} index={i}>
                 <td className="px-5 py-4 font-mono text-xs text-farm-sage">
                   {order.id.slice(0, 8)}
                 </td>
@@ -147,18 +138,9 @@ export default async function AdminOrdersPage({ searchParams }) {
                     year: "numeric",
                   })}
                 </td>
-              </tr>
+              </AdminTableRow>
             ))}
-            {(orders || []).length === 0 && (
-              <tr>
-                <td colSpan={7} className="px-5 py-10 text-center text-farm-sage">
-                  No orders found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      </AdminTable>
 
       {totalPages > 1 && (
         <div className="mt-4 flex items-center justify-center gap-2 text-sm">

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, MessageCircle } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { useAuth } from "@/context/auth-context";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/context/toast-context";
@@ -12,6 +12,11 @@ import { getCartOrderUrl } from "@/lib/whatsapp";
 import { Spinner } from "@/components/ui/spinner";
 import { FarmPageIntro } from "@/components/ui/farm-page-intro";
 import { TamilCaption } from "@/components/ui/tamil-caption";
+import { PageLoader } from "@/components/ui/page-loader";
+import { FarmPageShell } from "@/components/ui/farm-page-shell";
+import { ErrorNote } from "@/components/ui/error-note";
+import { WhatsAppButton } from "@/components/ui/whatsapp-button";
+import { OrderLineItems } from "@/components/ui/order-line-items";
 
 function loadRazorpayScript() {
   return new Promise((resolve) => {
@@ -130,19 +135,12 @@ export default function CheckoutPage() {
     }
   }, [address, lines, user, clearCart, toast, router]);
 
-  if (!authHydrated || !cartHydrated || !user || lines.length === 0) return null;
+  if (!authHydrated || !cartHydrated || !user || lines.length === 0) {
+    return <PageLoader label="Loading checkout…" />;
+  }
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-farm-warm px-4 pt-28 pb-16 md:px-8">
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.07]"
-        style={{
-          backgroundImage:
-            "radial-gradient(ellipse 80% 50% at 10% 20%, #15321f 0%, transparent 55%), radial-gradient(ellipse 60% 40% at 90% 80%, #8b5e3c 0%, transparent 50%)",
-        }}
-        aria-hidden
-      />
-
+    <FarmPageShell variant="checkout">
       <div className="relative mx-auto max-w-2xl">
         <Link
           href="/"
@@ -168,21 +166,14 @@ export default function CheckoutPage() {
               Order Summary
             </p>
             <TamilCaption className="mb-3">ஆர்டர் விவரம்</TamilCaption>
-            <ul className="space-y-2">
-              {lines.map((l) => (
-                <li
-                  key={l.product.id}
-                  className="flex justify-between text-sm text-farm-sage"
-                >
-                  <span>
-                    {l.product.name} × {l.quantity}
-                  </span>
-                  <span className="tabular-nums text-farm-green-dark">
-                    {formatPrice(l.lineTotal)}
-                  </span>
-                </li>
-              ))}
-            </ul>
+            <OrderLineItems
+              items={lines.map((l) => ({
+                key: l.product.id,
+                name: l.product.name,
+                quantity: l.quantity,
+                lineTotal: l.lineTotal,
+              }))}
+            />
             <div className="mt-3 flex justify-between border-t border-farm-green-dark/8 pt-3 font-semibold text-farm-green-dark">
               <span>Total</span>
               <span className="font-heading text-xl">{formatPrice(total)}</span>
@@ -209,11 +200,7 @@ export default function CheckoutPage() {
             />
           </div>
 
-          {error && (
-            <p className="mt-4 rounded-xl bg-farm-accent/10 px-3 py-2 text-sm text-farm-accent-dark">
-              {error}
-            </p>
-          )}
+          <ErrorNote className="mt-4">{error}</ErrorNote>
 
           <div className="mt-6 flex flex-col gap-3 sm:flex-row">
             <button
@@ -225,18 +212,16 @@ export default function CheckoutPage() {
               {loading && <Spinner className="size-4" />}
               {loading ? "Opening payment…" : `Pay ${formatPrice(total)}`}
             </button>
-            <a
+            <WhatsAppButton
               href={getCartOrderUrl(lines, total)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="focus-ring inline-flex h-14 flex-1 items-center justify-center gap-2 rounded-full border border-farm-green bg-transparent text-button font-semibold text-farm-green transition hover:bg-farm-green/5"
+              size="lg"
+              className="transition hover:bg-farm-green/5"
             >
-              <MessageCircle className="size-4" />
               Order on WhatsApp
-            </a>
+            </WhatsAppButton>
           </div>
         </div>
       </div>
-    </div>
+    </FarmPageShell>
   );
 }

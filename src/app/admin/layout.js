@@ -1,7 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
 import { redirect } from "next/navigation";
-import { cookies } from "next/headers";
 import {
   ArrowLeft,
   LayoutDashboard,
@@ -10,7 +9,7 @@ import {
   Tags,
   Users,
 } from "lucide-react";
-import { verifySession, SESSION_COOKIE_NAME } from "@/lib/auth/session";
+import { getSessionFromCookies } from "@/lib/auth/session";
 import { AdminLogoutButton } from "@/app/admin/logout-button";
 
 // Admin reads cookies + Supabase; never statically prerender without env.
@@ -25,9 +24,7 @@ const NAV = [
 ];
 
 export default async function AdminLayout({ children }) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-  const session = await verifySession(token);
+  const session = await getSessionFromCookies();
 
   // Defense in depth — middleware already gates /admin/**, this re-checks.
   if (!session?.isAdmin) redirect("/");

@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { requireAdmin } from "@/lib/auth/require-admin";
+import { withAdmin } from "@/lib/api/with-admin";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 import { PRODUCT_IMAGES_BUCKET } from "@/lib/supabase/storage";
 
@@ -15,10 +15,7 @@ const ALLOWED_TYPES = {
 
 const FOLDERS = new Set(["products", "categories"]);
 
-export async function POST(request) {
-  const admin = await requireAdmin();
-  if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
+export const POST = withAdmin(async (request) => {
   const formData = await request.formData();
   const file = formData.get("file");
   const folderRaw = formData.get("folder");
@@ -55,4 +52,4 @@ export async function POST(request) {
 
   const { data } = supabase.storage.from(PRODUCT_IMAGES_BUCKET).getPublicUrl(objectPath);
   return NextResponse.json({ url: data.publicUrl });
-}
+});

@@ -1,24 +1,13 @@
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/auth/require-admin";
+import { withAdmin } from "@/lib/api/with-admin";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 import { buildOrderItems } from "@/lib/orders/build-order-items";
 import { finalizePaidOrder } from "@/lib/orders/finalize-paid-order";
 import { isPhonePaymentMethod } from "@/lib/orders/payment-methods";
 import { getPhoneOrderConfirmUrl } from "@/lib/whatsapp";
+import { isValidMobile, normalizePhone, PHONE_ERROR } from "@/lib/phone";
 
-function normalizePhone(raw) {
-  const digits = String(raw || "").replace(/\D/g, "");
-  if (digits.length === 12 && digits.startsWith("91")) return digits.slice(2);
-  if (digits.length === 11 && digits.startsWith("0")) return digits.slice(1);
-  return digits;
-}
-
-export async function POST(request) {
-  const admin = await requireAdmin();
-  if (!admin) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
+export const POST = withAdmin(async (request) => {
   const body = await request.json();
   const {
     phone: rawPhone,
@@ -31,11 +20,8 @@ export async function POST(request) {
   } = body;
 
   const phone = normalizePhone(rawPhone);
-  if (!/^\d{10}$/.test(phone)) {
-    return NextResponse.json(
-      { error: "Phone must be a 10-digit Indian mobile number" },
-      { status: 400 },
-    );
+  if (!isValidMobile(phone)) {
+    return NextResponse.json({ error: PHONE_ERROR }, { status: 400 });
   }
 
   if (!address?.trim()) {
@@ -129,4 +115,4 @@ export async function POST(request) {
     order: finalOrder,
     whatsappUrl: getPhoneOrderConfirmUrl(finalOrder),
   });
-}
+});

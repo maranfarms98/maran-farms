@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
-import { requireAdmin } from "@/lib/auth/require-admin";
+import { withAdmin } from "@/lib/api/with-admin";
+import { applyFieldMap } from "@/lib/api/field-map";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 import { deleteStorageObject, replaceStorageObject } from "@/lib/supabase/storage";
 
@@ -17,17 +18,11 @@ const FIELD_MAP = {
   accent: "accent",
 };
 
-export async function PATCH(request, { params }) {
-  const admin = await requireAdmin();
-  if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
+export const PATCH = withAdmin(async (request, { params }) => {
   const { id } = await params;
   const body = await request.json();
 
-  const update = {};
-  for (const [key, column] of Object.entries(FIELD_MAP)) {
-    if (body[key] !== undefined) update[column] = body[key];
-  }
+  const update = applyFieldMap(body, FIELD_MAP);
 
   const supabase = requireSupabaseAdminClient();
 
@@ -61,12 +56,9 @@ export async function PATCH(request, { params }) {
   }
 
   return NextResponse.json({ category: data });
-}
+});
 
-export async function DELETE(_request, { params }) {
-  const admin = await requireAdmin();
-  if (!admin) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
+export const DELETE = withAdmin(async (_request, { params }) => {
   const { id } = await params;
   const supabase = requireSupabaseAdminClient();
 
@@ -92,4 +84,4 @@ export async function DELETE(_request, { params }) {
   await deleteStorageObject(existing?.hero_image);
 
   return NextResponse.json({ success: true });
-}
+});
