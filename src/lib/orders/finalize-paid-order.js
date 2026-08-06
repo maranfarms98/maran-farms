@@ -1,3 +1,6 @@
+import { sendOrderPaidEmails } from "@/lib/emails/send-order-emails";
+import { decrementStock } from "@/lib/orders/decrement-stock";
+
 /**
  * Mark a pending order as paid and decrement stock once.
  * Idempotent: if the order is already paid (or further along), returns success
@@ -29,11 +32,7 @@ export async function finalizePaidOrder(supabase, orderId, extras = {}) {
   }
 
   for (const item of order.items || []) {
-    const { error: stockError } = await supabase.rpc("decrement_stock", {
-      p_product_id: item.productId,
-      p_qty: item.quantity,
-    });
-    if (stockError) console.error("[finalizePaidOrder] stock decrement", stockError);
+    await decrementStock(supabase, item.productId, item.quantity);
   }
 
   const update = { status: "paid" };
@@ -63,6 +62,11 @@ export async function finalizePaidOrder(supabase, orderId, extras = {}) {
       .maybeSingle();
     return { ok: true, order: current || order, alreadyPaid: true };
   }
+
+  // Fire-and-forget — never block or fail the paid transition.
+  void sendOrderPaidEmails(updated).catch((err) =>
+    console.error("[finalizePaidOrder] emails", err),
+  );
 
   return { ok: true, order: updated };
 }

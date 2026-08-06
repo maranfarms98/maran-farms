@@ -14,7 +14,7 @@ export const GET = withAdmin(async (request) => {
   const supabase = requireSupabaseAdminClient();
   const { data: profile, error } = await supabase
     .from("profiles")
-    .select("id, name, phone, created_at")
+    .select("id, name, phone, created_at, email")
     .eq("phone", phone)
     .maybeSingle();
 

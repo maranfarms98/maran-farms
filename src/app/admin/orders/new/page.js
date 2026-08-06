@@ -22,6 +22,7 @@ export default function AdminNewPhoneOrderPage() {
   const [lookupDone, setLookupDone] = useState(false);
   const [existingCustomer, setExistingCustomer] = useState(null);
   const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
 
   const [productQuery, setProductQuery] = useState("");
   const [lines, setLines] = useState([]); // { productId, name, price, unit, quantity, stockQty, trackInventory }
@@ -76,9 +77,11 @@ export default function AdminNewPhoneOrderPage() {
       if (data.found) {
         setExistingCustomer(data.profile);
         setName(data.profile.name);
+        setEmail(data.profile.email || "");
       } else {
         setExistingCustomer(null);
         setName("");
+        setEmail("");
       }
     } finally {
       setLookingUp(false);
@@ -168,6 +171,7 @@ export default function AdminNewPhoneOrderPage() {
           phone: normalizedPhone,
           name: name.trim(),
           address: address.trim(),
+          email: email.trim() || undefined,
           items: lines.map((l) => ({
             productId: l.productId,
             quantity: l.quantity,
@@ -192,6 +196,7 @@ export default function AdminNewPhoneOrderPage() {
       setNotes("");
       setPhone("");
       setName("");
+      setEmail("");
       setLookupDone(false);
       setExistingCustomer(null);
     } finally {
@@ -325,6 +330,24 @@ export default function AdminNewPhoneOrderPage() {
                 disabled={Boolean(existingCustomer)}
                 className="mt-1.5 h-11 w-full rounded-xl border border-farm-green-dark/15 bg-white px-4 text-sm focus:border-farm-green focus:outline-none disabled:bg-farm-warm disabled:text-farm-sage"
               />
+            </div>
+          )}
+
+          {lookupDone && (
+            <div className="mt-4">
+              <label className="text-xs font-semibold uppercase tracking-wider text-farm-sage">
+                Email (optional)
+              </label>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="customer@example.com"
+                className="mt-1.5 h-11 w-full rounded-xl border border-farm-green-dark/15 bg-white px-4 text-sm focus:border-farm-green focus:outline-none"
+              />
+              <p className="mt-1 text-xs text-farm-sage">
+                Order confirmation is emailed when the order is marked paid.
+              </p>
             </div>
           )}
         </section>

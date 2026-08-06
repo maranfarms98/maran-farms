@@ -6,6 +6,7 @@ import { finalizePaidOrder } from "@/lib/orders/finalize-paid-order";
 import { isPhonePaymentMethod } from "@/lib/orders/payment-methods";
 import { getPhoneOrderConfirmUrl } from "@/lib/whatsapp";
 import { isValidMobile, normalizePhone, PHONE_ERROR } from "@/lib/phone";
+import { parseOptionalEmail } from "@/lib/email";
 
 export const POST = withAdmin(async (request) => {
   const body = await request.json();
@@ -17,6 +18,7 @@ export const POST = withAdmin(async (request) => {
     paymentMethod,
     paidNow,
     notes,
+    email: rawEmail,
   } = body;
 
   const phone = normalizePhone(rawPhone);
@@ -35,11 +37,17 @@ export const POST = withAdmin(async (request) => {
     );
   }
 
+  const parsedEmail = parseOptionalEmail(rawEmail);
+  if (parsedEmail.error) {
+    return NextResponse.json({ error: parsedEmail.error }, { status: 400 });
+  }
+  const email = parsedEmail.email;
+
   const supabase = requireSupabaseAdminClient();
 
   const { data: existing, error: lookupError } = await supabase
     .from("profiles")
-    .select("id, name, phone")
+    .select("id, name, phone, email")
     .eq("phone", phone)
     .maybeSingle();
 
@@ -59,8 +67,8 @@ export const POST = withAdmin(async (request) => {
     }
     const { data: created, error: createError } = await supabase
       .from("profiles")
-      .insert({ phone, name: trimmedName, is_admin: false })
-      .select("id, name, phone")
+      .insert({ phone, name: trimmedName, email, is_admin: false })
+      .select("id, name, phone, email")
       .single();
 
     if (createError) {
@@ -68,6 +76,18 @@ export const POST = withAdmin(async (request) => {
       return NextResponse.json({ error: "Failed to create customer" }, { status: 500 });
     }
     profile = created;
+  } else if (email) {
+    const { data: updatedProfile, error: emailError } = await supabase
+      .from("profiles")
+      .update({ email })
+      .eq("id", profile.id)
+      .select("id, name, phone, email")
+      .single();
+    if (emailError) {
+      console.error("[admin/orders POST] profile email", emailError);
+    } else if (updatedProfile) {
+      profile = updatedProfile;
+    }
   }
 
   const built = await buildOrderItems(supabase, items);
@@ -84,6 +104,7 @@ export const POST = withAdmin(async (request) => {
       profile_id: profile.id,
       name: profile.name,
       phone: profile.phone,
+      email: email || profile.email || null,
       address: address.trim(),
       items: orderItems,
       total,

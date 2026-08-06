@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "seed": "node scripts/seed-supabase.mjs",
-    "migrate:images": "node scripts/migrate-images-to-storage.mjs"
+    "migrate:images": "node scripts/migrate-images-to-storage.mjs",
+    "preview:emails": "node scripts/preview-order-emails.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.2",
@@ -22,6 +23,7 @@
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "recharts": "^3.9.2",
+    "resend": "^6.18.1",
     "server-only": "^0.0.1"
   },
   "devDependencies": {

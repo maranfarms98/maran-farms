@@ -20,7 +20,7 @@ export async function buildOrderItems(supabase, items) {
   const productIds = [...new Set(items.map((i) => i.productId))];
   const { data: products, error: productsError } = await supabase
     .from("products")
-    .select("id, name, price, unit, track_inventory, stock_qty")
+    .select("id, name, price, unit, image, track_inventory, stock_qty")
     .in("id", productIds);
 
   if (productsError) {
@@ -54,6 +54,7 @@ export async function buildOrderItems(supabase, items) {
       name: product.name,
       price: Number(product.price),
       unit: product.unit,
+      image: product.image || null,
       quantity,
       lineTotal,
     });

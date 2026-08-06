@@ -3,6 +3,7 @@ import Razorpay from "razorpay";
 import { getSessionFromCookies } from "@/lib/auth/session";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 import { buildOrderItems } from "@/lib/orders/build-order-items";
+import { parseOptionalEmail } from "@/lib/email";
 
 export async function POST(request) {
   const session = await getSessionFromCookies();
@@ -11,7 +12,7 @@ export async function POST(request) {
     return NextResponse.json({ error: "Please sign in first" }, { status: 401 });
   }
 
-  const { items, address } = await request.json();
+  const { items, address, email: rawEmail } = await request.json();
 
   if (!address?.trim()) {
     return NextResponse.json(
@@ -19,6 +20,12 @@ export async function POST(request) {
       { status: 400 },
     );
   }
+
+  const parsedEmail = parseOptionalEmail(rawEmail);
+  if (parsedEmail.error) {
+    return NextResponse.json({ error: parsedEmail.error }, { status: 400 });
+  }
+  const email = parsedEmail.email;
 
   const supabase = requireSupabaseAdminClient();
   const built = await buildOrderItems(supabase, items);
@@ -34,6 +41,7 @@ export async function POST(request) {
       profile_id: session.id,
       name: session.name,
       phone: session.phone,
+      email,
       address: address.trim(),
       items: orderItems,
       total,
@@ -47,6 +55,14 @@ export async function POST(request) {
   if (orderError) {
     console.error("[create-order] order insert", orderError);
     return NextResponse.json({ error: "Failed to create order" }, { status: 500 });
+  }
+
+  if (email) {
+    const { error: profileError } = await supabase
+      .from("profiles")
+      .update({ email })
+      .eq("id", session.id);
+    if (profileError) console.error("[create-order] profile email", profileError);
   }
 
   try {

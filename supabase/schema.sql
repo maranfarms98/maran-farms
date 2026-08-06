@@ -50,6 +50,7 @@ create table profiles (
   id uuid primary key default gen_random_uuid(),
   phone text unique not null check (phone ~ '^\d{10}$'),
   name text not null,
+  email text,                    -- optional; phone remains the identity
   is_admin boolean not null default false,
   created_at timestamptz default now()
 );
@@ -65,6 +66,7 @@ create table orders (
   profile_id uuid references profiles(id),
   name text not null,
   phone text not null,
+  email text,                    -- snapshot at order time (may differ from profile later)
   address text not null,
   items jsonb not null,          -- snapshot: [{productId, name, price, quantity, unit}]
   total numeric not null,
@@ -102,11 +104,17 @@ create policy "public read category_content" on category_content for select usin
 create or replace function decrement_stock(p_product_id text, p_qty integer)
 returns void
 language sql
+security definer
+set search_path = public
 as $$
   update products
   set stock_qty = greatest(stock_qty - p_qty, 0)
   where id = p_product_id and track_inventory = true;
 $$;
+
+grant execute on function decrement_stock(text, integer) to service_role;
+grant execute on function decrement_stock(text, integer) to authenticated;
+grant execute on function decrement_stock(text, integer) to anon;
 
 alter table profiles enable row level security;       -- no public policies — service role only
 alter table otp_codes enable row level security;       -- no public policies — service role only

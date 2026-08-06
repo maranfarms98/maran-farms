@@ -22,6 +22,17 @@ Ensure `.env.local` exists in the project root with:
 - `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` / `NEXT_PUBLIC_RAZORPAY_KEY_ID`
 - `AUTH_SECRET`
 
+Order confirmation emails (optional until configured — orders still complete without them):
+
+- `RESEND_API_KEY` — Resend API key (server-only)
+- `ORDER_NOTIFY_EMAIL` — inbox that receives every new paid-order notification
+- `SITE_URL` — public site origin for admin links in emails (e.g. `https://maranfarms.in`)
+- `EMAIL_FROM` — optional From header; defaults to `Maran Farms <hello@maranfarms.in>`. Before the sending domain is verified in Resend, use `Maran Farms <onboarding@resend.dev>`.
+
+If the database was created before order emails, run `supabase/migrations/20260806_order_emails.sql` in the Supabase SQL Editor (adds optional `email` on `profiles` and `orders`).
+
+If paid orders log `Could not find the function public.decrement_stock`, run `supabase/migrations/20260806_decrement_stock.sql` in the SQL Editor (the app falls back to a direct stock update until that function exists).
+
 Optional — seed catalog data:
 
 ```bash

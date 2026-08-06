@@ -31,12 +31,14 @@ function loadRazorpayScript() {
 }
 
 export default function CheckoutPage() {
-  const { user, hydrated: authHydrated } = useAuth();
+  const { user, hydrated: authHydrated, refresh } = useAuth();
   const { lines, total, clearCart, hydrated: cartHydrated } = useCart();
   const { toast } = useToast();
   const router = useRouter();
 
   const [address, setAddress] = useState("");
+  const [emailOverride, setEmailOverride] = useState(null);
+  const email = emailOverride ?? user?.email ?? "";
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -44,8 +46,11 @@ export default function CheckoutPage() {
     if (!authHydrated) return;
     if (!user) {
       router.replace("/login?redirect=/checkout");
+      return;
     }
-  }, [authHydrated, user, router]);
+    // OTP setSession may omit email; refresh pulls it from profiles.
+    if (!("email" in user)) refresh();
+  }, [authHydrated, user, router, refresh]);
 
   useEffect(() => {
     if (!cartHydrated) return;
@@ -75,6 +80,7 @@ export default function CheckoutPage() {
             quantity: l.quantity,
           })),
           address: address.trim(),
+          email: email.trim() || undefined,
         }),
       });
       const orderData = await res.json();
@@ -93,6 +99,7 @@ export default function CheckoutPage() {
         prefill: {
           name: user?.name,
           contact: `+91${user?.phone}`,
+          ...(email.trim() ? { email: email.trim() } : {}),
         },
         theme: { color: "#15321f" },
         handler: async (response) => {
@@ -133,7 +140,7 @@ export default function CheckoutPage() {
     } finally {
       setLoading(false);
     }
-  }, [address, lines, user, clearCart, toast, router]);
+  }, [address, email, lines, user, clearCart, toast, router]);
 
   if (!authHydrated || !cartHydrated || !user || lines.length === 0) {
     return <PageLoader label="Loading checkout…" />;
@@ -198,6 +205,28 @@ export default function CheckoutPage() {
               onChange={(e) => setAddress(e.target.value)}
               className="rounded-2xl border border-farm-green-dark/15 bg-white p-4 text-sm text-farm-green-dark placeholder:text-farm-sage/60 focus:border-farm-green focus:outline-none"
             />
+          </div>
+
+          <div className="mt-4 flex flex-col gap-1.5">
+            <label
+              className="text-sm font-medium text-farm-green-dark"
+              htmlFor="checkout-email"
+            >
+              Email <span className="font-normal text-farm-sage">(optional)</span>
+            </label>
+            <TamilCaption className="mb-1">ஆர்டர் உறுதிப்படுத்தல் மின்னஞ்சல்</TamilCaption>
+            <input
+              id="checkout-email"
+              type="email"
+              autoComplete="email"
+              placeholder="you@example.com"
+              value={email}
+              onChange={(e) => setEmailOverride(e.target.value)}
+              className="h-12 rounded-2xl border border-farm-green-dark/15 bg-white px-4 text-sm text-farm-green-dark placeholder:text-farm-sage/60 focus:border-farm-green focus:outline-none"
+            />
+            <p className="text-xs text-farm-sage">
+              We&apos;ll send your order receipt here if you provide one.
+            </p>
           </div>
 
           <ErrorNote className="mt-4">{error}</ErrorNote>
