@@ -15,6 +15,8 @@ import { isValidMobile, toPhoneInput } from "@/lib/phone";
 
 export default function AdminNewPhoneOrderPage() {
   const [products, setProducts] = useState([]);
+  console.log("products");
+  
   const [loadingProducts, setLoadingProducts] = useState(true);
 
   const [phone, setPhone] = useState("");
