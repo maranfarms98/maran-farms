@@ -14,22 +14,50 @@ const MIME_BY_EXT = {
   avif: "image/avif",
 };
 
-/** Load .env.local into process.env (does not override existing keys). */
-export function loadEnvLocal(projectRoot = join(__dirname, "../..")) {
-  try {
-    const raw = readFileSync(join(projectRoot, ".env.local"), "utf-8");
-    for (const line of raw.split("\n")) {
-      const trimmed = line.trim();
-      if (!trimmed || trimmed.startsWith("#")) continue;
-      const eq = trimmed.indexOf("=");
-      if (eq === -1) continue;
-      const key = trimmed.slice(0, eq).trim();
-      const value = trimmed.slice(eq + 1).trim();
-      if (!process.env[key]) process.env[key] = value;
-    }
-  } catch {
-    /* rely on real env */
+const FALLBACK_ENV_FILES = [".env.staging"];
+
+function applyEnvFile(filePath, { override = false } = {}) {
+  const raw = readFileSync(filePath, "utf-8");
+  for (const line of raw.split("\n")) {
+    const trimmed = line.trim();
+    if (!trimmed || trimmed.startsWith("#")) continue;
+    const eq = trimmed.indexOf("=");
+    if (eq === -1) continue;
+    const key = trimmed.slice(0, eq).trim();
+    const value = trimmed.slice(eq + 1).trim();
+    if (override || !process.env[key]) process.env[key] = value;
   }
+}
+
+/**
+ * Load local env files into process.env (does not override existing keys).
+ * Prefer vars already set (e.g. by `scripts/with-env.mjs production`).
+ * Otherwise fill from `.env.staging`.
+ */
+export function loadEnvLocal(projectRoot = join(__dirname, "../..")) {
+  for (const name of FALLBACK_ENV_FILES) {
+    const filePath = join(projectRoot, name);
+    if (!existsSync(filePath)) continue;
+    applyEnvFile(filePath);
+  }
+}
+
+/**
+ * Load `.env.<name>` and override existing keys.
+ * Throws if the file is missing so prod scripts cannot silently hit staging.
+ */
+export function loadNamedEnv(name, projectRoot = join(__dirname, "../..")) {
+  if (name !== "staging" && name !== "production") {
+    throw new Error(`Unknown env "${name}". Use staging or production.`);
+  }
+  const fileName = `.env.${name}`;
+  const filePath = join(projectRoot, fileName);
+  if (!existsSync(filePath)) {
+    throw new Error(
+      `Missing ${fileName}. Create it in the project root with the ${name} Supabase keys.`,
+    );
+  }
+  applyEnvFile(filePath, { override: true });
 }
 
 /**

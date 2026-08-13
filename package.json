@@ -3,13 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "node -e \"const {networkInterfaces:n}=require('os');const a=Object.values(n()).flat().find(i=>i.family==='IPv4'&&!i.internal);if(a)console.log('\\n  → Phone/LAN: http://'+a.address+':3000\\n');\" && next dev --hostname 0.0.0.0",
+    "dev": "node scripts/with-env.mjs staging node scripts/run-next-dev.mjs",
+    "dev:prod": "node scripts/with-env.mjs production node scripts/run-next-dev.mjs",
     "build": "next build",
+    "build:staging": "node scripts/with-env.mjs staging next build",
+    "build:prod": "node scripts/with-env.mjs production next build",
     "start": "next start",
     "lint": "eslint",
-    "seed": "node scripts/seed-supabase.mjs",
-    "migrate:images": "node scripts/migrate-images-to-storage.mjs",
-    "preview:emails": "node scripts/preview-order-emails.mjs"
+    "seed": "node scripts/with-env.mjs staging node scripts/seed-supabase.mjs",
+    "seed:prod": "node scripts/with-env.mjs production node scripts/seed-supabase.mjs",
+    "migrate:images": "node scripts/with-env.mjs staging node scripts/migrate-images-to-storage.mjs",
+    "migrate:images:prod": "node scripts/with-env.mjs production node scripts/migrate-images-to-storage.mjs",
+    "preview:emails": "node scripts/with-env.mjs staging node scripts/preview-order-emails.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.110.2",

@@ -1,8 +1,9 @@
 // Migrate product/category image columns from /images/... static paths
 // to public Supabase Storage URLs in the product-images bucket.
 //
-// Run: npm run migrate:images
-// Requires NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY in .env.local
+// Run: npm run migrate:images          (staging)
+//      npm run migrate:images:prod     (production)
+// Requires NEXT_PUBLIC_SUPABASE_URL + SUPABASE_SERVICE_ROLE_KEY
 // and a public Storage bucket named product-images.
 
 import { createClient } from "@supabase/supabase-js";
@@ -19,7 +20,7 @@ const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !serviceKey) {
   console.error(
-    "Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.local",
+    "Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.staging",
   );
   process.exit(1);
 }

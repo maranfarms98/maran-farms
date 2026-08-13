@@ -5,7 +5,7 @@
  * Output: tmp/email-preview-customer.html
  *         tmp/email-preview-admin.html
  *
- * Open the files in a browser to review. Uses SITE_URL from .env.local when set
+ * Open the files in a browser to review. Uses SITE_URL from the active env file
  * so product images resolve (default: http://localhost:3001).
  */
 
