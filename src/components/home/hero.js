@@ -18,7 +18,7 @@ export function Hero() {
   const gsapAllowed = useGsapAllowed();
   const contentRef = useRef(null);
   const playedRef = useRef(false);
-  const [revealed, setRevealed] = useState(!motionAllowed);
+  const [revealed, setRevealed] = useState(true);
   const sectionRef = useGsapContext(
     ({ gsap, el }) => {
       const bg = el.querySelector("[data-hero-bg]");
@@ -49,10 +49,15 @@ export function Hero() {
 
     let cancelled = false;
     let timeline;
+    // Never leave hero text invisible if splash signal is missed
+    const revealFailsafe = window.setTimeout(() => {
+      if (!cancelled) setRevealed(true);
+    }, 800);
 
     const runEntrance = async () => {
       if (cancelled || playedRef.current || !contentRef.current) return;
       playedRef.current = true;
+      window.clearTimeout(revealFailsafe);
 
       const { animate, createTimeline, stagger, splitText, utils } = await import(
         "animejs"
@@ -192,6 +197,7 @@ export function Hero() {
       return () => {
         cancelled = true;
         window.clearTimeout(t);
+        window.clearTimeout(revealFailsafe);
         window.removeEventListener(SPLASH_DONE_EVENT, onSplashDone);
         timeline?.pause?.();
       };
@@ -199,6 +205,7 @@ export function Hero() {
 
     return () => {
       cancelled = true;
+      window.clearTimeout(revealFailsafe);
       window.removeEventListener(SPLASH_DONE_EVENT, onSplashDone);
       timeline?.pause?.();
     };
@@ -249,14 +256,7 @@ export function Hero() {
       <div className="relative z-10 w-full px-6 pt-28 pb-[max(5.5rem,calc(env(safe-area-inset-bottom,0px)+5rem))] md:pb-28">
         <div
           ref={contentRef}
-          className={`mx-auto flex max-w-3xl flex-col items-center text-center ${
-            motionAllowed && !revealed ? "opacity-0" : ""
-          }`}
-          style={
-            motionAllowed && !revealed
-              ? { visibility: "hidden" }
-              : undefined
-          }
+          className="mx-auto flex max-w-3xl flex-col items-center text-center"
         >
           <p
             data-hero-brand

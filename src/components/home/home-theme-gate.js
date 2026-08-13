@@ -9,7 +9,9 @@ import { Testimonials } from "@/components/home/testimonials";
 import { WhatsAppSection } from "@/components/home/whatsapp-section";
 import { InstagramSection } from "@/components/home/instagram-section";
 import { useTheme } from "@/context/theme-context";
+import HomeBazaar from "@/components/theme-bazaar/home/home-bazaar";
 
+// Canopy keeps client-only (Three.js). Bazaar is SSR so reload is never a blank green frame.
 const HomeCanopy = dynamic(() => import("@/components/theme-canopy/home/home-canopy"), {
   ssr: false,
 });
@@ -19,6 +21,10 @@ export function HomeThemeGate({ categories, featuredProducts }) {
 
   if (theme === "canopy") {
     return <HomeCanopy categories={categories} featuredProducts={featuredProducts} />;
+  }
+
+  if (theme === "bazaar") {
+    return <HomeBazaar categories={categories} featuredProducts={featuredProducts} />;
   }
 
   return (

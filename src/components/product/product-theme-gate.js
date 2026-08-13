@@ -3,6 +3,7 @@
 import dynamic from "next/dynamic";
 import { ProductPageClient } from "@/components/product/product-page-client";
 import { useTheme } from "@/context/theme-context";
+import { ProductPageBazaar } from "@/components/theme-bazaar/product/product-page-bazaar";
 
 const ProductPageCanopy = dynamic(
   () =>
@@ -18,6 +19,12 @@ export function ProductThemeGate({ product, category, related, content }) {
   if (theme === "canopy") {
     return (
       <ProductPageCanopy product={product} category={category} related={related} content={content} />
+    );
+  }
+
+  if (theme === "bazaar") {
+    return (
+      <ProductPageBazaar product={product} category={category} related={related} content={content} />
     );
   }
 

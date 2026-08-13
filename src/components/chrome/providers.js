@@ -18,6 +18,11 @@ import { HeaderCanopy } from "@/components/theme-canopy/chrome/header-canopy";
 import { FooterCanopy } from "@/components/theme-canopy/chrome/footer-canopy";
 import { OrderBarCanopy } from "@/components/theme-canopy/chrome/order-bar-canopy";
 import { WhatsAppFabCanopy } from "@/components/theme-canopy/chrome/whatsapp-fab-canopy";
+import { BazaarShell } from "@/components/theme-bazaar/chrome/bazaar-shell";
+import { HeaderBazaar } from "@/components/theme-bazaar/chrome/header-bazaar";
+import { FooterBazaar } from "@/components/theme-bazaar/chrome/footer-bazaar";
+import { OrderBarBazaar } from "@/components/theme-bazaar/chrome/order-bar-bazaar";
+import { WhatsAppFabBazaar } from "@/components/theme-bazaar/chrome/whatsapp-fab-bazaar";
 
 function ViewportHeightSync() {
   useViewportHeightSync();
@@ -30,6 +35,26 @@ function Chrome({ children, categories }) {
   const isAdminRoute = pathname?.startsWith("/admin");
   const isCheckoutRoute = pathname?.startsWith("/checkout") || pathname?.startsWith("/login");
   const showCanopyChrome = theme === "canopy" && !isAdminRoute && !isCheckoutRoute;
+  const showBazaarChrome = theme === "bazaar" && !isAdminRoute;
+
+  if (showBazaarChrome) {
+    return (
+      <BazaarShell>
+        <ViewportHeightSync />
+        <SplashScreen />
+        {!isCheckoutRoute && <HeaderBazaar categories={categories} />}
+        <div className="flex min-h-vvh flex-1 flex-col">{children}</div>
+        {!isCheckoutRoute && (
+          <>
+            <FooterBazaar categories={categories} />
+            <OrderBarBazaar />
+            <WhatsAppFabBazaar />
+          </>
+        )}
+        <LoginModal />
+      </BazaarShell>
+    );
+  }
 
   return (
     <>

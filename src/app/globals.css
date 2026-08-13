@@ -33,6 +33,17 @@
   --canopy-gold-light: #f0cf8a;
   --canopy-mist: #eef6ee;
   --canopy-bark: #3c2a1e;
+
+  /* Bazaar theme — WhatsApp commerce minimal, additive only */
+  --bazaar-paper: #f6f3ec;
+  --bazaar-ink: #161513;
+  --bazaar-muted: #5f5c55;
+  --bazaar-wa: #0d6b45;
+  --bazaar-wa-bright: #12965c;
+  --bazaar-soil: #3a2718;
+  --bazaar-sand: #e6dccb;
+  --bazaar-line: rgba(22, 21, 19, 0.12);
+  --bazaar-highlight: #f2ebe0;
 }
 
 @theme inline {
@@ -80,6 +91,15 @@
   --color-canopy-gold-light: var(--canopy-gold-light);
   --color-canopy-mist: var(--canopy-mist);
   --color-canopy-bark: var(--canopy-bark);
+
+  --color-bazaar-paper: var(--bazaar-paper);
+  --color-bazaar-ink: var(--bazaar-ink);
+  --color-bazaar-muted: var(--bazaar-muted);
+  --color-bazaar-wa: var(--bazaar-wa);
+  --color-bazaar-wa-bright: var(--bazaar-wa-bright);
+  --color-bazaar-soil: var(--bazaar-soil);
+  --color-bazaar-sand: var(--bazaar-sand);
+  --color-bazaar-highlight: var(--bazaar-highlight);
 }
 
 * {
@@ -414,7 +434,67 @@ a,
   .animate-light-sweep,
   .animate-fab-pulse,
   .animate-canopy-drift,
-  .animate-canopy-glow {
+  .animate-canopy-glow,
+  .animate-bazaar-rise,
+  .animate-bazaar-bar {
     animation: none !important;
   }
+}
+
+/* —— Bazaar theme utilities (additive; unused by classic/canopy) —— */
+.theme-bazaar {
+  --background: var(--bazaar-paper);
+  --foreground: var(--bazaar-ink);
+  background: var(--bazaar-paper);
+  color: var(--bazaar-ink);
+  font-family: var(--font-bazaar-sans), system-ui, sans-serif;
+}
+
+.theme-bazaar .font-heading,
+.theme-bazaar h1,
+.theme-bazaar h2,
+.theme-bazaar h3 {
+  font-family: var(--font-bazaar-display), Georgia, serif;
+  letter-spacing: -0.03em;
+}
+
+.bazaar-container {
+  width: 100%;
+  max-width: 72rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+}
+
+@media (min-width: 768px) {
+  .bazaar-container {
+    padding-inline: 2rem;
+  }
+}
+
+@keyframes bazaar-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-bazaar-rise {
+  animation: bazaar-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes bazaar-bar {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-bazaar-bar {
+  animation: bazaar-bar 0.4s cubic-bezier(0.22, 1, 0.36, 1) both;
 }

@@ -19,6 +19,14 @@ const OrdersPageCanopy = dynamic(
   { ssr: false },
 );
 
+const OrdersPageBazaar = dynamic(
+  () =>
+    import("@/components/theme-bazaar/account/orders-page-bazaar").then(
+      (m) => m.OrdersPageBazaar,
+    ),
+  { ssr: false },
+);
+
 const STATUS_FILTERS = [
   { value: "all", label: "All" },
   { value: "pending", label: "Pending" },
@@ -64,6 +72,12 @@ export default function MyOrdersPage() {
   if (theme === "canopy") {
     return (
       <OrdersPageCanopy user={user} orders={orders} loading={loading} onCancelled={handleCancelled} />
+    );
+  }
+
+  if (theme === "bazaar") {
+    return (
+      <OrdersPageBazaar user={user} orders={orders} loading={loading} onCancelled={handleCancelled} />
     );
   }
 

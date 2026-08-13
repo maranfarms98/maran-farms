@@ -1,5 +1,5 @@
 import { cookies } from "next/headers";
-import { Outfit, Playfair_Display } from "next/font/google";
+import { DM_Sans, Fraunces, Outfit, Playfair_Display } from "next/font/google";
 import { Providers } from "@/components/chrome/providers";
 import { getAllCategories } from "@/data/categories";
 import "./globals.css";
@@ -14,6 +14,18 @@ const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
   weight: ["500", "600", "700", "800", "900"],
+});
+
+const dmSans = DM_Sans({
+  variable: "--font-bazaar-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const fraunces = Fraunces({
+  variable: "--font-bazaar-display",
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
 });
 
 export const metadata = {
@@ -40,13 +52,15 @@ export default async function RootLayout({ children }) {
     getAllCategories(),
     cookies(),
   ]);
-  const initialTheme = cookieStore.get("mf-theme")?.value === "canopy" ? "canopy" : "classic";
+  const themeCookie = cookieStore.get("mf-theme")?.value;
+  const initialTheme =
+    themeCookie === "canopy" || themeCookie === "bazaar" ? themeCookie : "classic";
 
   return (
     <html
       lang="en"
       data-scroll-behavior="smooth"
-      className={`${outfit.variable} ${playfair.variable} antialiased`}
+      className={`${outfit.variable} ${playfair.variable} ${dmSans.variable} ${fraunces.variable} antialiased`}
     >
       <body className="flex min-h-vvh flex-col font-sans">
         <Providers categories={categories} initialTheme={initialTheme}>
