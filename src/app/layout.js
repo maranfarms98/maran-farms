@@ -1,5 +1,6 @@
 import { Outfit, Playfair_Display } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "@/components/chrome/providers";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getAllCategories } from "@/data/categories";
@@ -68,6 +69,7 @@ export default async function RootLayout({ children }) {
         <JsonLd data={localBusinessJsonLd()} />
         <Providers categories={categories}>{children}</Providers>
         <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
