@@ -306,6 +306,16 @@ export function Header({ categories = [] }) {
           >
             Home
           </Link>
+          <Link
+            href="/blog"
+            className={`focus-ring relative py-1 text-sm font-medium after:absolute after:right-0 after:bottom-0 after:left-0 after:h-0.5 after:origin-left after:bg-current after:transition after:content-[''] ${
+              pathname === "/blog" || pathname?.startsWith("/blog/")
+                ? "after:scale-x-100"
+                : "after:scale-x-0 hover:after:scale-x-100"
+            }`}
+          >
+            Farm Diary
+          </Link>
           <div className="relative" ref={catalogRef}>
             <button
               type="button"
@@ -433,6 +443,13 @@ export function Header({ categories = [] }) {
             onClick={() => setMobileOpen(false)}
           >
             Home
+          </Link>
+          <Link
+            href="/blog"
+            className="focus-ring block rounded-2xl px-4 py-3 font-medium text-farm-green-dark hover:bg-farm-accent-light"
+            onClick={() => setMobileOpen(false)}
+          >
+            Farm Diary
           </Link>
           <p className="text-eyebrow px-4 pt-3 pb-1 text-farm-green">Categories</p>
           {categories.map((cat) => (

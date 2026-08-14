@@ -1,9 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import {
-  ArrowLeft,
   Check,
   CircleHelp,
   MessageCircle,
@@ -11,6 +9,8 @@ import {
   ShieldCheck,
   Truck,
 } from "lucide-react";
+import { Breadcrumbs } from "@/components/seo/breadcrumbs";
+import { productImageAlt } from "@/lib/seo";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { GENERIC_DESCRIPTION } from "@/data/constants";
@@ -32,7 +32,14 @@ const TABS = [
   { id: "origin", label: "Farm Origin & packaging" },
 ];
 
-export function ProductPageClient({ product, category, related, content }) {
+export function ProductPageClient({
+  product,
+  category,
+  related,
+  content,
+  guide,
+  crumbs,
+}) {
   const { getQuantity, setQuantity, addItem, setOrderDrawerOpen } = useCart();
   const { toast } = useToast();
   const motionAllowed = useMotionAllowed();
@@ -71,20 +78,18 @@ export function ProductPageClient({ product, category, related, content }) {
 
   return (
     <div className="container-farm pt-28 pb-28 md:pb-16">
-      <Link
-        href={`/category/${category?.slug || ""}`}
-        className="focus-ring mb-8 inline-flex items-center gap-2 text-sm font-medium text-farm-green hover:text-farm-accent"
-      >
-        <ArrowLeft className="size-4" />
-        Back to {category?.name || "Catalog"}
-      </Link>
+      {crumbs?.length ? (
+        <div className="mb-8">
+          <Breadcrumbs items={crumbs} />
+        </div>
+      ) : null}
 
       <div className="grid gap-10 lg:grid-cols-12">
         <div className="lg:col-span-6">
           <div className="relative aspect-[4/5] overflow-hidden bg-farm-warm md:aspect-[5/6] lg:-ml-4 lg:aspect-auto lg:min-h-[32rem]">
             <Image
               src={activeImage}
-              alt={product.name}
+              alt={productImageAlt(product.name)}
               fill
               priority
               className="object-cover"
@@ -112,7 +117,13 @@ export function ProductPageClient({ product, category, related, content }) {
                       : "opacity-80 hover:opacity-100"
                   }`}
                 >
-                  <Image src={src} alt="" fill className="object-cover" sizes="120px" />
+                  <Image
+                    src={src}
+                    alt={productImageAlt(product.name)}
+                    fill
+                    className="object-cover"
+                    sizes="120px"
+                  />
                 </button>
               ))}
             </div>
@@ -156,6 +167,14 @@ export function ProductPageClient({ product, category, related, content }) {
             <p className="mt-5 text-farm-sage">
               {product.description || GENERIC_DESCRIPTION}
             </p>
+
+            {guide?.body?.length ? (
+              <div className="mt-6 space-y-3 text-sm leading-relaxed text-farm-sage md:text-base">
+                {guide.body.map((para) => (
+                  <p key={para.slice(0, 48)}>{para}</p>
+                ))}
+              </div>
+            ) : null}
 
             <div className="mt-6">
               <p className="text-sm font-semibold text-farm-green-dark">

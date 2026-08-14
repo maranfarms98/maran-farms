@@ -71,6 +71,20 @@ export async function getFeaturedProducts() {
   return data.map(mapProduct);
 }
 
+export async function getAllProducts() {
+  const supabase = getSupabaseServerClient();
+  if (!supabase) return [];
+  const { data, error } = await supabase
+    .from("products")
+    .select(PRODUCT_SELECT)
+    .order("created_at", { ascending: true });
+  if (error) {
+    console.error("[getAllProducts]", error);
+    return [];
+  }
+  return data.map(mapProduct);
+}
+
 export async function getRelatedProducts(product, limit = 3) {
   const supabase = getSupabaseServerClient();
   if (!supabase) return [];

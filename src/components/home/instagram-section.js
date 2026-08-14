@@ -1,21 +1,13 @@
 "use client";
 
 import { InstagramIcon } from "@/components/ui/instagram-icon";
+import { INSTAGRAM_JOURNEY_POSTS } from "@/data/instagram-posts";
 import { INSTAGRAM_URL } from "@/lib/site";
+import { LazyVideo } from "@/components/ui/lazy-video";
 import { MotionReveal, StaggerChildren, StaggerItem } from "@/components/motion/motion-reveal";
 import { Pressable } from "@/components/motion/pressable";
-import { useMotionAllowed } from "@/components/motion/motion-provider";
-
-const POSTS = [
-  { src: "/images/Journey01.MP4", alt: "Napier harvest from the farm" },
-  { src: "/images/Journey02.MP4", alt: "Day-old chicks at Maran Farms" },
-  { src: "/images/Journey03.MP4", alt: "Farm birds on the branch" },
-  { src: "/images/Journey04.MP4", alt: "Small pets raised with care" },
-];
 
 export function InstagramSection() {
-  const motionAllowed = useMotionAllowed();
-
   return (
     <section className="section-pad-sm border-t border-farm-green-dark/8 bg-farm-warm">
       <div className="container-farm">
@@ -44,25 +36,27 @@ export function InstagramSection() {
         </MotionReveal>
 
         <StaggerChildren className="mt-8 grid grid-cols-2 gap-2 md:grid-cols-4 md:gap-3">
-          {POSTS.map((post) => (
+          {INSTAGRAM_JOURNEY_POSTS.map((post) => (
             <StaggerItem key={post.src}>
-              <a
-                href={INSTAGRAM_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative block aspect-square overflow-hidden bg-farm-green-dark"
-              >
-                <video
-                  className="absolute inset-0 size-full object-cover transition duration-500 group-hover:scale-105"
-                  src={post.src}
-                  autoPlay={motionAllowed}
-                  muted
-                  loop
-                  playsInline
-                  preload="metadata"
-                  aria-label={post.alt}
-                />
-              </a>
+              <figure>
+                <a
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title={post.caption}
+                  className="group relative block aspect-square overflow-hidden bg-farm-green-dark"
+                >
+                  <LazyVideo
+                    className="absolute inset-0 size-full object-cover"
+                    src={post.src}
+                    title={post.caption}
+                    aria-label={post.alt}
+                  />
+                </a>
+                <figcaption className="mt-2 px-1 text-xs font-medium text-farm-sage">
+                  {post.caption}
+                </figcaption>
+              </figure>
             </StaggerItem>
           ))}
         </StaggerChildren>

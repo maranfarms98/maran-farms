@@ -10,6 +10,7 @@ import { TamilCaption } from "@/components/ui/tamil-caption";
 import { useCart } from "@/context/cart-context";
 import { useFavorites } from "@/context/favorites-context";
 import { formatMinOrder, formatPrice } from "@/lib/format";
+import { productImageAlt } from "@/lib/seo";
 import { useMotionAllowed } from "@/components/motion/motion-provider";
 
 export function ProductCard({ product, compact = false, teaser = false }) {
@@ -43,7 +44,7 @@ export function ProductCard({ product, compact = false, teaser = false }) {
         >
           <Image
             src={product.image}
-            alt={product.name}
+            alt={productImageAlt(product.name)}
             fill
             className="object-cover transition duration-500 group-hover:scale-105"
             sizes="(max-width:768px) 50vw, 25vw"

@@ -12,6 +12,11 @@ import {
 import { getSessionFromCookies } from "@/lib/auth/session";
 import { AdminLogoutButton } from "@/app/admin/logout-button";
 
+export const metadata = {
+  robots: { index: false, follow: false },
+  title: "Admin",
+};
+
 // Admin reads cookies + Supabase; never statically prerender without env.
 export const dynamic = "force-dynamic";
 
@@ -34,7 +39,7 @@ export default async function AdminLayout({ children }) {
       <aside className="hidden w-64 shrink-0 border-r border-farm-green-dark/8 bg-farm-cream px-4 py-8 md:block">
         <div className="flex items-center gap-3 px-3">
           <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full">
-            <Image src="/images/logo.png" alt="" fill className="object-cover" sizes="40px" />
+            <Image src="/images/logo.png" alt="Maran Farms" fill className="object-cover" sizes="40px" />
           </span>
           <div>
             <p className="font-heading text-xl text-farm-green-dark">Maran Farms</p>

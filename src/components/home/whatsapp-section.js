@@ -9,6 +9,7 @@ import { MotionReveal } from "@/components/motion/motion-reveal";
 import { Pressable } from "@/components/motion/pressable";
 import { getGenericInquiryUrl } from "@/lib/whatsapp";
 import { WHATSAPP_DISPLAY, WHATSAPP_NUMBER } from "@/lib/site";
+import { productImageAlt } from "@/lib/seo";
 import { useMotionAllowed } from "@/components/motion/motion-provider";
 
 const STEPS = [
@@ -146,7 +147,7 @@ export function WhatsAppSection({ demoImage }) {
                       <div className="relative mb-1 aspect-video w-40 overflow-hidden rounded-lg">
                         <Image
                           src={demoImage}
-                          alt="Harvest photo"
+                          alt={productImageAlt("Red Napier grass sticks")}
                           fill
                           className="object-cover"
                           sizes="160px"

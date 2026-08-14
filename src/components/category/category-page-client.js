@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
+import { Breadcrumbs } from "@/components/seo/breadcrumbs";
+import { categoryImageAlt } from "@/lib/seo";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ProductCard } from "@/components/product/product-card";
@@ -38,7 +40,7 @@ function filterProducts(list, { search, sort, special }) {
   return result;
 }
 
-export function CategoryPageClient({ category, products, allCategories }) {
+export function CategoryPageClient({ category, products, allCategories, crumbs }) {
   const all = products;
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("relevance");
@@ -85,7 +87,7 @@ export function CategoryPageClient({ category, products, allCategories }) {
         <div data-cat-hero className="absolute inset-0 will-change-transform">
           <Image
             src={category.heroImage}
-            alt={category.name}
+            alt={categoryImageAlt(category.name)}
             fill
             priority
             className="object-cover"
@@ -97,13 +99,11 @@ export function CategoryPageClient({ category, products, allCategories }) {
         />
         <div className="grain-overlay pointer-events-none absolute inset-0" />
         <div className="relative z-10 container-farm flex min-h-[calc(var(--vvh)*0.4)] flex-col justify-end pb-10 pt-28 md:min-h-[calc(var(--vvh)*0.5)] md:pb-14">
-          <Link
-            href="/"
-            className="focus-ring mb-6 inline-flex w-fit items-center gap-2 text-sm font-medium text-white/90 hover:text-white"
-          >
-            <ArrowLeft className="size-4" />
-            Back to Home
-          </Link>
+          {crumbs?.length ? (
+            <div className="mb-6">
+              <Breadcrumbs items={crumbs} tone="light" />
+            </div>
+          ) : null}
           <p className="text-eyebrow text-[#f0d2a8]">Category</p>
           <h1 className="font-heading text-section mt-2 text-white">
             {category.name}
@@ -132,7 +132,7 @@ export function CategoryPageClient({ category, products, allCategories }) {
               >
                 <Image
                   src={cat.image || cat.heroImage}
-                  alt=""
+                  alt={categoryImageAlt(cat.name)}
                   fill
                   unoptimized
                   className="object-cover transition duration-500 group-hover:scale-105"

@@ -10,6 +10,7 @@ import {
   INSTAGRAM_URL,
   WHATSAPP_DISPLAY,
 } from "@/lib/site";
+import { DISTRICTS } from "@/data/districts";
 import { getGenericInquiryUrl } from "@/lib/whatsapp";
 import { TamilCaption } from "@/components/ui/tamil-caption";
 import { InstagramIcon } from "@/components/ui/instagram-icon";
@@ -44,11 +45,17 @@ export function Footer({ categories = [] }) {
             <div>
               <p className="text-eyebrow text-farm-ochre">Weekly Farm Diary</p>
               <h2 className="font-heading mt-3 text-section text-white">
-                Stay connected with our fresh farm harvests.
+                <Link href="/blog" className="focus-ring rounded-sm hover:text-farm-ochre">
+                  Stay connected with our fresh farm harvests.
+                </Link>
               </h2>
               <p className="mt-3 max-w-md text-farm-green-light/75">
                 Occasional notes on fodder cycles, chick batches, and farm life
-                across Tamil Nadu.
+                across Tamil Nadu.{" "}
+                <Link href="/blog" className="text-farm-ochre underline-offset-2 hover:underline">
+                  Read the farm diary
+                </Link>
+                .
               </p>
             </div>
             <form onSubmit={onSubmit} className="flex gap-2">
@@ -113,6 +120,19 @@ export function Footer({ categories = [] }) {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link
+                  href="/blog"
+                  className="focus-ring group block rounded-lg"
+                >
+                  <span className="block text-white transition group-hover:text-farm-ochre">
+                    Farm Diary
+                  </span>
+                  <span className="text-xs text-farm-green-light/70">
+                    Guides & field notes
+                  </span>
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -131,6 +151,21 @@ export function Footer({ categories = [] }) {
           <div>
             <h3 className="text-eyebrow text-farm-ochre">Direct Contact</h3>
             <p className="mt-4 text-farm-green-light/75">Tamil Nadu, India</p>
+            <p className="mt-3 text-sm text-farm-green-light/70">
+              We deliver across Tamil Nadu
+            </p>
+            <ul className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-sm">
+              {DISTRICTS.map((d) => (
+                <li key={d.slug}>
+                  <Link
+                    href={`/delivery/${d.slug}`}
+                    className="focus-ring rounded-sm text-white/85 hover:text-farm-ochre"
+                  >
+                    {d.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
             <a
               href={getGenericInquiryUrl()}
               target="_blank"

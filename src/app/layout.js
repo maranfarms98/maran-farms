@@ -1,6 +1,11 @@
 import { Outfit, Playfair_Display } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import { Providers } from "@/components/chrome/providers";
+import { JsonLd } from "@/components/seo/json-ld";
 import { getAllCategories } from "@/data/categories";
+import { localBusinessJsonLd } from "@/lib/schema";
+import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/seo";
+import { getSiteUrl } from "@/lib/site";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -15,13 +20,29 @@ const playfair = Playfair_Display({
   weight: ["500", "600", "700", "800", "900"],
 });
 
+const homeOg = {
+  title: HOME_TITLE,
+  description: HOME_DESCRIPTION,
+  siteName: "Maran Farms",
+  locale: "en_IN",
+  type: "website",
+  images: [{ url: "/images/home-hero.jpg", alt: HOME_TITLE }],
+};
+
 export const metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: {
-    default: "Maran Farms — Tamil Nadu's Premium Agricultural Brand",
+    default: HOME_TITLE,
     template: "%s · Maran Farms",
   },
-  description:
-    "Cultivating superior Napier grass plants, hatching farm-fresh poultry chicks, and raising healthy small pets. Order via WhatsApp across Tamil Nadu.",
+  description: HOME_DESCRIPTION,
+  openGraph: homeOg,
+  twitter: {
+    card: "summary_large_image",
+    title: HOME_TITLE,
+    description: HOME_DESCRIPTION,
+    images: ["/images/home-hero.jpg"],
+  },
   formatDetection: {
     telephone: false,
     date: false,
@@ -39,12 +60,14 @@ export default async function RootLayout({ children }) {
 
   return (
     <html
-      lang="en"
+      lang="en-IN"
       data-scroll-behavior="smooth"
       className={`${outfit.variable} ${playfair.variable} antialiased`}
     >
       <body className="flex min-h-vvh flex-col font-sans">
+        <JsonLd data={localBusinessJsonLd()} />
         <Providers categories={categories}>{children}</Providers>
+        <Analytics />
       </body>
     </html>
   );

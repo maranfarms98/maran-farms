@@ -6,6 +6,7 @@ import { useState } from "react";
 import { ArrowUpRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { TamilCaption } from "@/components/ui/tamil-caption";
+import { categoryImageAlt } from "@/lib/seo";
 import { MotionReveal } from "@/components/motion/motion-reveal";
 import { useMotionAllowed } from "@/components/motion/motion-provider";
 
@@ -52,7 +53,7 @@ function PathPanel({ path, isActive, showDivider, motionAllowed, onActivate }) {
       >
         <Image
           src={path.image}
-          alt={path.name}
+          alt={categoryImageAlt(path.name)}
           fill
           unoptimized
           className="object-cover"
@@ -160,7 +161,7 @@ export function HarvestPaths({ categories = [] }) {
           >
             <Image
               src={path.image}
-              alt={path.name}
+              alt={categoryImageAlt(path.name)}
               fill
               unoptimized
               className="object-cover"
