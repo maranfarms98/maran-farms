@@ -3,9 +3,9 @@ import { formatPrice } from "@/lib/format";
 import { getSiteUrl, SITE_NAME, toAbsoluteUrl } from "@/lib/site";
 
 export const HOME_TITLE =
-  "Maran Farms | Napier Grass, Day-Old Chicks & Small Pets — Tamil Nadu";
+  "Maran Farms | Napier Grass, Day-Old Chicks & Small Pets — Karur, Tamil Nadu";
 export const HOME_DESCRIPTION =
-  "Buy Napier grass sticks, farm-fresh day-old chicks, and healthy small pets from Maran Farms. WhatsApp ordering and delivery across Tamil Nadu.";
+  "Buy Napier grass sticks, farm-fresh day-old chicks, and healthy small pets from Maran Farms in Pallamaruthapatti, Karur. WhatsApp ordering and delivery across Tamil Nadu.";
 export const HOME_H1 =
   "Napier Plants, Farm-Fresh Chicks & Small Pets — Delivered Across Tamil Nadu";
 
@@ -18,11 +18,11 @@ export function canonicalUrl(path = "/") {
 }
 
 export function productImageAlt(name) {
-  return `${name} – Maran Farms Tamil Nadu`;
+  return `${name} – Maran Farms, Karur`;
 }
 
 export function categoryImageAlt(name) {
-  return `${name} from Maran Farms, Tamil Nadu`;
+  return `${name} from Maran Farms, Karur`;
 }
 
 export function productMetaDescription(product, guide) {
@@ -34,11 +34,11 @@ export function productMetaDescription(product, guide) {
 export function productPageTitle(product) {
   const price = formatPrice(product.price);
   const unit = product.unit ? ` ${product.unit}` : "";
-  return `${product.name} – ${price}${unit} | Maran Farms Tamil Nadu`;
+  return `${product.name} – ${price}${unit} | Maran Farms, Karur`;
 }
 
 export function categoryPageTitle(category) {
-  return `${category.name} Online | Maran Farms Tamil Nadu`;
+  return `${category.name} Online | Maran Farms, Karur`;
 }
 
 export function pageMetadata({

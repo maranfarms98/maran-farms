@@ -5,6 +5,13 @@ import { testimonials } from "@/data/testimonials";
 import { canonicalUrl, HOME_DESCRIPTION, productMetaDescription } from "@/lib/seo";
 import {
   CONTACT_EMAIL,
+  FARM_CITY,
+  FARM_COUNTRY,
+  FARM_LOCALITY,
+  FARM_POSTAL_CODE,
+  FARM_REGION,
+  GOOGLE_MAPS_URL,
+  GOOGLE_PLACE_URL,
   INSTAGRAM_URL,
   OPENING_HOURS,
   SITE_NAME,
@@ -39,7 +46,7 @@ export function aggregateRatingNode(list = testimonials) {
 export function localBusinessJsonLd() {
   return {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
+    "@type": ["Farm", "LocalBusiness"],
     name: SITE_NAME,
     image: toAbsoluteUrl("/images/logo.png"),
     url: canonicalUrl("/"),
@@ -48,14 +55,18 @@ export function localBusinessJsonLd() {
     description: HOME_DESCRIPTION,
     address: {
       "@type": "PostalAddress",
-      addressRegion: "Tamil Nadu",
-      addressCountry: "IN",
+      streetAddress: FARM_LOCALITY,
+      addressLocality: FARM_CITY,
+      addressRegion: FARM_REGION,
+      postalCode: FARM_POSTAL_CODE,
+      addressCountry: FARM_COUNTRY,
     },
+    hasMap: GOOGLE_MAPS_URL,
     areaServed: DISTRICTS.map((d) => ({
       "@type": "AdministrativeArea",
       name: `${d.name}, Tamil Nadu`,
     })),
-    sameAs: [INSTAGRAM_URL],
+    sameAs: [INSTAGRAM_URL, GOOGLE_PLACE_URL],
     openingHours: OPENING_HOURS,
     aggregateRating: aggregateRatingNode(),
     review: reviewNodes(),

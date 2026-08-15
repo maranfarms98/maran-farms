@@ -1,5 +1,19 @@
 export const DISTRICTS = [
   {
+    slug: "karur",
+    name: "Karur",
+    tamilName: "கரூர்",
+    title: "Farm-Gate Napier, Chicks & Pickup in Karur | Maran Farms",
+    description:
+      "Order Napier sticks, day-old chicks, and small pets from Maran Farms in Pallamaruthapatti, Karur. Farm-gate pickup and same-day drops around Karur district.",
+    focus: "farm-gate pickup and same-day Karur drops",
+    body: [
+      "Karur is home. Maran Farms sits in Pallamaruthapatti, so a Karur order is not a long haul — it is a morning cut, a WhatsApp confirm, and a farm-gate pickup or a short drop to Thanthonimalai, Aravakurichi, K. Paramathy, and neighbouring villages. If you can reach the farm, we would rather you collect sticks while they are still moist than sit them on a truck.",
+      "Dairy plots around Karur order Red Napier, Super Napier, and CO-4 in the same pattern as the western belts, with one difference: we can often line up a same-day bundle when you message before noon. Day-old chicks for Karur backyards are boxed the morning of hatch and handed over the same day when someone is home to receive them.",
+      "Visit only after a WhatsApp window. The fields are a working cattle farm, not a showroom. Share your village or a landmark (Pallamaruthapatti, Mariamman Temple side) and whether you want pickup or a drop — we will tell you honestly if the harvest should wait for moisture.",
+    ],
+  },
+  {
     slug: "pollachi",
     name: "Pollachi",
     tamilName: "பொள்ளாச்சி",

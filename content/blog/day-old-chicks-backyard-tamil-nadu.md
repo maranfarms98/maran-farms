@@ -6,7 +6,7 @@ image: "/images/product-chick.png"
 tamil: "ஒருநாள் குஞ்சுகள் — பின்னங்கே பராமரிப்பு"
 ---
 
-A backyard flock in Tamil Nadu is usually 10–25 birds, a courtyard or terrace coop, and a WhatsApp thread — not a 2,000-bird shed. [Day-old chicks](/product/day-old-chick) from Maran Farms are hatched on-farm and boxed the same morning. That timing is the product. A chick that sits two days in a warehouse is not a chick we will put our name on.
+A backyard flock in Tamil Nadu is usually 10–25 birds, a courtyard or terrace coop, and a WhatsApp thread — not a 2,000-bird shed. [Day-old chicks](/product/day-old-chick) from Maran Farms are hatched on our Karur farm and boxed the same morning. That timing is the product. A chick that sits two days in a warehouse is not a chick we will put our name on.
 
 ## What “day-old” actually means
 

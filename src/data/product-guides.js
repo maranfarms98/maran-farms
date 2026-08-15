@@ -5,7 +5,7 @@ export const PRODUCT_GUIDES = {
     body: [
       "Red Napier is the variety dairy farmers around Pollachi and western Tamil Nadu ask for when milk yield has stalled on ordinary grass. The stems tiller densely, the leaf is high in protein relative to coarse local fodder, and the first cut typically comes in 45–60 days if sticks are planted into moist soil within two days of delivery.",
       "Plan on roughly 40–50 kg of green fodder per milch animal per day once the plot is in regular harvest. A well-managed half-acre of Red Napier, cut at knee-to-waist height, will support a small dairy herd without buying load after load of outside grass. Plant sticks at a 45° angle, 2–3 feet between rows, and do not let the stand go to full flowering if you want protein rather than fibre.",
-      "Our Red Napier sticks are cut the same day we pack. Minimum order is 500 sticks. Order on WhatsApp with your village name and preferred planting week — we will not dispatch into a dry field in peak heat without telling you to wait for a shower or a drip cycle.",
+      "Our Red Napier sticks are cut the same day we pack, from the Karur fields. Minimum order is 500 sticks. Order on WhatsApp with your village name and preferred planting week — we will not dispatch into a dry field in peak heat without telling you to wait for a shower or a drip cycle.",
     ],
   },
   "super-napier": {
@@ -23,7 +23,7 @@ export const PRODUCT_GUIDES = {
     body: [
       "CO-4 is the variety most Tamil Nadu farmers already know by name — the TNAU-associated hybrid that extension officers still recommend. It is a reliable all-rounder: good biomass, decent protein, and a planting calendar that works year-round under drip, with a bias toward June–September if you are rainfed.",
       "Compared with Red Napier, CO-4 is usually a little cheaper per stick and a little less “dairy-specific” in leaf quality. Compared with Super Napier, it is less of a volume monster and easier to manage on a half-acre. If you are unsure, plant 500 of CO-4 and 500 of Red Napier on the same soil and keep the one that tillers in your water regime.",
-      "We supply CO-4 as fresh sticks, 500 minimum. Read our farm diary comparison of CO-4 vs Red Napier if you want the side-by-side before you buy. Dispatch is farm-direct across Tamil Nadu, confirmed on WhatsApp.",
+      "We supply CO-4 as fresh sticks, 500 minimum. Read our farm diary comparison of CO-4 vs Red Napier if you want the side-by-side before you buy. Dispatch is farm-direct from Karur across Tamil Nadu, confirmed on WhatsApp.",
     ],
   },
   "co5-napier": {
@@ -102,7 +102,7 @@ export const PRODUCT_GUIDES = {
     metaDescription:
       "Buy day-old chicks in Tamil Nadu from Maran Farms. Farm-hatched, packed for transit, WhatsApp ordering. Ideal for backyard and small commercial starts.",
     body: [
-      "Day-old chicks from Maran Farms are hatched on-farm and dispatched the same morning we box them. That timing is the whole product: a chick that sits two days in a warehouse is not the chick we will put our name on. Viability is why Erode and Coimbatore buyers come back, not a fancy breed name on the crate.",
+      "Day-old chicks from Maran Farms are hatched on our Karur farm and dispatched the same morning we box them. That timing is the whole product: a chick that sits two days in a warehouse is not the chick we will put our name on. Viability is why Erode and Coimbatore buyers come back, not a fancy breed name on the crate.",
       "A backyard start in Tamil Nadu is usually 10–25 chicks, not 200. Brood them under a heat lamp or a reliable heat source for the first week, keep water clean, and expect some first-week loss even in a good batch — we will say that on WhatsApp before you pay. Birds take roughly 5–6 months to mature as layers depending on breed mix and feed; this is not a two-week meat cycle unless you asked for a broiler line.",
       "We pack for district roads, not air cargo. Tell us Coimbatore, Salem, or Chennai in the first message so the box and the departure hour match the trip. Minimum is one chick; sensible minimum is a small group so they huddle. Read the farm diary on backyard flocks before you order if this is your first shed.",
     ],
@@ -113,7 +113,7 @@ export const PRODUCT_GUIDES = {
     body: [
       "Country chicks (nattu kozhi type) are what Salem and village keepers want when the goal is a hardy backyard bird, not a commercial layer hybrid. They forage, they take heat better than a fragile hybrid, and they grow slower — which is the point if you want eggs and meat on a homestead schedule.",
       "Settle them in a secure run for the first weeks; country birds still get taken by dogs and kites if you dump them in an open yard on day two. Feed a starter crumble, then let them scratch. Maturity is slower than a commercial chick — plan months, not weeks.",
-      "Hatched and packed on-farm. WhatsApp the count and district. We would rather send 12 healthy birds than 40 from a tired batch. Combine with a Napier order only when both are ready the same morning.",
+      "Hatched and packed on our Karur farm. WhatsApp the count and district. We would rather send 12 healthy birds than 40 from a tired batch. Combine with a Napier order only when both are ready the same morning.",
     ],
   },
   "lovebird-pair": {

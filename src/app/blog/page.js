@@ -15,7 +15,7 @@ const crumbs = [
 export const metadata = pageMetadata({
   title: "Weekly Farm Diary | Napier, Chicks & Farm Notes — Maran Farms",
   description:
-    "Field notes from Maran Farms: CO-4 vs Red Napier, day-old chicks for backyard flocks, and fodder advice for Tamil Nadu farmers.",
+    "Field notes from Maran Farms in Karur: CO-4 vs Red Napier, day-old chicks for backyard flocks, and fodder advice for Tamil Nadu farmers.",
   path: "/blog",
   image: "/images/home-hero.jpg",
 });
@@ -35,7 +35,7 @@ export default function BlogIndexPage() {
         <TamilCaption className="mt-2">பண்ணைக் குறிப்புகள்</TamilCaption>
         <p className="mt-4 max-w-2xl text-farm-sage">
           Fodder comparisons, chick batches, and the questions Tamil Nadu
-          farmers actually send on WhatsApp.
+          farmers actually send on WhatsApp — written from our Karur fields.
         </p>
 
         <ul className="mt-12 grid gap-6 md:grid-cols-2">

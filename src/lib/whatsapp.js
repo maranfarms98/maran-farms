@@ -11,6 +11,12 @@ export function getGenericInquiryUrl() {
   return waUrl(text);
 }
 
+export function getVisitInquiryUrl() {
+  const text =
+    "Hello Maran Farms! I'd like to visit the farm at Pallamaruthapatti, Karur. Please share a suitable time.";
+  return waUrl(text);
+}
+
 export function getOrderInquiryUrl(orderId) {
   return waUrl(`Hello Maran Farms! I have a question about order ${orderId}.`);
 }

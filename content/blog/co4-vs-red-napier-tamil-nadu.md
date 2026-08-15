@@ -30,4 +30,4 @@ A working ration is still about 40–50 kg of green fodder per milch animal per 
 
 Sticks at 45°, 2–3 feet between rows, plant within 48 hours of delivery, manure at planting, top-dress after the first cut. That list does not change between CO-4 and Red Napier. What changes is the leaf you get if you actually harvest on time.
 
-Maran Farms cuts both the morning we pack. Minimum order is 500 sticks per variety. [Order on WhatsApp](/category/napier-plants) with your taluk — Pollachi, Coimbatore, Madurai, Erode — and we will tell you honestly if the field should wait for a shower.
+Maran Farms cuts both the morning we pack, from our fields in Pallamaruthapatti, Karur. Minimum order is 500 sticks per variety. [Order on WhatsApp](/category/napier-plants) with your taluk — Karur, Pollachi, Coimbatore, Madurai, Erode — and we will tell you honestly if the field should wait for a shower.

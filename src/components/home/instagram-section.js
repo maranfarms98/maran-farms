@@ -21,7 +21,7 @@ export function InstagramSection() {
               Follow Our Journey
             </h2>
             <p className="mt-2 max-w-md text-farm-sage">
-              Field notes, chick batches, and pet moments from the farm.
+              Field notes, chick batches, and pet moments from the Karur farm.
             </p>
           </div>
           <Pressable

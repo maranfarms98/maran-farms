@@ -23,7 +23,7 @@ const MESSAGES = [
   { from: "user", text: "Hi! Do you have Red Napier sticks in stock?" },
   { from: "farm", text: "Yes — fresh Red Napier available. How many sticks do you need?" },
   { from: "user", text: "1,000 sticks delivered to Coimbatore please." },
-  { from: "farm", text: "Confirmed. We'll dispatch tomorrow morning with care packing." },
+  { from: "farm", text: "Confirmed. Cut this morning in Karur — dispatch tomorrow with care packing." },
   { from: "farm", text: "", image: true },
   { from: "user", text: "Perfect — booking confirmed. Thank you!" },
 ];

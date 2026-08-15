@@ -67,15 +67,16 @@ export function TrustDashboard() {
         <MotionReveal className="mx-auto max-w-2xl text-center">
           <p className="text-eyebrow text-farm-green">Credibility & Trust</p>
           <h2 className="font-heading text-section mt-3 font-semibold text-farm-green-dark">
-            Trusted across Tamil Nadu
+            Harvested in Karur. Trusted across Tamil Nadu.
           </h2>
           <TamilCaption className="mt-2">
-            தமிழ்நாடு முழுவதும் நம்பிக்கை
+            கரூரில் அறுவடை · தமிழ்நாடு முழுவதும் நம்பிக்கை
           </TamilCaption>
           <div className="mx-auto mt-5 h-0.5 w-14 bg-farm-accent" aria-hidden />
           <p className="mt-5 text-farm-sage">
-            From Pollachi dairy farms to Chennai homesteads — viable stock,
-            clear communication, every order confirmed on WhatsApp.
+            From our Pallamaruthapatti fields to Pollachi dairies and Chennai
+            homesteads — viable stock, clear communication, every order
+            confirmed on WhatsApp.
           </p>
         </MotionReveal>
 

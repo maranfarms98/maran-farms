@@ -2,11 +2,16 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, Leaf, MessageCircle } from "lucide-react";
+import { ArrowUpRight, Leaf, MapPin, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/context/toast-context";
 import {
   CONTACT_EMAIL,
+  FARM_ADDRESS_LINE,
+  FARM_ADDRESS_SHORT,
+  FARM_CITY_TA,
+  FARM_LOCALITY_TA,
+  GOOGLE_DIRECTIONS_URL,
   INSTAGRAM_URL,
   WHATSAPP_DISPLAY,
 } from "@/lib/site";
@@ -51,7 +56,7 @@ export function Footer({ categories = [] }) {
               </h2>
               <p className="mt-3 max-w-md text-farm-green-light/75">
                 Occasional notes on fodder cycles, chick batches, and farm life
-                across Tamil Nadu.{" "}
+                from Karur across Tamil Nadu.{" "}
                 <Link href="/blog" className="text-farm-ochre underline-offset-2 hover:underline">
                   Read the farm diary
                 </Link>
@@ -92,7 +97,8 @@ export function Footer({ categories = [] }) {
             </div>
             <p className="mt-4 text-sm text-farm-green-light/75">
               Family-owned agricultural excellence — Napier plants, farm-fresh
-              chicks, and healthy small pets delivered across Tamil Nadu.
+              chicks, and healthy small pets from {FARM_ADDRESS_SHORT},
+              delivered across Tamil Nadu.
             </p>
             <p className="mt-5 text-sm italic text-farm-ochre" lang="ta">
               விதைத்தால் விளையும்; உழைத்தால் உயரும்.
@@ -150,8 +156,20 @@ export function Footer({ categories = [] }) {
 
           <div>
             <h3 className="text-eyebrow text-farm-ochre">Direct Contact</h3>
-            <p className="mt-4 text-farm-green-light/75">Tamil Nadu, India</p>
-            <p className="mt-3 text-sm text-farm-green-light/70">
+            <p className="mt-4 text-white">{FARM_ADDRESS_LINE}</p>
+            <p className="mt-1 text-sm text-farm-green-light/70" lang="ta">
+              {FARM_LOCALITY_TA}, {FARM_CITY_TA}
+            </p>
+            <a
+              href={GOOGLE_DIRECTIONS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus-ring mt-3 inline-flex items-center gap-2 text-sm text-farm-ochre hover:underline"
+            >
+              <MapPin className="size-4" />
+              Get directions
+            </a>
+            <p className="mt-4 text-sm text-farm-green-light/70">
               We deliver across Tamil Nadu
             </p>
             <ul className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-sm">
@@ -194,6 +212,15 @@ export function Footer({ categories = [] }) {
               className="focus-ring flex size-11 items-center justify-center rounded-full border border-white/15 text-white transition hover:bg-white/10"
             >
               <InstagramIcon className="size-5" />
+            </a>
+            <a
+              href={GOOGLE_DIRECTIONS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Directions to Maran Farms in Karur"
+              className="focus-ring flex size-11 items-center justify-center rounded-full border border-white/15 text-white transition hover:bg-white/10"
+            >
+              <MapPin className="size-5" />
             </a>
             <a
               href={getGenericInquiryUrl()}

@@ -288,7 +288,7 @@ export function Hero() {
             data-hero-line
             className="mt-4 max-w-lg text-[1.05rem] leading-relaxed text-white/95 drop-shadow-[0_2px_14px_rgba(0,0,0,0.5)]"
           >
-            Premium farm products from Tamil Nadu — order easily on WhatsApp.
+            Harvested in Karur, delivered across Tamil Nadu — order on WhatsApp.
           </p>
 
           <div data-hero-line>

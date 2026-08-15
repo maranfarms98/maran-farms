@@ -23,7 +23,7 @@ const contentSecurityPolicy = [
   "img-src 'self' blob: data: https://*.supabase.co https://*.razorpay.com",
   "font-src 'self'",
   "connect-src 'self' https://checkout.razorpay.com https://api.razorpay.com https://lumberjack.razorpay.com https://va.vercel-scripts.com https://vitals.vercel-insights.com",
-  "frame-src https://api.razorpay.com https://checkout.razorpay.com",
+  "frame-src https://api.razorpay.com https://checkout.razorpay.com https://www.google.com https://maps.google.com https://www.google.co.in",
   "media-src 'self'",
   "object-src 'none'",
   "base-uri 'self'",

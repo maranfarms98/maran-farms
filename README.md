@@ -1,6 +1,6 @@
 # Maran Farms
 
-Tamil Nadu farm storefront — Napier plants, chicks & birds, and small pets. Orders via WhatsApp / Razorpay checkout with Supabase-backed catalog, auth, and admin.
+Tamil Nadu farm storefront based in Pallamaruthapatti, Karur — Napier plants, chicks & birds, and small pets. Orders via WhatsApp / Razorpay checkout with Supabase-backed catalog, auth, and admin.
 
 ## Requirements
 

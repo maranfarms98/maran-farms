@@ -2,6 +2,7 @@ import { formatPrice, pluralizeUnit } from "@/lib/format";
 import { PAYMENT_METHOD_LABELS } from "@/lib/orders/payment-methods";
 import {
   CONTACT_EMAIL,
+  FARM_ADDRESS_LINE,
   INSTAGRAM_URL,
   SITE_NAME,
   WHATSAPP_DISPLAY,
@@ -308,7 +309,7 @@ function heroSection() {
                 ${brandMark()}
                 <td style="padding-left:14px;" valign="middle">
                   <div class="brand-title" style="font-family:Georgia,'Times New Roman',serif;color:#ffffff;font-size:22px;font-weight:700;letter-spacing:1.5px;">${escapeHtml(SITE_NAME.toUpperCase())}</div>
-                  <div style="font-family:Arial,Helvetica,sans-serif;color:${C.tagline};font-size:11px;letter-spacing:0.5px;margin-top:2px;">FROM OUR FARM, TO YOUR HOME</div>
+                  <div style="font-family:Arial,Helvetica,sans-serif;color:${C.tagline};font-size:11px;letter-spacing:0.5px;margin-top:2px;">FROM KARUR, TO YOUR FARM</div>
                 </td>
               </tr>
             </table>
@@ -601,7 +602,7 @@ function footerSection() {
                   </td>
                   <td class="trust-col" style="padding-right:20px;font-size:11px;color:${C.ink};vertical-align:top;">
                     <div style="font-family:Georgia,serif;color:${C.green};font-size:12px;margin-bottom:3px;">🏡 Farm Fresh</div>
-                    Direct from our farm
+                    Direct from our Karur farm
                   </td>
                   <td class="trust-col" style="font-size:11px;color:${C.ink};vertical-align:top;">
                     <div style="font-family:Georgia,serif;color:${C.green};font-size:12px;margin-bottom:3px;">❤️ Trusted Quality</div>
@@ -614,7 +615,7 @@ function footerSection() {
 
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="copyright-bar" style="margin-top:20px;background-color:${C.green};border-radius:8px;">
             <tr>
-              <td class="copyright-left" style="padding:12px 18px;font-size:11px;color:${C.footerBar};">© ${year} ${escapeHtml(SITE_NAME)}. All rights reserved.</td>
+              <td class="copyright-left" style="padding:12px 18px;font-size:11px;color:${C.footerBar};">© ${year} ${escapeHtml(SITE_NAME)} · ${escapeHtml(FARM_ADDRESS_LINE)}</td>
               <td class="copyright-right" align="right" style="padding:12px 18px;font-size:12px;color:${C.footerBar};">
                 <a href="${escapeHtml(INSTAGRAM_URL)}" style="color:${C.footerBar};text-decoration:none;">📷 Instagram</a>&nbsp;&nbsp;
                 <a href="${escapeHtml(wa)}" style="color:${C.footerBar};text-decoration:none;">💬 WhatsApp</a>

@@ -94,7 +94,7 @@ export function Testimonials() {
             </TamilCaption>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-farm-green-light/75 md:mt-5 md:text-base">
               Feedback from dairy growers, poultry starters, and homestead
-              keepers across Tamil Nadu.
+              keepers — from our Karur fields to farms across Tamil Nadu.
             </p>
           </MotionReveal>
         </div>

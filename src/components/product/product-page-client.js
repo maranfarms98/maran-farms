@@ -221,7 +221,7 @@ export function ProductPageClient({
               </span>
               <span className="inline-flex items-center gap-2">
                 <Truck className="size-4 text-farm-green" />
-                Verified Tamil Nadu Logistics
+                Verified Karur dispatch
               </span>
             </div>
           </MotionReveal>
