@@ -57,6 +57,7 @@ export function ProductPageClient({
 
   const inCart = cartQty > 0;
   const lineTotal = product.price * qty;
+  const originNotes = Array.isArray(content.origin) ? content.origin : [];
 
   const share = async () => {
     try {
@@ -284,7 +285,7 @@ export function ProductPageClient({
           )}
           {tab === "origin" && (
             <ul className="space-y-3">
-              {content.origin.map((item, i) => (
+              {originNotes.map((item, i) => (
                 <li key={i} className="flex gap-3 text-farm-sage">
                   <Check className="mt-1 size-4 shrink-0 text-farm-green" />
                   {item}

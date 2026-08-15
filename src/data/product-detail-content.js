@@ -2,6 +2,25 @@ import { getSupabaseServerClient } from "@/lib/supabase/server";
 
 const EMPTY_CONTENT = { specs: [], care: [], origin: [], faqs: [] };
 
+function asArray(value) {
+  if (Array.isArray(value)) return value;
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (!trimmed) return [];
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (Array.isArray(parsed)) return parsed;
+    } catch {
+      // Stored as plain text instead of a JSON array.
+    }
+    return trimmed
+      .split(/\n+/)
+      .map((line) => line.replace(/^[-*•]\s*/, "").trim())
+      .filter(Boolean);
+  }
+  return [];
+}
+
 export async function getDetailContent(categoryId) {
   const supabase = getSupabaseServerClient();
   if (!supabase) return EMPTY_CONTENT;
@@ -16,9 +35,9 @@ export async function getDetailContent(categoryId) {
   }
   if (!data) return EMPTY_CONTENT;
   return {
-    specs: data.specs || [],
-    care: data.care_tips || [],
-    origin: data.origin_notes || [],
-    faqs: data.faqs || [],
+    specs: asArray(data.specs),
+    care: asArray(data.care_tips),
+    origin: asArray(data.origin_notes),
+    faqs: asArray(data.faqs),
   };
 }
