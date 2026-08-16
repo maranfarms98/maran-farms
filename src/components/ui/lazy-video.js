@@ -2,6 +2,21 @@
 
 import { useEffect, useRef, useState } from "react";
 
+function unlockPlayback(el) {
+  if (!el) return;
+  el.muted = true;
+  el.defaultMuted = true;
+  el.playsInline = true;
+  el.setAttribute("playsinline", "");
+  el.setAttribute("webkit-playsinline", "true");
+}
+
+function tryPlay(el) {
+  unlockPlayback(el);
+  const play = el.play();
+  if (play) play.catch(() => {});
+}
+
 /**
  * Attaches src and plays a muted loop only while the tile is on screen.
  * Off-screen clips pause so a grid does not keep decoding in the background.
@@ -32,30 +47,42 @@ export function LazyVideo({
     const el = ref.current;
     if (!el || !inView) return undefined;
 
-    const play = () => {
-      el.play().catch(() => {});
+    unlockPlayback(el);
+    el.src = src;
+    el.load();
+
+    const play = () => tryPlay(el);
+    play();
+    el.addEventListener("canplay", play);
+    el.addEventListener("loadeddata", play);
+
+    const onVis = () => {
+      if (document.visibilityState === "visible") play();
     };
-    if (el.readyState >= 2) play();
-    else el.addEventListener("canplay", play);
+    document.addEventListener("visibilitychange", onVis);
 
     return () => {
       el.removeEventListener("canplay", play);
+      el.removeEventListener("loadeddata", play);
+      document.removeEventListener("visibilitychange", onVis);
       el.pause();
     };
-  }, [inView]);
+  }, [inView, src]);
 
   return (
     <video
       ref={ref}
       className={className}
-      src={inView ? src : undefined}
       poster={poster}
       muted
+      autoPlay
       loop
       playsInline
       preload={inView ? "auto" : "none"}
       title={title}
       aria-label={ariaLabel}
+      disablePictureInPicture
+      disableRemotePlayback
     />
   );
 }

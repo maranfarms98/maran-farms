@@ -23,7 +23,6 @@ export function Hero() {
   const [revealed, setRevealed] = useState(!motionAllowed);
   const [splashDone, setSplashDone] = useState(false);
   const [heroInView, setHeroInView] = useState(true);
-  const [desktopMotion, setDesktopMotion] = useState(false);
   const [videoSrc, setVideoSrc] = useState(null);
 
   useEffect(() => {
@@ -31,21 +30,6 @@ export function Hero() {
     window.addEventListener(SPLASH_DONE_EVENT, onSplash);
     if (hasSplashCompleted()) onSplash();
     return () => window.removeEventListener(SPLASH_DONE_EVENT, onSplash);
-  }, []);
-
-  useEffect(() => {
-    const desktop = window.matchMedia(
-      "(min-width: 768px) and (pointer: fine) and (hover: hover)",
-    );
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
-    const update = () => setDesktopMotion(desktop.matches && !reduced.matches);
-    update();
-    desktop.addEventListener("change", update);
-    reduced.addEventListener("change", update);
-    return () => {
-      desktop.removeEventListener("change", update);
-      reduced.removeEventListener("change", update);
-    };
   }, []);
 
   useEffect(() => {
@@ -59,7 +43,7 @@ export function Hero() {
     return () => io.disconnect();
   }, []);
 
-  const canPlayVideo = desktopMotion && splashDone && heroInView;
+  const canPlayVideo = motionAllowed && splashDone && heroInView;
 
   useEffect(() => {
     if (canPlayVideo) setVideoSrc("/images/home-story.mp4");
@@ -68,9 +52,25 @@ export function Hero() {
   useEffect(() => {
     const video = videoRef.current;
     if (!video || !videoSrc) return undefined;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute("webkit-playsinline", "true");
+
     if (canPlayVideo) {
-      video.play().catch(() => {});
-      return undefined;
+      const play = () => {
+        video.muted = true;
+        video.play().catch(() => {});
+      };
+      play();
+      video.addEventListener("canplay", play);
+      const onTouch = () => play();
+      window.addEventListener("touchstart", onTouch, { once: true, passive: true });
+      return () => {
+        video.removeEventListener("canplay", play);
+        window.removeEventListener("touchstart", onTouch);
+      };
     }
     video.pause();
     return undefined;
@@ -243,6 +243,7 @@ export function Hero() {
             className="absolute inset-0 size-full object-cover object-center"
             src={videoSrc}
             muted
+            autoPlay
             loop
             playsInline
             preload="metadata"
