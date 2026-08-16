@@ -119,7 +119,7 @@ export function HarvestPaths({ categories = [] }) {
       className="relative scroll-mt-24 overflow-hidden bg-farm-green-dark"
       aria-labelledby="harvest-paths-heading"
     >
-      <div className="container-farm px-6 pt-14 pb-8 md:pt-16 md:pb-10">
+      <div className="container-farm px-6 pt-10 pb-6 md:pt-12 md:pb-8">
         <MotionReveal>
           <p className="text-eyebrow text-[#f0d2a8]">Our Categories</p>
           <h2
@@ -136,7 +136,7 @@ export function HarvestPaths({ categories = [] }) {
 
       {/* Desktop: expanding full-bleed panels */}
       <div
-        className="hidden h-[min(72vh,620px)] w-full md:flex"
+        className="hidden h-[min(56vh,480px)] w-full md:flex"
         onMouseLeave={() => setActive(0)}
       >
         {paths.map((path, i) => (
@@ -157,7 +157,7 @@ export function HarvestPaths({ categories = [] }) {
           <Link
             key={path.slug}
             href={`/category/${path.slug}`}
-            className="relative h-[58vh] w-[82vw] shrink-0 snap-center overflow-hidden first:ml-6 last:mr-6"
+            className="relative h-[48vh] w-[82vw] shrink-0 snap-center overflow-hidden first:ml-6 last:mr-6"
           >
             <Image
               src={path.image}

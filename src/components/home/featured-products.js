@@ -11,6 +11,8 @@ export function FeaturedProducts({ products = [] }) {
   const scrollerRef = useRef(null);
   const motionAllowed = useMotionAllowed();
 
+  if (!products.length) return null;
+
   const scroll = (dir) => {
     const el = scrollerRef.current;
     if (!el) return;
@@ -18,7 +20,7 @@ export function FeaturedProducts({ products = [] }) {
   };
 
   return (
-    <section className="section-pad bg-farm-cream">
+    <section className="bg-white py-10 md:py-12">
       <div className="container-farm">
         <div className="flex items-end justify-between gap-4">
           <SectionHeader

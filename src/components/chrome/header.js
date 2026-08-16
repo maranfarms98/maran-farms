@@ -259,12 +259,12 @@ export function Header({ categories = [] }) {
       className={`fixed inset-x-0 top-0 z-50 ${
         transparent
           ? "bg-transparent"
-          : "border-b border-farm-green-dark/8 bg-farm-cream/90 shadow-soft backdrop-blur-md"
+          : "border-b border-farm-green-dark/8 bg-white/90 shadow-soft backdrop-blur-md"
       }`}
       animate={{
         backgroundColor: transparent
-          ? "rgba(252, 248, 244, 0)"
-          : "rgba(252, 248, 244, 0.9)",
+          ? "rgba(255, 255, 255, 0)"
+          : "rgba(255, 255, 255, 0.9)",
       }}
       transition={{ duration: 0.35 }}
       style={{

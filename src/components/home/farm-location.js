@@ -20,7 +20,7 @@ import { getVisitInquiryUrl } from "@/lib/whatsapp";
 
 export function FarmLocation() {
   return (
-    <section className="section-pad bg-farm-cream">
+    <section className="bg-white pt-4 pb-10 md:pt-6 md:pb-14">
       <div className="container-farm grid items-center gap-10 lg:grid-cols-[1fr_1.1fr] lg:gap-14">
         <MotionReveal>
           <p className="text-eyebrow text-farm-green">Our fields</p>

@@ -80,7 +80,7 @@ export function Testimonials() {
         aria-hidden
       />
 
-      <div className="relative py-12 md:py-[5.5rem] xl:py-[7.5rem]">
+      <div className="relative py-10 md:py-14 xl:py-16">
         <div className="container-farm">
           <MotionReveal className="flex max-w-xl flex-col items-start text-left">
             <p className="text-[0.6875rem] font-semibold tracking-[0.2em] text-farm-ochre uppercase">

@@ -9,7 +9,7 @@ import { Pressable } from "@/components/motion/pressable";
 
 export function InstagramSection() {
   return (
-    <section className="section-pad-sm border-t border-farm-green-dark/8 bg-farm-warm">
+    <section className="section-pad-sm border-t border-farm-green-dark/8 bg-white">
       <div className="container-farm">
         <MotionReveal className="flex flex-col items-start gap-4 md:flex-row md:items-end md:justify-between">
           <div>
