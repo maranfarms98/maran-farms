@@ -40,7 +40,7 @@ export default async function BlogPostPage({ params }) {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
-      <article className="container-farm max-w-3xl pt-28 pb-20">
+      <article className="container-farm max-w-3xl pt-24 pb-24 md:pt-28 md:pb-20">
         <Breadcrumbs items={crumbs} />
         {post.date ? (
           <p className="text-eyebrow mt-8 text-farm-sage">
@@ -51,7 +51,7 @@ export default async function BlogPostPage({ params }) {
             })}
           </p>
         ) : null}
-        <h1 className="font-heading mt-2 text-3xl text-farm-green-dark md:text-4xl">
+        <h1 className="font-heading mt-2 text-[1.65rem] leading-tight text-farm-green-dark md:text-4xl">
           {post.title}
         </h1>
         {post.tamil ? (

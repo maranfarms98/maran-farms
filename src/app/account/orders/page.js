@@ -101,7 +101,7 @@ export default function MyOrdersPage() {
 
         {orders.length > 0 && (
           <div className="mt-6 flex flex-wrap gap-3">
-            <div className="flex h-11 min-w-[200px] flex-1 items-center gap-2 rounded-full border border-farm-green-dark/15 bg-farm-cream px-4">
+            <div className="flex h-11 min-w-0 w-full flex-1 items-center gap-2 rounded-full border border-farm-green-dark/15 bg-farm-cream px-4 sm:min-w-[200px]">
               <Search className="size-4 text-farm-sage" />
               <input
                 type="text"

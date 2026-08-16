@@ -3,7 +3,7 @@ import { MessageCircle } from "lucide-react";
 const SIZES = {
   sm: "h-10 px-4 text-sm",
   md: "h-11 px-6 text-sm",
-  lg: "h-14 flex-1 justify-center text-button",
+  lg: "h-14 w-full flex-1 justify-center text-button",
 };
 
 const VARIANTS = {

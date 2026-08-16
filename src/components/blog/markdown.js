@@ -8,7 +8,7 @@ export const markdownComponents = {
     <h3 className="font-heading mt-8 text-xl text-farm-green-dark">{children}</h3>
   ),
   p: ({ children }) => (
-    <p className="mt-4 text-base leading-relaxed text-farm-sage">{children}</p>
+    <p className="mt-4 text-base leading-relaxed break-words text-farm-sage">{children}</p>
   ),
   ul: ({ children }) => (
     <ul className="mt-4 list-disc space-y-2 pl-5 text-farm-sage">{children}</ul>

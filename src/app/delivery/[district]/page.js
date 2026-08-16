@@ -66,12 +66,12 @@ export default async function DistrictPage({ params }) {
     <>
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <JsonLd data={areaSchema} />
-      <div className="container-farm max-w-3xl pt-28 pb-20">
+      <div className="container-farm max-w-3xl pt-24 pb-24 md:pt-28 md:pb-20">
         <Breadcrumbs items={crumbs} />
         <p className="text-eyebrow mt-8 text-farm-green">
           {place.slug === "karur" ? "Our farm · Karur" : "Delivery · Tamil Nadu"}
         </p>
-        <h1 className="font-heading mt-2 text-3xl text-farm-green-dark md:text-4xl">
+        <h1 className="font-heading mt-2 text-[1.65rem] leading-tight text-farm-green-dark md:text-4xl">
           {place.slug === "karur"
             ? "Farm-gate pickup in Karur"
             : `Farm delivery in ${place.name}`}
@@ -101,13 +101,13 @@ export default async function DistrictPage({ params }) {
                 allowFullScreen
               />
             </div>
-            <div className="flex items-center justify-between gap-3 px-5 py-4">
-              <p className="text-sm text-farm-sage">{FARM_ADDRESS_SHORT}</p>
+            <div className="flex flex-wrap items-center justify-between gap-3 px-4 py-4 sm:px-5">
+              <p className="min-w-0 text-sm text-farm-sage">{FARM_ADDRESS_SHORT}</p>
               <a
                 href={GOOGLE_DIRECTIONS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="focus-ring text-sm font-semibold text-farm-green hover:text-farm-accent"
+                className="focus-ring shrink-0 text-sm font-semibold text-farm-green hover:text-farm-accent"
               >
                 Get directions
               </a>

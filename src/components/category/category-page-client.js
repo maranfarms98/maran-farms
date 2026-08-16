@@ -148,7 +148,7 @@ export function CategoryPageClient({ category, products, allCategories, crumbs }
         </div>
       </div>
 
-      <div className="container-farm grid gap-8 pb-20 lg:grid-cols-12">
+      <div className="container-farm grid gap-8 pb-24 lg:grid-cols-12">
         <CategoryFilters
           className="hidden lg:col-span-3 lg:sticky lg:top-24 lg:block lg:self-start"
           search={search}
@@ -161,13 +161,13 @@ export function CategoryPageClient({ category, products, allCategories, crumbs }
 
         <div className="lg:col-span-9">
           <div className="mb-4 flex items-center justify-between gap-3 lg:hidden">
-            <p className="text-sm text-farm-sage">
+            <p className="min-w-0 text-sm text-farm-sage">
               {filtered.length} of {all.length} products
             </p>
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
-              className="focus-ring inline-flex h-11 items-center gap-2 rounded-full bg-farm-green px-4 text-sm font-semibold text-farm-green-light"
+              className="focus-ring inline-flex h-11 shrink-0 items-center gap-2 rounded-full bg-farm-green px-4 text-sm font-semibold text-farm-green-light"
             >
               <SlidersHorizontal className="size-4" />
               Filters & Sort
@@ -210,7 +210,7 @@ export function CategoryPageClient({ category, products, allCategories, crumbs }
           ) : (
             <motion.div
               layout
-              className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5"
+              className="grid grid-cols-2 gap-2.5 sm:gap-3 md:grid-cols-3 md:gap-5"
             >
               <AnimatePresence mode="popLayout">
                 {filtered.map((p) => (

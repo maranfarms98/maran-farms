@@ -61,14 +61,14 @@ export function OrderBar() {
       <motion.div
         initial={motionAllowed ? { opacity: 0, y: 24 } : false}
         animate={{ opacity: 1, y: 0 }}
-        className="fixed z-40 flex items-center gap-2 max-md:bottom-[calc(env(safe-area-inset-bottom,0px)+1rem)] max-md:left-1/2 max-md:-translate-x-1/2 md:right-6 md:bottom-6"
+        className="fixed z-40 flex max-w-[calc(100vw-1.5rem)] items-center gap-2 max-md:bottom-[calc(env(safe-area-inset-bottom,0px)+1rem)] max-md:left-1/2 max-md:-translate-x-1/2 md:right-6 md:bottom-6"
       >
         <motion.button
           type="button"
           onClick={() => setOrderDrawerOpen(true)}
           whileHover={motionAllowed ? { scale: 1.03 } : undefined}
           whileTap={motionAllowed ? { scale: 0.97 } : undefined}
-          className="focus-ring inline-flex h-14 items-center gap-3 rounded-full bg-farm-green-dark px-5 text-farm-green-light shadow-elevated"
+          className="focus-ring inline-flex h-14 min-w-0 items-center gap-2 rounded-full bg-farm-green-dark px-4 text-farm-green-light shadow-elevated sm:gap-3 sm:px-5"
         >
           <span className="relative">
             <ShoppingBag className="size-5" />
@@ -76,8 +76,8 @@ export function OrderBar() {
               {uniqueCount}
             </span>
           </span>
-          <span className="font-semibold">Order</span>
-          <span className="tabular-nums text-farm-ochre">
+          <span className="shrink-0 font-semibold">Order</span>
+          <span className="truncate tabular-nums text-farm-ochre">
             {formatPrice(total)}
           </span>
           <ChevronRight className="size-4 opacity-70" />
@@ -89,7 +89,7 @@ export function OrderBar() {
           aria-label="Order on WhatsApp"
           whileHover={motionAllowed ? { scale: 1.06 } : undefined}
           whileTap={motionAllowed ? { scale: 0.94 } : undefined}
-          className="focus-ring flex size-14 items-center justify-center rounded-full bg-farm-green text-farm-green-light shadow-elevated"
+          className="focus-ring flex size-14 shrink-0 items-center justify-center rounded-full bg-farm-green text-farm-green-light shadow-elevated"
         >
           <MessageCircle className="size-6" />
         </motion.a>

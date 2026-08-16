@@ -63,7 +63,7 @@ export function Footer({ categories = [] }) {
                 .
               </p>
             </div>
-            <form onSubmit={onSubmit} className="flex gap-2">
+            <form onSubmit={onSubmit} className="flex min-w-0 gap-2">
               <label className="sr-only" htmlFor="newsletter-email">
                 Email
               </label>
@@ -74,7 +74,7 @@ export function Footer({ categories = [] }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email address"
-                className="focus-ring h-14 flex-1 rounded-full border border-white/15 bg-white/10 px-5 text-white placeholder:text-white/45"
+                className="focus-ring h-14 min-w-0 flex-1 rounded-full border border-white/15 bg-white/10 px-5 text-white placeholder:text-white/45"
               />
               <button
                 type="submit"
@@ -87,7 +87,7 @@ export function Footer({ categories = [] }) {
           </div>
         </MotionReveal>
 
-        <div className="container-farm grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="container-farm grid gap-10 py-10 sm:grid-cols-2 sm:py-14 lg:grid-cols-4">
           <div>
             <div className="flex items-center gap-2.5">
               <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full">
@@ -199,7 +199,7 @@ export function Footer({ categories = [] }) {
           </div>
         </div>
 
-        <div className="container-farm flex flex-col gap-4 border-t border-white/10 py-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="container-farm flex flex-col gap-4 border-t border-white/10 pt-6 pb-[calc(env(safe-area-inset-bottom,0px)+5.5rem)] sm:flex-row sm:items-center sm:justify-between md:pb-6">
           <p className="text-sm text-farm-green-light/55">
             © {year} Maran Farms. Handcrafted for agricultural excellence.
           </p>

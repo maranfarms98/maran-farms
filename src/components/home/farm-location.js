@@ -41,13 +41,13 @@ export function FarmLocation() {
             <MapPin className="mt-0.5 size-4 shrink-0 text-farm-accent" />
             <span>{FARM_ADDRESS_LINE}</span>
           </p>
-          <div className="mt-8 flex flex-wrap gap-3">
+          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
             <Pressable
               as="a"
               href={GOOGLE_DIRECTIONS_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="focus-ring inline-flex h-12 items-center gap-2 rounded-full bg-farm-green px-6 text-button font-semibold text-farm-green-light"
+              className="focus-ring inline-flex h-12 w-full items-center justify-center gap-2 rounded-full bg-farm-green px-6 text-button font-semibold text-farm-green-light sm:w-auto"
             >
               <Navigation className="size-4" />
               Get directions
@@ -57,7 +57,7 @@ export function FarmLocation() {
               href={getVisitInquiryUrl()}
               target="_blank"
               rel="noopener noreferrer"
-              className="focus-ring inline-flex h-12 items-center gap-2 rounded-full border border-farm-green-dark/15 bg-farm-warm px-6 text-button font-semibold text-farm-green"
+              className="focus-ring inline-flex h-12 w-full items-center justify-center gap-2 rounded-full border border-farm-green-dark/15 bg-farm-warm px-6 text-button font-semibold text-farm-green sm:w-auto"
             >
               <MessageCircle className="size-4" />
               WhatsApp before you visit
@@ -75,7 +75,7 @@ export function FarmLocation() {
 
         <MotionReveal delay={80} className="relative">
           <div className="overflow-hidden rounded-[2rem] border border-farm-green-dark/8 bg-farm-warm shadow-soft">
-            <div className="relative aspect-[4/3] min-h-[280px] w-full md:aspect-[16/11]">
+            <div className="relative aspect-[4/3] min-h-[220px] w-full md:aspect-[16/11] md:min-h-[280px]">
               <iframe
                 title={`${SITE_NAME}, ${FARM_ADDRESS_SHORT}`}
                 src={GOOGLE_MAPS_EMBED_URL}
@@ -88,12 +88,12 @@ export function FarmLocation() {
                 className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-farm-green-dark/10"
                 aria-hidden
               />
-              <p className="pointer-events-none absolute top-4 left-4 rounded-full bg-farm-green-dark/90 px-4 py-2 font-heading text-sm text-[#f0d2a8] shadow-elevated">
+              <p className="pointer-events-none absolute top-3 left-3 max-w-[calc(100%-1.5rem)] truncate rounded-full bg-farm-green-dark/90 px-3 py-1.5 font-heading text-xs text-[#f0d2a8] shadow-elevated sm:top-4 sm:left-4 sm:px-4 sm:py-2 sm:text-sm">
                 {SITE_NAME} · {FARM_CITY_TA}
               </p>
             </div>
-            <div className="flex items-center justify-between gap-3 border-t border-farm-green-dark/8 bg-farm-warm px-5 py-4">
-              <p className="text-sm text-farm-sage">
+            <div className="flex items-center justify-between gap-3 border-t border-farm-green-dark/8 bg-farm-warm px-4 py-4 sm:px-5">
+              <p className="min-w-0 text-sm text-farm-sage">
                 Pin: {FARM_LOCALITY}, {FARM_CITY}
               </p>
               <a

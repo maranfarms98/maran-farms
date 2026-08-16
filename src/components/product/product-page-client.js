@@ -81,7 +81,7 @@ export function ProductPageClient({
   };
 
   return (
-    <div className="container-farm pt-28 pb-28 md:pb-16">
+    <div className="container-farm pt-24 pb-28 md:pt-28 md:pb-16">
       {crumbs?.length ? (
         <div className="mb-8">
           <Breadcrumbs items={crumbs} />
@@ -90,7 +90,7 @@ export function ProductPageClient({
 
       <div className="grid gap-10 lg:grid-cols-12">
         <div className="lg:col-span-6">
-          <div className="relative aspect-[4/5] overflow-hidden bg-farm-warm md:aspect-[5/6] lg:-ml-4 lg:aspect-auto lg:min-h-[32rem]">
+          <div className="relative aspect-square overflow-hidden bg-farm-warm sm:aspect-[4/5] md:aspect-[5/6] lg:-ml-4 lg:aspect-auto lg:min-h-[32rem]">
             <Image
               src={activeImage}
               alt={productImageAlt(product.name)}
@@ -137,11 +137,11 @@ export function ProductPageClient({
         <div className="lg:col-span-6">
           <MotionReveal
             variant="right"
-            className="sticky top-24 rounded-[2rem] border border-farm-green-dark/8 bg-farm-warm p-6 shadow-soft md:p-8"
+            className="sticky top-24 rounded-[1.5rem] border border-farm-green-dark/8 bg-farm-warm p-5 shadow-soft sm:rounded-[2rem] md:p-8"
           >
             <p className="text-eyebrow text-farm-green">{category?.name || "Product"}</p>
             <div className="mt-2 flex items-start justify-between gap-3">
-              <h1 className="font-heading text-3xl text-farm-green-dark md:text-4xl">
+              <h1 className="font-heading text-[1.65rem] leading-tight text-farm-green-dark sm:text-3xl md:text-4xl">
                 {product.name}
               </h1>
               <button
@@ -255,7 +255,7 @@ export function ProductPageClient({
             </button>
           ))}
         </div>
-        <div className="relative min-h-[12rem] rounded-[2rem] border border-farm-green-dark/8 bg-farm-warm p-6 md:p-8 lg:col-span-9">
+        <div className="relative min-h-[12rem] rounded-[1.5rem] border border-farm-green-dark/8 bg-farm-warm p-5 md:rounded-[2rem] md:p-8 lg:col-span-9">
           <AnimatePresence mode="wait">
             <motion.div
               key={tab}
@@ -335,9 +335,9 @@ export function ProductPageClient({
           <TamilCaption className="mt-2">
             தொடர்புடைய பொருட்கள்
           </TamilCaption>
-          <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5">
+          <div className="mt-8 grid grid-cols-2 gap-2.5 sm:gap-3 md:grid-cols-3 md:gap-5">
             {related.map((p) => (
-              <ProductCard key={p.id} product={p} />
+              <ProductCard key={p.id} product={p} compact />
             ))}
           </div>
         </section>
@@ -352,7 +352,7 @@ export function ProductPageClient({
         style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
       >
         <div className="flex items-center justify-between gap-3">
-          <div>
+          <div className="min-w-0">
             <p className="font-heading text-xl text-farm-green">
               {formatPrice(outOfStock ? product.price : lineTotal)}
             </p>
@@ -364,7 +364,7 @@ export function ProductPageClient({
             href={getProductOrderUrl(product, qty)}
             target="_blank"
             rel="noopener noreferrer"
-            className="focus-ring inline-flex h-12 items-center gap-2 rounded-full bg-farm-green px-5 text-sm font-semibold text-farm-green-light"
+            className="focus-ring inline-flex h-12 shrink-0 items-center gap-2 rounded-full bg-farm-green px-4 text-sm font-semibold text-farm-green-light sm:px-5"
           >
             <MessageCircle className="size-4" />
             {outOfStock ? "Ask availability" : "WhatsApp"}

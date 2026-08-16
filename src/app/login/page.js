@@ -41,7 +41,7 @@ function LoginForm() {
 
   return (
     <FarmPageShell variant="login" centered>
-      <div className="relative w-full max-w-md rounded-[2rem] border border-farm-green-dark/8 bg-farm-cream/95 p-8 shadow-soft backdrop-blur-sm">
+      <div className="relative w-full max-w-md rounded-[1.5rem] border border-farm-green-dark/8 bg-farm-cream/95 p-5 shadow-soft backdrop-blur-sm sm:rounded-[2rem] sm:p-8">
         <Link href="/" className="flex items-center gap-2.5">
           <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full shadow-soft">
             <Image src="/images/logo.png" alt="Maran Farms" fill className="object-cover" sizes="40px" />

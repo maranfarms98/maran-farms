@@ -54,7 +54,7 @@ export function FeaturedProducts({ products = [] }) {
           </div>
         </div>
 
-        <div className="mt-8 grid grid-cols-2 gap-3 md:hidden">
+        <div className="mt-8 grid grid-cols-2 gap-2.5 sm:gap-3 md:hidden">
           {products.map((p) => (
             <ProductCard key={p.id} product={p} teaser />
           ))}

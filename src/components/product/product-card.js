@@ -33,7 +33,7 @@ export function ProductCard({ product, compact = false, teaser = false }) {
       }
       transition={{ type: "spring", stiffness: 380, damping: 28 }}
       className={`group relative flex flex-col overflow-hidden rounded-3xl bg-farm-warm ${
-        inCart && !teaser
+        inCart
           ? "shadow-elevated ring-2 ring-farm-accent"
           : "shadow-soft"
       }`}
@@ -104,14 +104,14 @@ export function ProductCard({ product, compact = false, teaser = false }) {
               {product.categoryName || "Catalog"}
             </p>
           )}
-          <h3 className="font-heading text-card-title font-semibold text-farm-green-dark">
+          <h3 className="font-heading text-card-title line-clamp-2 font-semibold text-farm-green-dark">
             {product.name}
           </h3>
           {!light && (
             <TamilCaption className="mt-0.5">{product.tamilName}</TamilCaption>
           )}
-          <div className="mt-2 flex items-baseline gap-1.5">
-            <span className="font-heading text-lg font-semibold text-farm-green">
+          <div className="mt-2 flex min-w-0 flex-wrap items-baseline gap-x-1.5 gap-y-0.5">
+            <span className="font-heading text-base font-semibold text-farm-green sm:text-lg">
               {formatPrice(product.price)}
             </span>
             <span className="text-xs text-farm-sage">{product.unit}</span>
@@ -124,14 +124,7 @@ export function ProductCard({ product, compact = false, teaser = false }) {
           )}
         </Link>
 
-        {teaser ? (
-          <Link
-            href={`/product/${product.id}`}
-            className="mt-3 inline-flex text-sm font-semibold text-farm-accent transition group-hover:gap-2"
-          >
-            View details
-          </Link>
-        ) : outOfStock ? (
+        {outOfStock ? (
           <div className="mt-3 flex h-11 items-center justify-center rounded-full bg-farm-sage/15 text-sm font-semibold text-farm-sage">
             Out of Stock
           </div>

@@ -45,7 +45,7 @@ export function ProductOverview({ product, guide }) {
             delay={80}
             className="lg:col-span-5 lg:self-start"
           >
-            <div className="rounded-[2rem] border border-farm-green-dark/8 bg-farm-warm p-6 shadow-soft md:p-8">
+            <div className="rounded-[1.5rem] border border-farm-green-dark/8 bg-farm-warm p-5 shadow-soft md:rounded-[2rem] md:p-8">
               <p className="text-eyebrow text-farm-green">Key Features</p>
               <ul className="mt-5 space-y-4">
                 {features.map((feature) => (

@@ -26,10 +26,10 @@ export default function BlogIndexPage() {
   return (
     <>
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
-      <div className="container-farm pt-28 pb-20">
+      <div className="container-farm pt-24 pb-24 md:pt-28 md:pb-20">
         <Breadcrumbs items={crumbs} />
         <p className="text-eyebrow mt-8 text-farm-green">Weekly Farm Diary</p>
-        <h1 className="font-heading mt-2 text-3xl text-farm-green-dark md:text-4xl">
+        <h1 className="font-heading mt-2 text-[1.65rem] leading-tight text-farm-green-dark md:text-4xl">
           Notes from the farm
         </h1>
         <TamilCaption className="mt-2">பண்ணைக் குறிப்புகள்</TamilCaption>

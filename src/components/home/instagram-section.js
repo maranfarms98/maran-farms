@@ -53,7 +53,7 @@ export function InstagramSection() {
                     aria-label={post.alt}
                   />
                 </a>
-                <figcaption className="mt-2 px-1 text-xs font-medium text-farm-sage">
+                <figcaption className="mt-2 line-clamp-2 px-1 text-xs font-medium text-farm-sage">
                   {post.caption}
                 </figcaption>
               </figure>

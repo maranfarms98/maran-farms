@@ -157,7 +157,7 @@ export default function CheckoutPage() {
           Back to shopping
         </Link>
 
-        <div className="rounded-[2rem] border border-farm-green-dark/8 bg-farm-cream/95 p-6 shadow-soft backdrop-blur-sm md:p-8">
+        <div className="rounded-[1.5rem] border border-farm-green-dark/8 bg-farm-cream/95 p-5 shadow-soft backdrop-blur-sm md:rounded-[2rem] md:p-8">
           <FarmPageIntro
             eyebrow="Order"
             title="Checkout"

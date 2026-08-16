@@ -23,8 +23,8 @@ const GRADIENTS = {
 export function FarmPageShell({ variant, centered = false, children, className = "" }) {
   const gradient = variant ? GRADIENTS[variant] : null;
   const layout = centered
-    ? "flex items-center justify-center px-4 py-28"
-    : "px-4 pt-28 pb-16 md:px-8";
+    ? "flex items-center justify-center px-4 py-24 sm:py-28"
+    : "px-4 pt-24 pb-20 md:px-8 md:pt-28 md:pb-16";
 
   return (
     <div

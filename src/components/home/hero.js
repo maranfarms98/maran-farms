@@ -255,7 +255,7 @@ export function Hero() {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[min(40%,14rem)] bg-gradient-to-b from-farm-green-dark/80 via-farm-green-dark/35 to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-farm-green-dark/90 to-transparent" />
 
-      <div className="relative z-10 w-full px-6 pt-28 pb-[max(5.5rem,calc(env(safe-area-inset-bottom,0px)+5rem))] md:pb-28">
+      <div className="relative z-10 w-full px-4 pt-28 pb-[max(5.5rem,calc(env(safe-area-inset-bottom,0px)+5rem))] sm:px-6 md:pb-28">
         <div
           ref={contentRef}
           className="mx-auto flex max-w-3xl flex-col items-center text-center"
@@ -294,7 +294,7 @@ export function Hero() {
           <div data-hero-line>
             <TamilCaption
               tone="light"
-              className="mt-2 drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
+              className="mt-2 px-1 leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
             >
               தரமான நேப்பியர் · பண்ணை குஞ்சுகள் · செல்லப்பிராணிகள்
             </TamilCaption>

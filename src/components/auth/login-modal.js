@@ -36,8 +36,8 @@ export function LoginModal() {
 
   return (
     <Drawer open={loginModalOpen} onClose={handleClose} placement="bottom">
-      <div className="flex items-center justify-between border-b border-farm-green-dark/8 p-5">
-        <div>
+      <div className="flex items-start justify-between gap-3 border-b border-farm-green-dark/8 p-5">
+        <div className="min-w-0">
           <h2 className="font-heading text-2xl text-farm-green-dark">
             {login.step === "phone" ? "Sign In" : login.isNewUser ? "Welcome!" : "Welcome Back"}
           </h2>
@@ -52,7 +52,7 @@ export function LoginModal() {
         <button
           type="button"
           aria-label="Close"
-          className="focus-ring flex size-11 items-center justify-center rounded-full text-farm-green hover:bg-farm-accent-light"
+          className="focus-ring flex size-11 shrink-0 items-center justify-center rounded-full text-farm-green hover:bg-farm-accent-light"
           onClick={handleClose}
         >
           <X className="size-5" />

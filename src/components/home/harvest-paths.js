@@ -119,7 +119,7 @@ export function HarvestPaths({ categories = [] }) {
       className="relative scroll-mt-24 overflow-hidden bg-farm-green-dark"
       aria-labelledby="harvest-paths-heading"
     >
-      <div className="container-farm px-6 pt-10 pb-6 md:pt-12 md:pb-8">
+      <div className="container-farm pt-10 pb-6 md:pt-12 md:pb-8">
         <MotionReveal>
           <p className="text-eyebrow text-[#f0d2a8]">Our Categories</p>
           <h2
@@ -152,12 +152,12 @@ export function HarvestPaths({ categories = [] }) {
       </div>
 
       {/* Mobile: horizontal snap gallery */}
-      <div className="flex snap-x snap-mandatory gap-0 overflow-x-auto pb-2 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-6 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {paths.map((path) => (
           <Link
             key={path.slug}
             href={`/category/${path.slug}`}
-            className="relative h-[48vh] w-[82vw] shrink-0 snap-center overflow-hidden first:ml-6 last:mr-6"
+            className="relative h-[min(42vh,22rem)] w-[min(78vw,19rem)] shrink-0 snap-start overflow-hidden rounded-[1.25rem]"
           >
             <Image
               src={path.image}
@@ -169,13 +169,13 @@ export function HarvestPaths({ categories = [] }) {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-farm-green-dark/90 via-farm-green-dark/30 to-transparent" />
             <div className="absolute inset-x-0 bottom-0 flex flex-col p-5">
-              <span className="font-heading text-2xl font-semibold text-white">
+              <span className="font-heading text-xl font-semibold text-white sm:text-2xl">
                 {path.name}
               </span>
               <span className="mt-1 text-sm italic text-[#f0d2a8]" lang="ta">
                 {path.tamilName}
               </span>
-              <p className="mt-2 text-sm leading-relaxed text-white/85">
+              <p className="mt-2 line-clamp-3 text-sm leading-relaxed text-white/85">
                 {path.line}
               </p>
               <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-[#f0d2a8]">
