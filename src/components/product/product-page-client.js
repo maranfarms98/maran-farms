@@ -3,6 +3,7 @@
 import Image from "next/image";
 import {
   Check,
+  CircleAlert,
   CircleHelp,
   MessageCircle,
   Share2,
@@ -18,6 +19,7 @@ import { ProductBadge } from "@/components/ui/product-badge";
 import { QuantityStepper } from "@/components/ui/quantity-stepper";
 import { TamilCaption } from "@/components/ui/tamil-caption";
 import { ProductCard } from "@/components/product/product-card";
+import { ProductOverview } from "@/components/product/product-overview";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/context/toast-context";
 import { formatMinOrder, formatPrice } from "@/lib/format";
@@ -56,6 +58,7 @@ export function ProductPageClient({
   }, [product.image]);
 
   const inCart = cartQty > 0;
+  const outOfStock = product.inStock === false;
   const lineTotal = product.price * qty;
   const originNotes = Array.isArray(content.origin) ? content.origin : [];
 
@@ -159,37 +162,38 @@ export function ProductPageClient({
                 </p>
                 <p className="text-sm text-farm-sage">{product.unit}</p>
               </div>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-farm-green/10 px-3 py-1.5 text-sm font-semibold text-farm-green">
-                <Check className="size-4" />
-                In Stock
-              </span>
+              {outOfStock ? (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-farm-sage/15 px-3 py-1.5 text-sm font-semibold text-farm-sage">
+                  <CircleAlert className="size-4" />
+                  Out of Stock
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-farm-green/10 px-3 py-1.5 text-sm font-semibold text-farm-green">
+                  <Check className="size-4" />
+                  In Stock
+                </span>
+              )}
             </div>
 
             <p className="mt-5 text-farm-sage">
               {product.description || GENERIC_DESCRIPTION}
             </p>
 
-            {guide?.body?.length ? (
-              <div className="mt-6 space-y-3 text-sm leading-relaxed text-farm-sage md:text-base">
-                {guide.body.map((para) => (
-                  <p key={para.slice(0, 48)}>{para}</p>
-                ))}
-              </div>
-            ) : null}
-
-            <div className="mt-6">
-              <p className="text-sm font-semibold text-farm-green-dark">
-                Specify Quantity
-              </p>
-              <div className="mt-3">
-                <QuantityStepper value={qty} onChange={setQty} min={0} />
-              </div>
-              {product.minOrder > 1 && (
-                <p className="mt-2 text-sm italic text-farm-accent">
-                  Minimum order: {formatMinOrder(product).replace("Min ", "")}
+            {!outOfStock && (
+              <div className="mt-6">
+                <p className="text-sm font-semibold text-farm-green-dark">
+                  Specify Quantity
                 </p>
-              )}
-            </div>
+                <div className="mt-3">
+                  <QuantityStepper value={qty} onChange={setQty} min={0} />
+                </div>
+                {product.minOrder > 1 && (
+                  <p className="mt-2 text-sm italic text-farm-accent">
+                    Minimum order: {formatMinOrder(product).replace("Min ", "")}
+                  </p>
+                )}
+              </div>
+            )}
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Pressable
@@ -200,19 +204,21 @@ export function ProductPageClient({
                 className="focus-ring inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-farm-green text-button font-semibold text-farm-green-light"
               >
                 <MessageCircle className="size-4" />
-                Order on WhatsApp
+                {outOfStock ? "Ask availability on WhatsApp" : "Order on WhatsApp"}
               </Pressable>
-              <Pressable
-                type="button"
-                onClick={handleAdd}
-                className={`focus-ring inline-flex h-12 flex-1 items-center justify-center rounded-full border text-button font-semibold ${
-                  inCart
-                    ? "border-farm-green bg-farm-green/10 text-farm-green"
-                    : "border-farm-green-dark/15 bg-farm-cream text-farm-green-dark"
-                }`}
-              >
-                {inCart ? "Review Order list" : "Add to Order list"}
-              </Pressable>
+              {!outOfStock && (
+                <Pressable
+                  type="button"
+                  onClick={handleAdd}
+                  className={`focus-ring inline-flex h-12 flex-1 items-center justify-center rounded-full border text-button font-semibold ${
+                    inCart
+                      ? "border-farm-green bg-farm-green/10 text-farm-green"
+                      : "border-farm-green-dark/15 bg-farm-cream text-farm-green-dark"
+                  }`}
+                >
+                  {inCart ? "Review Order list" : "Add to Order list"}
+                </Pressable>
+              )}
             </div>
 
             <div className="mt-6 flex flex-wrap gap-4 text-sm text-farm-sage">
@@ -228,6 +234,8 @@ export function ProductPageClient({
           </MotionReveal>
         </div>
       </div>
+
+      <ProductOverview product={product} guide={guide} />
 
       {/* Tabs */}
       <div className="mt-16 grid gap-8 lg:grid-cols-12">
@@ -346,9 +354,11 @@ export function ProductPageClient({
         <div className="flex items-center justify-between gap-3">
           <div>
             <p className="font-heading text-xl text-farm-green">
-              {formatPrice(lineTotal)}
+              {formatPrice(outOfStock ? product.price : lineTotal)}
             </p>
-            <p className="text-xs text-farm-sage">Qty {qty}</p>
+            <p className="text-xs text-farm-sage">
+              {outOfStock ? "Out of Stock" : `Qty ${qty}`}
+            </p>
           </div>
           <a
             href={getProductOrderUrl(product, qty)}
@@ -357,7 +367,7 @@ export function ProductPageClient({
             className="focus-ring inline-flex h-12 items-center gap-2 rounded-full bg-farm-green px-5 text-sm font-semibold text-farm-green-light"
           >
             <MessageCircle className="size-4" />
-            WhatsApp
+            {outOfStock ? "Ask availability" : "WhatsApp"}
           </a>
         </div>
       </motion.div>
