@@ -2,14 +2,20 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowUpRight, Leaf, MessageCircle } from "lucide-react";
+import { ArrowUpRight, Leaf, MapPin, MessageCircle } from "lucide-react";
 import { useState } from "react";
 import { useToast } from "@/context/toast-context";
 import {
   CONTACT_EMAIL,
+  FARM_ADDRESS_LINE,
+  FARM_ADDRESS_SHORT,
+  FARM_CITY_TA,
+  FARM_LOCALITY_TA,
+  GOOGLE_DIRECTIONS_URL,
   INSTAGRAM_URL,
   WHATSAPP_DISPLAY,
 } from "@/lib/site";
+import { DISTRICTS } from "@/data/districts";
 import { getGenericInquiryUrl } from "@/lib/whatsapp";
 import { TamilCaption } from "@/components/ui/tamil-caption";
 import { InstagramIcon } from "@/components/ui/instagram-icon";
@@ -44,14 +50,20 @@ export function Footer({ categories = [] }) {
             <div>
               <p className="text-eyebrow text-farm-ochre">Weekly Farm Diary</p>
               <h2 className="font-heading mt-3 text-section text-white">
-                Stay connected with our fresh farm harvests.
+                <Link href="/blog" className="focus-ring rounded-sm hover:text-farm-ochre">
+                  Stay connected with our fresh farm harvests.
+                </Link>
               </h2>
               <p className="mt-3 max-w-md text-farm-green-light/75">
                 Occasional notes on fodder cycles, chick batches, and farm life
-                across Tamil Nadu.
+                from Karur across Tamil Nadu.{" "}
+                <Link href="/blog" className="text-farm-ochre underline-offset-2 hover:underline">
+                  Read the farm diary
+                </Link>
+                .
               </p>
             </div>
-            <form onSubmit={onSubmit} className="flex gap-2">
+            <form onSubmit={onSubmit} className="flex min-w-0 gap-2">
               <label className="sr-only" htmlFor="newsletter-email">
                 Email
               </label>
@@ -62,7 +74,7 @@ export function Footer({ categories = [] }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Your email address"
-                className="focus-ring h-14 flex-1 rounded-full border border-white/15 bg-white/10 px-5 text-white placeholder:text-white/45"
+                className="focus-ring h-14 min-w-0 flex-1 rounded-full border border-white/15 bg-white/10 px-5 text-white placeholder:text-white/45"
               />
               <button
                 type="submit"
@@ -75,7 +87,7 @@ export function Footer({ categories = [] }) {
           </div>
         </MotionReveal>
 
-        <div className="container-farm grid gap-10 py-14 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="container-farm grid gap-10 py-10 sm:grid-cols-2 sm:py-14 lg:grid-cols-4">
           <div>
             <div className="flex items-center gap-2.5">
               <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full">
@@ -85,7 +97,8 @@ export function Footer({ categories = [] }) {
             </div>
             <p className="mt-4 text-sm text-farm-green-light/75">
               Family-owned agricultural excellence — Napier plants, farm-fresh
-              chicks, and healthy small pets delivered across Tamil Nadu.
+              chicks, and healthy small pets from {FARM_ADDRESS_SHORT},
+              delivered across Tamil Nadu.
             </p>
             <p className="mt-5 text-sm italic text-farm-ochre" lang="ta">
               விதைத்தால் விளையும்; உழைத்தால் உயரும்.
@@ -113,6 +126,19 @@ export function Footer({ categories = [] }) {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link
+                  href="/blog"
+                  className="focus-ring group block rounded-lg"
+                >
+                  <span className="block text-white transition group-hover:text-farm-ochre">
+                    Farm Diary
+                  </span>
+                  <span className="text-xs text-farm-green-light/70">
+                    Guides & field notes
+                  </span>
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -130,7 +156,34 @@ export function Footer({ categories = [] }) {
 
           <div>
             <h3 className="text-eyebrow text-farm-ochre">Direct Contact</h3>
-            <p className="mt-4 text-farm-green-light/75">Tamil Nadu, India</p>
+            <p className="mt-4 text-white">{FARM_ADDRESS_LINE}</p>
+            <p className="mt-1 text-sm text-farm-green-light/70" lang="ta">
+              {FARM_LOCALITY_TA}, {FARM_CITY_TA}
+            </p>
+            <a
+              href={GOOGLE_DIRECTIONS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus-ring mt-3 inline-flex items-center gap-2 text-sm text-farm-ochre hover:underline"
+            >
+              <MapPin className="size-4" />
+              Get directions
+            </a>
+            <p className="mt-4 text-sm text-farm-green-light/70">
+              We deliver across Tamil Nadu
+            </p>
+            <ul className="mt-2 flex flex-wrap gap-x-3 gap-y-1 text-sm">
+              {DISTRICTS.map((d) => (
+                <li key={d.slug}>
+                  <Link
+                    href={`/delivery/${d.slug}`}
+                    className="focus-ring rounded-sm text-white/85 hover:text-farm-ochre"
+                  >
+                    {d.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
             <a
               href={getGenericInquiryUrl()}
               target="_blank"
@@ -146,7 +199,7 @@ export function Footer({ categories = [] }) {
           </div>
         </div>
 
-        <div className="container-farm flex flex-col gap-4 border-t border-white/10 py-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="container-farm flex flex-col gap-4 border-t border-white/10 pt-6 pb-[calc(env(safe-area-inset-bottom,0px)+5.5rem)] sm:flex-row sm:items-center sm:justify-between md:pb-6">
           <p className="text-sm text-farm-green-light/55">
             © {year} Maran Farms. Handcrafted for agricultural excellence.
           </p>
@@ -159,6 +212,15 @@ export function Footer({ categories = [] }) {
               className="focus-ring flex size-11 items-center justify-center rounded-full border border-white/15 text-white transition hover:bg-white/10"
             >
               <InstagramIcon className="size-5" />
+            </a>
+            <a
+              href={GOOGLE_DIRECTIONS_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Directions to Maran Farms in Karur"
+              className="focus-ring flex size-11 items-center justify-center rounded-full border border-white/15 text-white transition hover:bg-white/10"
+            >
+              <MapPin className="size-5" />
             </a>
             <a
               href={getGenericInquiryUrl()}

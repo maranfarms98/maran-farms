@@ -1,16 +1,9 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { verifySession, SESSION_COOKIE_NAME } from "@/lib/auth/session";
+import { getSessionFromCookies } from "@/lib/auth/session";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 
-async function getSession() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-  return verifySession(token);
-}
-
 export async function GET() {
-  const session = await getSession();
+  const session = await getSessionFromCookies();
   if (!session) return NextResponse.json({ favorites: [] });
 
   const supabase = requireSupabaseAdminClient();
@@ -28,7 +21,7 @@ export async function GET() {
 }
 
 export async function POST(request) {
-  const session = await getSession();
+  const session = await getSessionFromCookies();
   if (!session) return NextResponse.json({ error: "Please sign in" }, { status: 401 });
 
   const { productId } = await request.json();
@@ -48,7 +41,7 @@ export async function POST(request) {
 }
 
 export async function DELETE(request) {
-  const session = await getSession();
+  const session = await getSessionFromCookies();
   if (!session) return NextResponse.json({ error: "Please sign in" }, { status: 401 });
 
   const { productId } = await request.json();

@@ -1,21 +1,27 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { verifySession, SESSION_COOKIE_NAME } from "@/lib/auth/session";
+import { getSessionFromCookies } from "@/lib/auth/session";
+import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export async function GET() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-  const session = await verifySession(token);
+  const session = await getSessionFromCookies();
 
   if (!session) {
     return NextResponse.json({ user: null });
   }
+
+  const supabase = requireSupabaseAdminClient();
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("email")
+    .eq("id", session.id)
+    .maybeSingle();
 
   return NextResponse.json({
     user: {
       id: session.id,
       name: session.name,
       phone: session.phone,
+      email: profile?.email || null,
       isAdmin: session.isAdmin,
     },
   });

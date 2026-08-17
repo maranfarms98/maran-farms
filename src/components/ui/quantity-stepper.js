@@ -28,7 +28,7 @@ export function QuantityStepper({
           onChange(Math.max(1, min || 1));
           setJustAdded(true);
         }}
-        className={`focus-ring inline-flex h-11 min-w-[5.5rem] items-center justify-center gap-1.5 rounded-full bg-farm-accent px-4 text-button font-semibold text-white transition hover:bg-farm-accent-dark ${className}`}
+        className={`focus-ring inline-flex h-11 w-full min-w-0 items-center justify-center gap-1.5 rounded-full bg-farm-accent px-3 text-button font-semibold text-white transition hover:bg-farm-accent-dark ${className}`}
       >
         {justAdded ? (
           <Check className="animate-check-success size-4" />
@@ -42,7 +42,7 @@ export function QuantityStepper({
 
   return (
     <div
-      className={`inline-flex h-11 items-center rounded-full border border-farm-green-dark/10 bg-farm-warm ${className}`}
+      className={`inline-flex h-11 w-full items-center justify-between rounded-full border border-farm-green-dark/10 bg-white ${className}`}
       onClick={(e) => {
         e.preventDefault();
         e.stopPropagation();

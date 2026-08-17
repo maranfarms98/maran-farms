@@ -11,6 +11,16 @@ export function getGenericInquiryUrl() {
   return waUrl(text);
 }
 
+export function getVisitInquiryUrl() {
+  const text =
+    "Hello Maran Farms! I'd like to visit the farm at Pallamaruthapatti, Karur. Please share a suitable time.";
+  return waUrl(text);
+}
+
+export function getOrderInquiryUrl(orderId) {
+  return waUrl(`Hello Maran Farms! I have a question about order ${orderId}.`);
+}
+
 export function getProductOrderUrl(product, quantity) {
   const unit = pluralizeUnit(
     product.minOrderUnit || product.unit.replace("per ", ""),
@@ -32,5 +42,26 @@ export function getCartOrderUrl(lines, total) {
     .join("\n");
 
   const text = `🌾 New Order — Maran Farms\n\n${itemLines}\n\nTotal: ${formatPrice(total)}\n\nPlease confirm availability, delivery timeline, and final billing.`;
+  return waUrl(text);
+}
+
+/** Prefill a confirmation message for a phone order (admin sends manually). */
+export function getPhoneOrderConfirmUrl(order) {
+  const itemLines = (order.items || [])
+    .map((item) => {
+      const unit = pluralizeUnit(
+        (item.unit || "unit").replace("per ", ""),
+        item.quantity,
+      );
+      return `• ${item.name} — ${item.quantity} ${unit} × ${formatPrice(item.price)} = ${formatPrice(item.lineTotal ?? item.price * item.quantity)}`;
+    })
+    .join("\n");
+
+  const statusNote =
+    order.status === "paid"
+      ? "Payment received. Thank you!"
+      : "Payment pending — we will confirm when received.";
+
+  const text = `Hello ${order.name}! Your Maran Farms order is confirmed.\n\nOrder: ${String(order.id).slice(0, 8)}\n\n${itemLines}\n\nTotal: ${formatPrice(Number(order.total))}\n\n${statusNote}`;
   return waUrl(text);
 }

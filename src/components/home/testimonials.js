@@ -80,7 +80,7 @@ export function Testimonials() {
         aria-hidden
       />
 
-      <div className="relative py-12 md:py-[5.5rem] xl:py-[7.5rem]">
+      <div className="relative py-10 md:py-14 xl:py-16">
         <div className="container-farm">
           <MotionReveal className="flex max-w-xl flex-col items-start text-left">
             <p className="text-[0.6875rem] font-semibold tracking-[0.2em] text-farm-ochre uppercase">
@@ -94,7 +94,7 @@ export function Testimonials() {
             </TamilCaption>
             <p className="mt-4 max-w-sm text-sm leading-relaxed text-farm-green-light/75 md:mt-5 md:text-base">
               Feedback from dairy growers, poultry starters, and homestead
-              keepers across Tamil Nadu.
+              keepers — from our Karur fields to farms across Tamil Nadu.
             </p>
           </MotionReveal>
         </div>

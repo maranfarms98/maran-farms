@@ -2,8 +2,9 @@
 // Catalog images live in scripts/catalog-images/ and are uploaded to the
 // public product-images Storage bucket before rows are upserted.
 //
-// Run with: npm run seed
-// Requires NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY in .env.local
+// Run with: npm run seed          (staging)
+//            npm run seed:prod     (production — destructive)
+// Requires NEXT_PUBLIC_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY
 
 import { createClient } from "@supabase/supabase-js";
 import {
@@ -18,7 +19,7 @@ const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 if (!supabaseUrl || !serviceKey) {
   console.error(
-    "Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.local",
+    "Missing NEXT_PUBLIC_SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY in .env.staging",
   );
   process.exit(1);
 }

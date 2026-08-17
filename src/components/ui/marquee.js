@@ -1,7 +1,7 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "@/hooks/use-media";
-import { useState } from "react";
 
 export function Marquee({
   children,
@@ -11,7 +11,20 @@ export function Marquee({
   pauseOnPointer = true,
 }) {
   const reduced = useReducedMotion();
+  const rootRef = useRef(null);
   const [paused, setPaused] = useState(false);
+  const [offscreen, setOffscreen] = useState(false);
+
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el || reduced) return undefined;
+    const io = new IntersectionObserver(
+      ([entry]) => setOffscreen(!entry.isIntersecting),
+      { threshold: 0.08 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [reduced]);
 
   if (reduced) {
     return (
@@ -25,7 +38,8 @@ export function Marquee({
 
   return (
     <div
-      className={`edge-fade-x overflow-hidden ${paused ? "marquee-paused" : ""} ${className}`}
+      ref={rootRef}
+      className={`edge-fade-x overflow-hidden ${paused || offscreen ? "marquee-paused" : ""} ${className}`}
       onMouseEnter={
         pauseOnPointer
           ? () => {

@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, MessageCircle, SlidersHorizontal } from "lucide-react";
+import { SlidersHorizontal } from "lucide-react";
+import { Breadcrumbs } from "@/components/seo/breadcrumbs";
+import { categoryImageAlt } from "@/lib/seo";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { ProductCard } from "@/components/product/product-card";
@@ -16,6 +18,7 @@ import {
 } from "@/components/motion/motion-provider";
 import { useGsapContext } from "@/components/motion/use-gsap-context";
 import { getGenericInquiryUrl } from "@/lib/whatsapp";
+import { WhatsAppButton } from "@/components/ui/whatsapp-button";
 
 function filterProducts(list, { search, sort, special }) {
   let result = [...list];
@@ -37,7 +40,7 @@ function filterProducts(list, { search, sort, special }) {
   return result;
 }
 
-export function CategoryPageClient({ category, products, allCategories }) {
+export function CategoryPageClient({ category, products, allCategories, crumbs }) {
   const all = products;
   const [search, setSearch] = useState("");
   const [sort, setSort] = useState("relevance");
@@ -84,7 +87,7 @@ export function CategoryPageClient({ category, products, allCategories }) {
         <div data-cat-hero className="absolute inset-0 will-change-transform">
           <Image
             src={category.heroImage}
-            alt={category.name}
+            alt={categoryImageAlt(category.name)}
             fill
             priority
             className="object-cover"
@@ -96,13 +99,11 @@ export function CategoryPageClient({ category, products, allCategories }) {
         />
         <div className="grain-overlay pointer-events-none absolute inset-0" />
         <div className="relative z-10 container-farm flex min-h-[calc(var(--vvh)*0.4)] flex-col justify-end pb-10 pt-28 md:min-h-[calc(var(--vvh)*0.5)] md:pb-14">
-          <Link
-            href="/"
-            className="focus-ring mb-6 inline-flex w-fit items-center gap-2 text-sm font-medium text-white/90 hover:text-white"
-          >
-            <ArrowLeft className="size-4" />
-            Back to Home
-          </Link>
+          {crumbs?.length ? (
+            <div className="mb-6">
+              <Breadcrumbs items={crumbs} tone="light" />
+            </div>
+          ) : null}
           <p className="text-eyebrow text-[#f0d2a8]">Category</p>
           <h1 className="font-heading text-section mt-2 text-white">
             {category.name}
@@ -131,7 +132,7 @@ export function CategoryPageClient({ category, products, allCategories }) {
               >
                 <Image
                   src={cat.image || cat.heroImage}
-                  alt=""
+                  alt={categoryImageAlt(cat.name)}
                   fill
                   unoptimized
                   className="object-cover transition duration-500 group-hover:scale-105"
@@ -147,7 +148,7 @@ export function CategoryPageClient({ category, products, allCategories }) {
         </div>
       </div>
 
-      <div className="container-farm grid gap-8 pb-20 lg:grid-cols-12">
+      <div className="container-farm grid gap-8 pb-24 lg:grid-cols-12">
         <CategoryFilters
           className="hidden lg:col-span-3 lg:sticky lg:top-24 lg:block lg:self-start"
           search={search}
@@ -160,13 +161,13 @@ export function CategoryPageClient({ category, products, allCategories }) {
 
         <div className="lg:col-span-9">
           <div className="mb-4 flex items-center justify-between gap-3 lg:hidden">
-            <p className="text-sm text-farm-sage">
+            <p className="min-w-0 text-sm text-farm-sage">
               {filtered.length} of {all.length} products
             </p>
             <button
               type="button"
               onClick={() => setDrawerOpen(true)}
-              className="focus-ring inline-flex h-11 items-center gap-2 rounded-full bg-farm-green px-4 text-sm font-semibold text-farm-green-light"
+              className="focus-ring inline-flex h-11 shrink-0 items-center gap-2 rounded-full bg-farm-green px-4 text-sm font-semibold text-farm-green-light"
             >
               <SlidersHorizontal className="size-4" />
               Filters & Sort
@@ -203,21 +204,13 @@ export function CategoryPageClient({ category, products, allCategories }) {
                 >
                   Reset Filters
                 </button>
-                <a
-                  href={getGenericInquiryUrl()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="focus-ring inline-flex h-11 items-center gap-2 rounded-full bg-farm-green px-6 text-sm font-semibold text-farm-green-light"
-                >
-                  <MessageCircle className="size-4" />
-                  WhatsApp
-                </a>
+                <WhatsAppButton href={getGenericInquiryUrl()} variant="solid" />
               </div>
             </div>
           ) : (
             <motion.div
               layout
-              className="grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5"
+              className="grid grid-cols-2 gap-2.5 sm:gap-3 md:grid-cols-3 md:gap-5"
             >
               <AnimatePresence mode="popLayout">
                 {filtered.map((p) => (

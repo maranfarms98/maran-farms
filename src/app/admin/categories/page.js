@@ -1,8 +1,18 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Pencil, Plus, Trash2, X } from "lucide-react";
 import { Spinner } from "@/components/ui/spinner";
+import { PageLoader } from "@/components/ui/page-loader";
+import { ErrorNote } from "@/components/ui/error-note";
+import { AdminTable, AdminTableRow } from "@/components/admin/admin-table";
+import {
+  AdminPageHeader,
+  adminInput,
+  adminPrimaryButton,
+} from "@/components/admin/admin-page-header";
+import { useAdminResource } from "@/hooks/use-admin-resource";
+import { useImageUpload } from "@/hooks/use-image-upload";
 
 const EMPTY_FORM = {
   id: "",
@@ -20,23 +30,33 @@ const EMPTY_FORM = {
 };
 
 export default function AdminCategoriesPage() {
-  const [categories, setCategories] = useState([]);
+  const {
+    items: categories,
+    listLoading,
+    saving,
+    error,
+    setError,
+    save,
+    remove,
+  } = useAdminResource({
+    endpoint: "/api/admin/categories",
+    collectionKey: "categories",
+    saveErrorMessage: "Failed to save category",
+  });
+
   const [formOpen, setFormOpen] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [form, setForm] = useState(EMPTY_FORM);
-  const [saving, setSaving] = useState(false);
-  const [uploadingField, setUploadingField] = useState(null);
-  const [error, setError] = useState("");
 
-  const load = useCallback(async () => {
-    const res = await fetch("/api/admin/categories");
-    const data = await res.json();
-    setCategories(data.categories || []);
-  }, []);
-
-  useEffect(() => {
-    load();
-  }, [load]);
+  const setField = useCallback(
+    (field, value) => setForm((f) => ({ ...f, [field]: value })),
+    [],
+  );
+  const { uploadingField, upload } = useImageUpload({
+    folder: "categories",
+    onUploaded: setField,
+    onError: setError,
+  });
 
   const openCreate = () => {
     setEditingId(null);
@@ -65,77 +85,34 @@ export default function AdminCategoriesPage() {
     setFormOpen(true);
   };
 
-  const handleUpload = async (e, field) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    setUploadingField(field);
-    setError("");
-    try {
-      const fd = new FormData();
-      fd.append("file", file);
-      fd.append("folder", "categories");
-      const res = await fetch("/api/admin/upload-image", { method: "POST", body: fd });
-      const data = await res.json();
-      if (!res.ok) return setError(data.error || "Upload failed");
-      setForm((f) => ({ ...f, [field]: data.url }));
-    } finally {
-      setUploadingField(null);
-      e.target.value = "";
-    }
-  };
-
   const handleSave = async () => {
-    setError("");
-    setSaving(true);
-    try {
-      const payload = { ...form, minOrder: Number(form.minOrder) };
-      const res = editingId
-        ? await fetch(`/api/admin/categories/${editingId}`, {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          })
-        : await fetch("/api/admin/categories", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
-          });
-      const data = await res.json();
-      if (!res.ok) return setError(data.error || "Failed to save category");
-      setFormOpen(false);
-      load();
-    } finally {
-      setSaving(false);
-    }
+    const ok = await save({ ...form, minOrder: Number(form.minOrder) }, editingId);
+    if (ok) setFormOpen(false);
   };
 
   const handleDelete = async (id) => {
     if (!confirm("Delete this category? This fails if it still has products.")) return;
-    const res = await fetch(`/api/admin/categories/${id}`, { method: "DELETE" });
-    if (!res.ok) {
-      const data = await res.json();
-      alert(data.error || "Failed to delete category");
-      return;
-    }
-    load();
+    const result = await remove(id);
+    if (!result.ok) alert(result.error || "Failed to delete category");
   };
+
+  if (listLoading) {
+    return <PageLoader label="Loading categories…" />;
+  }
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-heading text-3xl text-farm-green-dark">Categories</h1>
-          <p className="mt-1 text-sm text-farm-sage">{categories.length} categories</p>
-        </div>
-        <button
-          type="button"
-          onClick={openCreate}
-          className="focus-ring inline-flex h-11 items-center gap-2 rounded-full bg-farm-green px-5 text-sm font-semibold text-farm-green-light"
-        >
-          <Plus className="size-4" />
-          Add Category
-        </button>
-      </div>
+      <AdminPageHeader
+        title="Categories"
+        subtitle={`${categories.length} categories`}
+        align="center"
+        action={
+          <button type="button" onClick={openCreate} className={adminPrimaryButton}>
+            <Plus className="size-4" />
+            Add Category
+          </button>
+        }
+      />
 
       {formOpen && (
         <div className="mt-6 rounded-3xl border border-farm-green-dark/10 bg-farm-cream p-6">
@@ -152,51 +129,51 @@ export default function AdminCategoriesPage() {
               placeholder="ID (e.g. napier)"
               value={form.id}
               disabled={Boolean(editingId)}
-              onChange={(e) => setForm({ ...form, id: e.target.value })}
-              className="h-11 w-full min-w-0 rounded-xl border border-farm-green-dark/15 bg-white px-3 text-sm disabled:opacity-60"
+              onChange={(e) => setField("id", e.target.value)}
+              className={`${adminInput} disabled:opacity-60`}
             />
             <input
               placeholder="Slug (e.g. napier-plants)"
               value={form.slug}
-              onChange={(e) => setForm({ ...form, slug: e.target.value })}
-              className="h-11 w-full min-w-0 rounded-xl border border-farm-green-dark/15 bg-white px-3 text-sm"
+              onChange={(e) => setField("slug", e.target.value)}
+              className={adminInput}
             />
             <input
               placeholder="Name"
               value={form.name}
-              onChange={(e) => setForm({ ...form, name: e.target.value })}
-              className="h-11 w-full min-w-0 rounded-xl border border-farm-green-dark/15 bg-white px-3 text-sm"
+              onChange={(e) => setField("name", e.target.value)}
+              className={adminInput}
             />
             <input
               placeholder="Tamil name"
               value={form.tamilName}
-              onChange={(e) => setForm({ ...form, tamilName: e.target.value })}
-              className="h-11 w-full min-w-0 rounded-xl border border-farm-green-dark/15 bg-white px-3 text-sm"
+              onChange={(e) => setField("tamilName", e.target.value)}
+              className={adminInput}
             />
             <input
               type="number"
               placeholder="Min order"
               value={form.minOrder}
-              onChange={(e) => setForm({ ...form, minOrder: e.target.value })}
-              className="h-11 w-full min-w-0 rounded-xl border border-farm-green-dark/15 bg-white px-3 text-sm"
+              onChange={(e) => setField("minOrder", e.target.value)}
+              className={adminInput}
             />
             <input
               placeholder="Min order unit"
               value={form.minOrderUnit}
-              onChange={(e) => setForm({ ...form, minOrderUnit: e.target.value })}
-              className="h-11 w-full min-w-0 rounded-xl border border-farm-green-dark/15 bg-white px-3 text-sm"
+              onChange={(e) => setField("minOrderUnit", e.target.value)}
+              className={adminInput}
             />
             <textarea
               placeholder="Description"
               value={form.description}
-              onChange={(e) => setForm({ ...form, description: e.target.value })}
-              className="h-11 rounded-xl border border-farm-green-dark/15 bg-white px-3 py-2 text-sm md:col-span-2"
+              onChange={(e) => setField("description", e.target.value)}
+              className={`${adminInput} py-2 md:col-span-2`}
             />
             <textarea
               placeholder="Tamil description"
               value={form.tamilDescription}
-              onChange={(e) => setForm({ ...form, tamilDescription: e.target.value })}
-              className="h-11 rounded-xl border border-farm-green-dark/15 bg-white px-3 py-2 text-sm md:col-span-2"
+              onChange={(e) => setField("tamilDescription", e.target.value)}
+              className={`${adminInput} py-2 md:col-span-2`}
             />
             <div>
               <label className="mb-1.5 block text-sm font-medium text-farm-green-dark">
@@ -210,7 +187,7 @@ export default function AdminCategoriesPage() {
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/webp,image/avif"
-                  onChange={(e) => handleUpload(e, "image")}
+                  onChange={(e) => upload(e, "image")}
                   disabled={Boolean(uploadingField)}
                 />
                 {uploadingField === "image" && (
@@ -230,7 +207,7 @@ export default function AdminCategoriesPage() {
                 <input
                   type="file"
                   accept="image/jpeg,image/png,image/webp,image/avif"
-                  onChange={(e) => handleUpload(e, "heroImage")}
+                  onChange={(e) => upload(e, "heroImage")}
                   disabled={Boolean(uploadingField)}
                 />
                 {uploadingField === "heroImage" && (
@@ -239,11 +216,7 @@ export default function AdminCategoriesPage() {
               </div>
             </div>
           </div>
-          {error && (
-            <p className="mt-3 rounded-xl bg-farm-accent/10 px-3 py-2 text-sm text-farm-accent-dark">
-              {error}
-            </p>
-          )}
+          <ErrorNote className="mt-3">{error}</ErrorNote>
           <button
             type="button"
             disabled={saving}
@@ -256,49 +229,31 @@ export default function AdminCategoriesPage() {
         </div>
       )}
 
-      <div className="mt-6 overflow-x-auto rounded-3xl border border-farm-green-dark/10 bg-farm-cream">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-farm-green-dark/8 text-left text-xs font-semibold uppercase tracking-wider text-farm-sage">
-              <th className="px-5 py-4">Name</th>
-              <th className="px-5 py-4">Slug</th>
-              <th className="px-5 py-4">Min Order</th>
-              <th className="px-5 py-4"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {categories.map((c, i) => (
-              <tr
-                key={c.id}
-                className={`border-b border-farm-green-dark/6 last:border-0 ${i % 2 ? "bg-farm-warm/40" : ""}`}
-              >
-                <td className="px-5 py-4 font-medium text-farm-green-dark">{c.name}</td>
-                <td className="px-5 py-4 text-farm-sage">{c.slug}</td>
-                <td className="px-5 py-4 text-farm-sage">
-                  {c.min_order} {c.min_order_unit}
-                </td>
-                <td className="px-5 py-4">
-                  <div className="flex gap-2">
-                    <button type="button" onClick={() => openEdit(c)} className="text-farm-green hover:text-farm-accent">
-                      <Pencil className="size-4" />
-                    </button>
-                    <button type="button" onClick={() => handleDelete(c.id)} className="text-farm-accent hover:text-farm-accent-dark">
-                      <Trash2 className="size-4" />
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-            {categories.length === 0 && (
-              <tr>
-                <td colSpan={4} className="px-5 py-10 text-center text-farm-sage">
-                  No categories yet.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      <AdminTable
+        columns={["Name", "Slug", "Min Order", ""]}
+        isEmpty={categories.length === 0}
+        empty="No categories yet."
+      >
+        {categories.map((c, i) => (
+          <AdminTableRow key={c.id} index={i}>
+            <td className="px-5 py-4 font-medium text-farm-green-dark">{c.name}</td>
+            <td className="px-5 py-4 text-farm-sage">{c.slug}</td>
+            <td className="px-5 py-4 text-farm-sage">
+              {c.min_order} {c.min_order_unit}
+            </td>
+            <td className="px-5 py-4">
+              <div className="flex gap-2">
+                <button type="button" onClick={() => openEdit(c)} className="text-farm-green hover:text-farm-accent">
+                  <Pencil className="size-4" />
+                </button>
+                <button type="button" onClick={() => handleDelete(c.id)} className="text-farm-accent hover:text-farm-accent-dark">
+                  <Trash2 className="size-4" />
+                </button>
+              </div>
+            </td>
+          </AdminTableRow>
+        ))}
+      </AdminTable>
     </div>
   );
 }

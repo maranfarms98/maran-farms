@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
+import { isValidMobile } from "@/lib/phone";
 
 const ADMIN_PHONE = "9600267271";
 const ADMIN_OTP = "1122";
@@ -9,7 +10,7 @@ const RESEND_COOLDOWN_MS = 30 * 1000;
 export async function POST(request) {
   const { phone } = await request.json();
 
-  if (!phone || !/^\d{10}$/.test(phone)) {
+  if (!isValidMobile(phone)) {
     return NextResponse.json(
       { error: "Enter a valid 10-digit phone number" },
       { status: 400 },

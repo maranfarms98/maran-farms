@@ -1,16 +1,17 @@
 "use client";
 
 import Image from "next/image";
-import Link from "next/link";
 import {
-  ArrowLeft,
   Check,
+  CircleAlert,
   CircleHelp,
   MessageCircle,
   Share2,
   ShieldCheck,
   Truck,
 } from "lucide-react";
+import { Breadcrumbs } from "@/components/seo/breadcrumbs";
+import { productImageAlt } from "@/lib/seo";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { GENERIC_DESCRIPTION } from "@/data/constants";
@@ -18,6 +19,7 @@ import { ProductBadge } from "@/components/ui/product-badge";
 import { QuantityStepper } from "@/components/ui/quantity-stepper";
 import { TamilCaption } from "@/components/ui/tamil-caption";
 import { ProductCard } from "@/components/product/product-card";
+import { ProductOverview } from "@/components/product/product-overview";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/context/toast-context";
 import { formatMinOrder, formatPrice } from "@/lib/format";
@@ -32,7 +34,14 @@ const TABS = [
   { id: "origin", label: "Farm Origin & packaging" },
 ];
 
-export function ProductPageClient({ product, category, related, content }) {
+export function ProductPageClient({
+  product,
+  category,
+  related,
+  content,
+  guide,
+  crumbs,
+}) {
   const { getQuantity, setQuantity, addItem, setOrderDrawerOpen } = useCart();
   const { toast } = useToast();
   const motionAllowed = useMotionAllowed();
@@ -49,7 +58,9 @@ export function ProductPageClient({ product, category, related, content }) {
   }, [product.image]);
 
   const inCart = cartQty > 0;
+  const outOfStock = product.inStock === false;
   const lineTotal = product.price * qty;
+  const originNotes = Array.isArray(content.origin) ? content.origin : [];
 
   const share = async () => {
     try {
@@ -70,21 +81,19 @@ export function ProductPageClient({ product, category, related, content }) {
   };
 
   return (
-    <div className="container-farm pt-28 pb-28 md:pb-16">
-      <Link
-        href={`/category/${category?.slug || ""}`}
-        className="focus-ring mb-8 inline-flex items-center gap-2 text-sm font-medium text-farm-green hover:text-farm-accent"
-      >
-        <ArrowLeft className="size-4" />
-        Back to {category?.name || "Catalog"}
-      </Link>
+    <div className="container-farm pt-24 pb-28 md:pt-28 md:pb-16">
+      {crumbs?.length ? (
+        <div className="mb-8">
+          <Breadcrumbs items={crumbs} />
+        </div>
+      ) : null}
 
       <div className="grid gap-10 lg:grid-cols-12">
         <div className="lg:col-span-6">
-          <div className="relative aspect-[4/5] overflow-hidden bg-farm-warm md:aspect-[5/6] lg:-ml-4 lg:aspect-auto lg:min-h-[32rem]">
+          <div className="relative aspect-square overflow-hidden bg-farm-warm sm:aspect-[4/5] md:aspect-[5/6] lg:-ml-4 lg:aspect-auto lg:min-h-[32rem]">
             <Image
               src={activeImage}
-              alt={product.name}
+              alt={productImageAlt(product.name)}
               fill
               priority
               className="object-cover"
@@ -112,7 +121,13 @@ export function ProductPageClient({ product, category, related, content }) {
                       : "opacity-80 hover:opacity-100"
                   }`}
                 >
-                  <Image src={src} alt="" fill className="object-cover" sizes="120px" />
+                  <Image
+                    src={src}
+                    alt={productImageAlt(product.name)}
+                    fill
+                    className="object-cover"
+                    sizes="120px"
+                  />
                 </button>
               ))}
             </div>
@@ -122,11 +137,11 @@ export function ProductPageClient({ product, category, related, content }) {
         <div className="lg:col-span-6">
           <MotionReveal
             variant="right"
-            className="sticky top-24 rounded-[2rem] border border-farm-green-dark/8 bg-farm-warm p-6 shadow-soft md:p-8"
+            className="sticky top-24 rounded-[1.5rem] border border-farm-green-dark/8 bg-farm-warm p-5 shadow-soft sm:rounded-[2rem] md:p-8"
           >
             <p className="text-eyebrow text-farm-green">{category?.name || "Product"}</p>
             <div className="mt-2 flex items-start justify-between gap-3">
-              <h1 className="font-heading text-3xl text-farm-green-dark md:text-4xl">
+              <h1 className="font-heading text-[1.65rem] leading-tight text-farm-green-dark sm:text-3xl md:text-4xl">
                 {product.name}
               </h1>
               <button
@@ -147,29 +162,38 @@ export function ProductPageClient({ product, category, related, content }) {
                 </p>
                 <p className="text-sm text-farm-sage">{product.unit}</p>
               </div>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-farm-green/10 px-3 py-1.5 text-sm font-semibold text-farm-green">
-                <Check className="size-4" />
-                In Stock
-              </span>
+              {outOfStock ? (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-farm-sage/15 px-3 py-1.5 text-sm font-semibold text-farm-sage">
+                  <CircleAlert className="size-4" />
+                  Out of Stock
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-farm-green/10 px-3 py-1.5 text-sm font-semibold text-farm-green">
+                  <Check className="size-4" />
+                  In Stock
+                </span>
+              )}
             </div>
 
             <p className="mt-5 text-farm-sage">
               {product.description || GENERIC_DESCRIPTION}
             </p>
 
-            <div className="mt-6">
-              <p className="text-sm font-semibold text-farm-green-dark">
-                Specify Quantity
-              </p>
-              <div className="mt-3">
-                <QuantityStepper value={qty} onChange={setQty} min={0} />
-              </div>
-              {product.minOrder > 1 && (
-                <p className="mt-2 text-sm italic text-farm-accent">
-                  Minimum order: {formatMinOrder(product).replace("Min ", "")}
+            {!outOfStock && (
+              <div className="mt-6">
+                <p className="text-sm font-semibold text-farm-green-dark">
+                  Specify Quantity
                 </p>
-              )}
-            </div>
+                <div className="mt-3">
+                  <QuantityStepper value={qty} onChange={setQty} min={0} />
+                </div>
+                {product.minOrder > 1 && (
+                  <p className="mt-2 text-sm italic text-farm-accent">
+                    Minimum order: {formatMinOrder(product).replace("Min ", "")}
+                  </p>
+                )}
+              </div>
+            )}
 
             <div className="mt-6 flex flex-col gap-3 sm:flex-row">
               <Pressable
@@ -180,19 +204,21 @@ export function ProductPageClient({ product, category, related, content }) {
                 className="focus-ring inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-farm-green text-button font-semibold text-farm-green-light"
               >
                 <MessageCircle className="size-4" />
-                Order on WhatsApp
+                {outOfStock ? "Ask availability on WhatsApp" : "Order on WhatsApp"}
               </Pressable>
-              <Pressable
-                type="button"
-                onClick={handleAdd}
-                className={`focus-ring inline-flex h-12 flex-1 items-center justify-center rounded-full border text-button font-semibold ${
-                  inCart
-                    ? "border-farm-green bg-farm-green/10 text-farm-green"
-                    : "border-farm-green-dark/15 bg-farm-cream text-farm-green-dark"
-                }`}
-              >
-                {inCart ? "Review Order list" : "Add to Order list"}
-              </Pressable>
+              {!outOfStock && (
+                <Pressable
+                  type="button"
+                  onClick={handleAdd}
+                  className={`focus-ring inline-flex h-12 flex-1 items-center justify-center rounded-full border text-button font-semibold ${
+                    inCart
+                      ? "border-farm-green bg-farm-green/10 text-farm-green"
+                      : "border-farm-green-dark/15 bg-farm-cream text-farm-green-dark"
+                  }`}
+                >
+                  {inCart ? "Review Order list" : "Add to Order list"}
+                </Pressable>
+              )}
             </div>
 
             <div className="mt-6 flex flex-wrap gap-4 text-sm text-farm-sage">
@@ -202,12 +228,14 @@ export function ProductPageClient({ product, category, related, content }) {
               </span>
               <span className="inline-flex items-center gap-2">
                 <Truck className="size-4 text-farm-green" />
-                Verified Tamil Nadu Logistics
+                Verified Karur dispatch
               </span>
             </div>
           </MotionReveal>
         </div>
       </div>
+
+      <ProductOverview product={product} guide={guide} />
 
       {/* Tabs */}
       <div className="mt-16 grid gap-8 lg:grid-cols-12">
@@ -227,7 +255,7 @@ export function ProductPageClient({ product, category, related, content }) {
             </button>
           ))}
         </div>
-        <div className="relative min-h-[12rem] rounded-[2rem] border border-farm-green-dark/8 bg-farm-warm p-6 md:p-8 lg:col-span-9">
+        <div className="relative min-h-[12rem] rounded-[1.5rem] border border-farm-green-dark/8 bg-farm-warm p-5 md:rounded-[2rem] md:p-8 lg:col-span-9">
           <AnimatePresence mode="wait">
             <motion.div
               key={tab}
@@ -265,7 +293,7 @@ export function ProductPageClient({ product, category, related, content }) {
           )}
           {tab === "origin" && (
             <ul className="space-y-3">
-              {content.origin.map((item, i) => (
+              {originNotes.map((item, i) => (
                 <li key={i} className="flex gap-3 text-farm-sage">
                   <Check className="mt-1 size-4 shrink-0 text-farm-green" />
                   {item}
@@ -307,9 +335,9 @@ export function ProductPageClient({ product, category, related, content }) {
           <TamilCaption className="mt-2">
             தொடர்புடைய பொருட்கள்
           </TamilCaption>
-          <div className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-3 md:gap-5">
+          <div className="mt-8 grid grid-cols-2 gap-2.5 sm:gap-3 md:grid-cols-3 md:gap-5">
             {related.map((p) => (
-              <ProductCard key={p.id} product={p} />
+              <ProductCard key={p.id} product={p} compact />
             ))}
           </div>
         </section>
@@ -324,20 +352,22 @@ export function ProductPageClient({ product, category, related, content }) {
         style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
       >
         <div className="flex items-center justify-between gap-3">
-          <div>
+          <div className="min-w-0">
             <p className="font-heading text-xl text-farm-green">
-              {formatPrice(lineTotal)}
+              {formatPrice(outOfStock ? product.price : lineTotal)}
             </p>
-            <p className="text-xs text-farm-sage">Qty {qty}</p>
+            <p className="text-xs text-farm-sage">
+              {outOfStock ? "Out of Stock" : `Qty ${qty}`}
+            </p>
           </div>
           <a
             href={getProductOrderUrl(product, qty)}
             target="_blank"
             rel="noopener noreferrer"
-            className="focus-ring inline-flex h-12 items-center gap-2 rounded-full bg-farm-green px-5 text-sm font-semibold text-farm-green-light"
+            className="focus-ring inline-flex h-12 shrink-0 items-center gap-2 rounded-full bg-farm-green px-4 text-sm font-semibold text-farm-green-light sm:px-5"
           >
             <MessageCircle className="size-4" />
-            WhatsApp
+            {outOfStock ? "Ask availability" : "WhatsApp"}
           </a>
         </div>
       </motion.div>

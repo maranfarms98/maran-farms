@@ -1,12 +1,9 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { verifySession, SESSION_COOKIE_NAME } from "@/lib/auth/session";
+import { getSessionFromCookies } from "@/lib/auth/session";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 
 export async function PATCH(_request, { params }) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(SESSION_COOKIE_NAME)?.value;
-  const session = await verifySession(token);
+  const session = await getSessionFromCookies();
   if (!session) {
     return NextResponse.json({ error: "Please sign in" }, { status: 401 });
   }

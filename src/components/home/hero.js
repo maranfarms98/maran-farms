@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 import { ArrowDown, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { TamilCaption } from "@/components/ui/tamil-caption";
-import { useMotionAllowed, useGsapAllowed } from "@/components/motion/motion-provider";
-import { useGsapContext } from "@/components/motion/use-gsap-context";
+import { useMotionAllowed } from "@/components/motion/motion-provider";
 import { Pressable } from "@/components/motion/pressable";
 import { SITE_NAME } from "@/lib/site";
+import { HOME_H1 } from "@/lib/seo";
 import {
   SPLASH_DONE_EVENT,
   hasSplashCompleted,
@@ -15,31 +16,65 @@ import {
 
 export function Hero() {
   const motionAllowed = useMotionAllowed();
-  const gsapAllowed = useGsapAllowed();
   const contentRef = useRef(null);
+  const videoRef = useRef(null);
+  const sectionRef = useRef(null);
   const playedRef = useRef(false);
   const [revealed, setRevealed] = useState(!motionAllowed);
-  const sectionRef = useGsapContext(
-    ({ gsap, el }) => {
-      const bg = el.querySelector("[data-hero-bg]");
-      if (!bg) return;
-      gsap.fromTo(
-        bg,
-        { scale: 1.08 },
-        {
-          scale: 1,
-          ease: "none",
-          scrollTrigger: {
-            trigger: el,
-            start: "top top",
-            end: "bottom top",
-            scrub: true,
-          },
-        },
-      );
-    },
-    [gsapAllowed],
-  );
+  const [splashDone, setSplashDone] = useState(false);
+  const [heroInView, setHeroInView] = useState(true);
+  const [videoSrc, setVideoSrc] = useState(null);
+
+  useEffect(() => {
+    const onSplash = () => setSplashDone(true);
+    window.addEventListener(SPLASH_DONE_EVENT, onSplash);
+    if (hasSplashCompleted()) onSplash();
+    return () => window.removeEventListener(SPLASH_DONE_EVENT, onSplash);
+  }, []);
+
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return undefined;
+    const io = new IntersectionObserver(
+      ([entry]) => setHeroInView(entry.isIntersecting && entry.intersectionRatio > 0.15),
+      { threshold: [0, 0.15, 1] },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  const canPlayVideo = motionAllowed && splashDone && heroInView;
+
+  useEffect(() => {
+    if (canPlayVideo) setVideoSrc("/images/home-story.mp4");
+  }, [canPlayVideo]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video || !videoSrc) return undefined;
+
+    video.muted = true;
+    video.defaultMuted = true;
+    video.playsInline = true;
+    video.setAttribute("webkit-playsinline", "true");
+
+    if (canPlayVideo) {
+      const play = () => {
+        video.muted = true;
+        video.play().catch(() => {});
+      };
+      play();
+      video.addEventListener("canplay", play);
+      const onTouch = () => play();
+      window.addEventListener("touchstart", onTouch, { once: true, passive: true });
+      return () => {
+        video.removeEventListener("canplay", play);
+        window.removeEventListener("touchstart", onTouch);
+      };
+    }
+    video.pause();
+    return undefined;
+  }, [canPlayVideo, videoSrc]);
 
   useEffect(() => {
     if (!motionAllowed) {
@@ -61,18 +96,15 @@ export function Hero() {
 
       const root = contentRef.current;
       const section = root.closest("section");
-      const bg = section?.querySelector("[data-hero-bg]");
       const brand = root.querySelector("[data-hero-brand]");
       const lines = root.querySelectorAll("[data-hero-line]");
       const rule = root.querySelector("[data-hero-rule]");
       const cta = root.querySelector("[data-hero-cta]");
       const scrollHint = section?.querySelector("[data-hero-scroll]");
 
-      utils.set(root, { opacity: 1, visibility: "visible" });
-      if (bg) utils.set(bg, { scale: 1.18, opacity: 0.35 });
-      utils.set(lines, { opacity: 0, y: 36, filter: "blur(8px)" });
+      utils.set(lines, { opacity: 0, y: 28 });
       if (rule) utils.set(rule, { scaleX: 0, opacity: 0 });
-      if (cta) utils.set(cta, { opacity: 0, y: 28, scale: 0.92 });
+      if (cta) utils.set(cta, { opacity: 0, y: 20 });
       if (scrollHint) utils.set(scrollHint, { opacity: 0 });
 
       let split;
@@ -80,9 +112,7 @@ export function Hero() {
         split = splitText(brand, { chars: true });
         utils.set(split.chars, {
           opacity: 0,
-          y: 48,
-          rotateX: -70,
-          filter: "blur(10px)",
+          y: 36,
         });
       }
 
@@ -92,29 +122,14 @@ export function Hero() {
         defaults: { ease: "out(3)" },
       });
 
-      if (bg) {
-        timeline.add(bg, {
-          scale: 1.04,
-          opacity: 1,
-          duration: 1600,
-          ease: "out(2)",
-        });
-      }
-
       if (split?.chars?.length) {
-        timeline.add(
-          split.chars,
-          {
-            opacity: 1,
-            y: 0,
-            rotateX: 0,
-            filter: "blur(0px)",
-            duration: 900,
-            delay: stagger(28, { start: 80 }),
-            ease: "out(4)",
-          },
-          bg ? "-=1100" : 0,
-        );
+        timeline.add(split.chars, {
+          opacity: 1,
+          y: 0,
+          duration: 800,
+          delay: stagger(24, { start: 40 }),
+          ease: "out(4)",
+        });
       }
 
       timeline.add(
@@ -122,12 +137,11 @@ export function Hero() {
         {
           opacity: 1,
           y: 0,
-          filter: "blur(0px)",
-          duration: 750,
-          delay: stagger(90),
+          duration: 650,
+          delay: stagger(80),
           ease: "out(3)",
         },
-        "-=500",
+        "-=400",
       );
 
       if (rule) {
@@ -136,10 +150,10 @@ export function Hero() {
           {
             scaleX: 1,
             opacity: 1,
-            duration: 700,
+            duration: 600,
             ease: "out(3)",
           },
-          "-=650",
+          "-=500",
         );
       }
 
@@ -149,11 +163,10 @@ export function Hero() {
           {
             opacity: 1,
             y: 0,
-            scale: 1,
-            duration: 700,
+            duration: 600,
             ease: "out(3)",
           },
-          "-=400",
+          "-=350",
         );
       }
 
@@ -162,7 +175,7 @@ export function Hero() {
           scrollHint,
           {
             opacity: 1,
-            duration: 500,
+            duration: 400,
           },
           "-=200",
         );
@@ -172,8 +185,8 @@ export function Hero() {
         timeline.call(() => {
           if (cancelled) return;
           animate(cta, {
-            scale: [1, 1.04, 1],
-            duration: 900,
+            scale: [1, 1.03, 1],
+            duration: 800,
             ease: "inOut(2)",
           });
         });
@@ -186,7 +199,6 @@ export function Hero() {
 
     window.addEventListener(SPLASH_DONE_EVENT, onSplashDone);
 
-    // Late mount after splash already finished this session
     if (hasSplashCompleted()) {
       const t = window.setTimeout(onSplashDone, 50);
       return () => {
@@ -216,59 +228,53 @@ export function Hero() {
       ref={sectionRef}
       className="relative flex min-h-vvh items-end justify-center overflow-hidden bg-farm-green-dark"
     >
-      <div
-        data-hero-bg
-        className="pointer-events-none absolute inset-0 will-change-transform"
-      >
-        <video
-          className="absolute inset-0 size-full object-cover object-center"
-          src="/images/home-story.mp4"
-          poster="/images/home-hero.jpg"
-          autoPlay={motionAllowed}
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          aria-label="Maran Farms field footage"
+      <div className="pointer-events-none absolute inset-0">
+        <Image
+          src="/images/home-hero.jpg"
+          alt=""
+          fill
+          priority
+          className="object-cover object-center"
+          sizes="100vw"
         />
+        {videoSrc ? (
+          <video
+            ref={videoRef}
+            className="absolute inset-0 size-full object-cover object-center"
+            src={videoSrc}
+            muted
+            autoPlay
+            loop
+            playsInline
+            preload="metadata"
+            aria-label="Maran Farms field footage"
+          />
+        ) : null}
       </div>
 
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-farm-green-dark via-farm-green-dark/55 to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 top-0 h-[min(40%,14rem)] bg-gradient-to-b from-farm-green-dark/80 via-farm-green-dark/35 to-transparent" />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-farm-green-dark/90 to-transparent" />
 
-      {motionAllowed && revealed && (
-        <div
-          className="pointer-events-none absolute inset-0 overflow-hidden"
-          aria-hidden
-        >
-          <div className="animate-light-sweep absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-transparent via-[#f0d2a8]/15 to-transparent" />
-        </div>
-      )}
-
-      <div className="relative z-10 w-full px-6 pt-28 pb-[max(5.5rem,calc(env(safe-area-inset-bottom,0px)+5rem))] md:pb-28">
+      <div className="relative z-10 w-full px-4 pt-28 pb-[max(5.5rem,calc(env(safe-area-inset-bottom,0px)+5rem))] sm:px-6 md:pb-28">
         <div
           ref={contentRef}
-          className={`mx-auto flex max-w-3xl flex-col items-center text-center ${
-            motionAllowed && !revealed ? "opacity-0" : ""
-          }`}
-          style={
-            motionAllowed && !revealed
-              ? { visibility: "hidden" }
-              : undefined
-          }
+          className="mx-auto flex max-w-3xl flex-col items-center text-center"
         >
           <p
             data-hero-brand
             className="font-heading text-[clamp(3rem,12vw,6rem)] leading-[0.92] font-bold tracking-tight text-white drop-shadow-[0_4px_28px_rgba(0,0,0,0.55)]"
-            style={{ perspective: "600px" }}
           >
             {SITE_NAME}
           </p>
 
+          <h1 className="font-heading mt-4 max-w-2xl text-[clamp(1.15rem,2.8vw,1.65rem)] font-medium text-[#f0d2a8] drop-shadow-[0_2px_16px_rgba(0,0,0,0.75)]">
+            {HOME_H1}
+          </h1>
+
           <p
             data-hero-line
-            className="font-heading mt-4 text-[clamp(1.15rem,2.8vw,1.65rem)] font-medium text-[#f0d2a8] italic drop-shadow-[0_2px_16px_rgba(0,0,0,0.75)]"
+            className="font-heading mt-4 text-[clamp(1.05rem,2.2vw,1.35rem)] font-medium italic text-white/90 drop-shadow-[0_2px_16px_rgba(0,0,0,0.75)]"
           >
             Rooted in integrity
           </p>
@@ -281,22 +287,15 @@ export function Hero() {
 
           <p
             data-hero-line
-            className="mt-5 text-[0.95rem] font-medium tracking-[0.12em] text-white/90 uppercase drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)] md:text-[1rem]"
-          >
-            Napier · Chicks · Pets
-          </p>
-
-          <p
-            data-hero-line
             className="mt-4 max-w-lg text-[1.05rem] leading-relaxed text-white/95 drop-shadow-[0_2px_14px_rgba(0,0,0,0.5)]"
           >
-            Premium farm products from Tamil Nadu — order easily on WhatsApp.
+            Harvested in Karur, delivered across Tamil Nadu — order on WhatsApp.
           </p>
 
           <div data-hero-line>
             <TamilCaption
               tone="light"
-              className="mt-2 drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
+              className="mt-2 px-1 leading-relaxed drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
             >
               தரமான நேப்பியர் · பண்ணை குஞ்சுகள் · செல்லப்பிராணிகள்
             </TamilCaption>

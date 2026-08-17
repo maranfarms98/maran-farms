@@ -9,6 +9,7 @@ import { MotionReveal } from "@/components/motion/motion-reveal";
 import { Pressable } from "@/components/motion/pressable";
 import { getGenericInquiryUrl } from "@/lib/whatsapp";
 import { WHATSAPP_DISPLAY, WHATSAPP_NUMBER } from "@/lib/site";
+import { productImageAlt } from "@/lib/seo";
 import { useMotionAllowed } from "@/components/motion/motion-provider";
 
 const STEPS = [
@@ -22,7 +23,7 @@ const MESSAGES = [
   { from: "user", text: "Hi! Do you have Red Napier sticks in stock?" },
   { from: "farm", text: "Yes — fresh Red Napier available. How many sticks do you need?" },
   { from: "user", text: "1,000 sticks delivered to Coimbatore please." },
-  { from: "farm", text: "Confirmed. We'll dispatch tomorrow morning with care packing." },
+  { from: "farm", text: "Confirmed. Cut this morning in Karur — dispatch tomorrow with care packing." },
   { from: "farm", text: "", image: true },
   { from: "user", text: "Perfect — booking confirmed. Thank you!" },
 ];
@@ -146,7 +147,7 @@ export function WhatsAppSection({ demoImage }) {
                       <div className="relative mb-1 aspect-video w-40 overflow-hidden rounded-lg">
                         <Image
                           src={demoImage}
-                          alt="Harvest photo"
+                          alt={productImageAlt("Red Napier grass sticks")}
                           fill
                           className="object-cover"
                           sizes="160px"

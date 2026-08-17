@@ -13,6 +13,7 @@ import { WhatsAppFAB } from "@/components/chrome/whatsapp-fab";
 import { SplashScreen } from "@/components/chrome/splash-screen";
 import { LoginModal } from "@/components/auth/login-modal";
 import { useViewportHeightSync } from "@/hooks/use-media";
+import { useNavigationPending } from "@/hooks/use-navigation-pending";
 
 function ViewportHeightSync() {
   useViewportHeightSync();
@@ -22,6 +23,7 @@ function ViewportHeightSync() {
 export function Providers({ children, categories = [] }) {
   const pathname = usePathname();
   const isAdminRoute = pathname?.startsWith("/admin");
+  const navPending = useNavigationPending();
 
   return (
     <MotionProvider>
@@ -41,7 +43,7 @@ export function Providers({ children, categories = [] }) {
               </main>
               {!isAdminRoute && (
                 <>
-                  <Footer categories={categories} />
+                  {!navPending && <Footer categories={categories} />}
                   <OrderBar />
                   <WhatsAppFAB />
                 </>

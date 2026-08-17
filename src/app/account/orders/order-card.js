@@ -1,13 +1,15 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, MessageCircle, RotateCcw, XCircle } from "lucide-react";
+import { ChevronDown, RotateCcw, XCircle } from "lucide-react";
 import { useCart } from "@/context/cart-context";
 import { useToast } from "@/context/toast-context";
 import { formatPrice } from "@/lib/format";
 import { StatusTracker } from "@/app/account/orders/status-tracker";
 import { Spinner } from "@/components/ui/spinner";
-import { WHATSAPP_NUMBER } from "@/lib/site";
+import { WhatsAppButton } from "@/components/ui/whatsapp-button";
+import { OrderLineItems } from "@/components/ui/order-line-items";
+import { getOrderInquiryUrl } from "@/lib/whatsapp";
 
 export function OrderCard({ order, onCancelled }) {
   const [expanded, setExpanded] = useState(false);
@@ -88,19 +90,10 @@ export function OrderCard({ order, onCancelled }) {
 
       {expanded && (
         <div className="mt-4 border-t border-farm-green-dark/8 pt-4">
-          <ul className="space-y-1.5">
-            {order.items.map((item) => (
-              <li
-                key={item.productId}
-                className="flex justify-between text-sm text-farm-sage"
-              >
-                <span>{item.name} × {item.quantity}</span>
-                <span className="tabular-nums text-farm-green-dark">
-                  {formatPrice(item.lineTotal)}
-                </span>
-              </li>
-            ))}
-          </ul>
+          <OrderLineItems
+            className="space-y-1.5"
+            items={order.items.map((item) => ({ ...item, key: item.productId }))}
+          />
           <div className="mt-4 flex items-center justify-between border-t border-farm-green-dark/8 pt-3">
             <span className="text-sm text-farm-sage">Delivering to</span>
             <span className="max-w-[60%] text-right text-sm text-farm-green-dark">
@@ -118,18 +111,11 @@ export function OrderCard({ order, onCancelled }) {
               {reordering ? <Spinner className="size-4" /> : <RotateCcw className="size-4" />}
               {reordering ? "Adding…" : "Reorder"}
             </button>
-            <a
-              href={`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
-                `Hello Maran Farms! I have a question about order ${order.id}.`,
-              )}`}
-              target="_blank"
-              rel="noopener noreferrer"
+            <WhatsAppButton
+              href={getOrderInquiryUrl(order.id)}
+              size="sm"
               onClick={(e) => e.stopPropagation()}
-              className="focus-ring inline-flex h-10 items-center gap-2 rounded-full border border-farm-green px-4 text-sm font-semibold text-farm-green"
-            >
-              <MessageCircle className="size-4" />
-              WhatsApp
-            </a>
+            />
             {order.status === "pending" && (
               <button
                 type="button"

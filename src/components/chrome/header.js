@@ -259,12 +259,12 @@ export function Header({ categories = [] }) {
       className={`fixed inset-x-0 top-0 z-50 ${
         transparent
           ? "bg-transparent"
-          : "border-b border-farm-green-dark/8 bg-farm-cream/90 shadow-soft backdrop-blur-md"
+          : "border-b border-farm-green-dark/8 bg-white/90 shadow-soft backdrop-blur-md"
       }`}
       animate={{
         backgroundColor: transparent
-          ? "rgba(252, 248, 244, 0)"
-          : "rgba(252, 248, 244, 0.9)",
+          ? "rgba(255, 255, 255, 0)"
+          : "rgba(255, 255, 255, 0.9)",
       }}
       transition={{ duration: 0.35 }}
       style={{
@@ -284,15 +284,18 @@ export function Header({ categories = [] }) {
       )}
 
       <div
-        className={`container-farm flex items-center justify-between gap-3 ${
+        className={`container-farm flex items-center justify-between gap-2 sm:gap-3 ${
           transparent ? "h-[4.5rem]" : "h-[3.75rem]"
         }`}
       >
-        <Link href="/" className={`focus-ring group flex items-center gap-2.5 ${textClass}`}>
-          <span className="relative flex size-10 shrink-0 items-center justify-center overflow-hidden rounded-full shadow-soft transition group-hover:rotate-12">
+        <Link
+          href="/"
+          className={`focus-ring group flex min-w-0 items-center gap-2 sm:gap-2.5 ${textClass}`}
+        >
+          <span className="relative flex size-9 shrink-0 items-center justify-center overflow-hidden rounded-full shadow-soft transition group-hover:rotate-12 sm:size-10">
             <Image src="/images/logo.png" alt="Maran Farms" fill className="object-cover" sizes="40px" />
           </span>
-          <span className="font-heading text-lg tracking-tight sm:text-xl">
+          <span className="font-heading truncate text-lg tracking-tight max-[360px]:hidden sm:text-xl">
             Maran Farms
           </span>
         </Link>
@@ -305,6 +308,16 @@ export function Header({ categories = [] }) {
             }`}
           >
             Home
+          </Link>
+          <Link
+            href="/blog"
+            className={`focus-ring relative py-1 text-sm font-medium after:absolute after:right-0 after:bottom-0 after:left-0 after:h-0.5 after:origin-left after:bg-current after:transition after:content-[''] ${
+              pathname === "/blog" || pathname?.startsWith("/blog/")
+                ? "after:scale-x-100"
+                : "after:scale-x-0 hover:after:scale-x-100"
+            }`}
+          >
+            Farm Diary
           </Link>
           <div className="relative" ref={catalogRef}>
             <button
@@ -352,7 +365,7 @@ export function Header({ categories = [] }) {
           </div>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex shrink-0 items-center gap-1.5 sm:gap-2">
           <motion.button
             type="button"
             onClick={() => setOrderDrawerOpen(true)}
@@ -362,7 +375,7 @@ export function Header({ categories = [] }) {
                 : { scale: 1 }
             }
             transition={{ duration: 0.4 }}
-            className={`focus-ring inline-flex h-11 items-center gap-2 rounded-full px-3 text-sm font-semibold sm:px-4 ${
+            className={`focus-ring inline-flex h-11 items-center gap-1.5 rounded-full px-2.5 text-sm font-semibold sm:gap-2 sm:px-4 ${
               itemCount > 0
                 ? "bg-farm-accent text-white"
                 : transparent
@@ -425,40 +438,51 @@ export function Header({ categories = [] }) {
             <X className="size-5" />
           </button>
         </div>
-        <div className="flex flex-1 flex-col space-y-1 overflow-y-auto p-4">
-          <MobileAccountLinks onNavigate={() => setMobileOpen(false)} />
-          <Link
-            href="/"
-            className="focus-ring block rounded-2xl px-4 py-3 font-medium text-farm-green-dark hover:bg-farm-accent-light"
-            onClick={() => setMobileOpen(false)}
-          >
-            Home
-          </Link>
-          <p className="text-eyebrow px-4 pt-3 pb-1 text-farm-green">Categories</p>
-          {categories.map((cat) => (
+        <div className="flex min-h-0 flex-1 flex-col">
+          <div className="flex-1 space-y-1 overflow-y-auto p-4">
+            <MobileAccountLinks onNavigate={() => setMobileOpen(false)} />
             <Link
-              key={cat.id}
-              href={`/category/${cat.slug}`}
-              className="focus-ring block rounded-2xl px-4 py-3 hover:bg-farm-accent-light"
+              href="/"
+              className="focus-ring block rounded-2xl px-4 py-3 font-medium text-farm-green-dark hover:bg-farm-accent-light"
               onClick={() => setMobileOpen(false)}
             >
-              <span className="block font-medium text-farm-green-dark">
-                {cat.name}
-              </span>
-              <span className="text-xs text-farm-accent" lang="ta">
-                {cat.tamilName}
-              </span>
+              Home
             </Link>
-          ))}
-          <a
-            href={getGenericInquiryUrl()}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="focus-ring mt-auto flex h-12 w-full items-center justify-center rounded-full bg-farm-green text-button font-semibold text-farm-green-light"
-            onClick={() => setMobileOpen(false)}
-          >
-            WhatsApp Order
-          </a>
+            <Link
+              href="/blog"
+              className="focus-ring block rounded-2xl px-4 py-3 font-medium text-farm-green-dark hover:bg-farm-accent-light"
+              onClick={() => setMobileOpen(false)}
+            >
+              Farm Diary
+            </Link>
+            <p className="text-eyebrow px-4 pt-3 pb-1 text-farm-green">Categories</p>
+            {categories.map((cat) => (
+              <Link
+                key={cat.id}
+                href={`/category/${cat.slug}`}
+                className="focus-ring block rounded-2xl px-4 py-3 hover:bg-farm-accent-light"
+                onClick={() => setMobileOpen(false)}
+              >
+                <span className="block font-medium text-farm-green-dark">
+                  {cat.name}
+                </span>
+                <span className="text-xs text-farm-accent" lang="ta">
+                  {cat.tamilName}
+                </span>
+              </Link>
+            ))}
+          </div>
+          <div className="border-t border-farm-green-dark/8 p-4 pb-[max(1rem,env(safe-area-inset-bottom,0px))]">
+            <a
+              href={getGenericInquiryUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="focus-ring flex h-12 w-full items-center justify-center rounded-full bg-farm-green text-button font-semibold text-farm-green-light"
+              onClick={() => setMobileOpen(false)}
+            >
+              WhatsApp Order
+            </a>
+          </div>
         </div>
       </Drawer>
     </motion.header>

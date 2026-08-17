@@ -74,11 +74,13 @@ export function Drawer({
   };
 
   const placementClasses = {
-    bottom: "inset-x-0 bottom-0 max-h-[min(88vh,calc(var(--vvh)*0.88))] rounded-t-3xl",
+    bottom:
+      "inset-x-0 bottom-0 max-h-[min(88vh,calc(var(--vvh)*0.88))] rounded-t-3xl pb-[env(safe-area-inset-bottom,0px)]",
     dropdown:
       "left-0 right-0 top-[var(--header-offset,4.5rem)] max-h-[min(70vh,32rem,calc(var(--vvh)*0.7))] rounded-b-3xl",
     fullscreen: "inset-0 h-vvh rounded-none",
-    right: "inset-y-0 right-0 h-vvh w-[min(100%,20rem)] rounded-l-3xl",
+    right:
+      "inset-y-0 right-0 h-vvh w-[min(100%,20rem)] rounded-l-3xl pt-[env(safe-area-inset-top,0px)]",
   };
 
   const motionProps = panelMotion[placement] || panelMotion.bottom;

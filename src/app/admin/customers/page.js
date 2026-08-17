@@ -1,20 +1,17 @@
 import { getSupabaseAdminClient } from "@/lib/supabase/admin";
 import { formatPrice } from "@/lib/format";
+import { AdminTable, AdminTableRow } from "@/components/admin/admin-table";
+import {
+  AdminPageHeader,
+  SupabaseNotConfigured,
+} from "@/components/admin/admin-page-header";
 
 const REVENUE_STATUSES = ["paid", "shipped", "delivered"];
 
 export default async function AdminCustomersPage() {
   const supabase = getSupabaseAdminClient();
   if (!supabase) {
-    return (
-      <div>
-        <h1 className="font-heading text-3xl text-farm-green-dark">Customers</h1>
-        <p className="mt-4 text-sm text-farm-sage">
-          Supabase is not configured. Set NEXT_PUBLIC_SUPABASE_URL and
-          SUPABASE_SERVICE_ROLE_KEY in the deployment environment.
-        </p>
-      </div>
-    );
+    return <SupabaseNotConfigured title="Customers" />;
   }
 
   const [{ data: profiles }, { data: orders }] = await Promise.all([
@@ -39,29 +36,27 @@ export default async function AdminCustomersPage() {
 
   return (
     <div>
-      <h1 className="font-heading text-3xl text-farm-green-dark">Customers</h1>
-      <p className="mt-1 text-sm text-farm-sage">{customers.length} registered customers</p>
+      <AdminPageHeader
+        title="Customers"
+        subtitle={`${customers.length} registered customers`}
+      />
 
-      <div className="mt-6 overflow-x-auto rounded-3xl border border-farm-green-dark/10 bg-farm-cream">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-farm-green-dark/8 text-left text-xs font-semibold uppercase tracking-wider text-farm-sage">
-              <th className="px-5 py-4">Name</th>
-              <th className="px-5 py-4">Phone</th>
-              <th className="px-5 py-4">Orders</th>
-              <th className="px-5 py-4 text-right">Total Spend</th>
-              <th className="px-5 py-4">Last Order</th>
-              <th className="px-5 py-4">Joined</th>
-            </tr>
-          </thead>
-          <tbody>
-            {customers
+      <AdminTable
+        columns={[
+          "Name",
+          "Phone",
+          "Orders",
+          { label: "Total Spend", align: "right" },
+          "Last Order",
+          "Joined",
+        ]}
+        isEmpty={customers.length === 0}
+        empty="No customers yet."
+      >
+        {customers
               .sort((a, b) => b.spend - a.spend)
               .map((c, i) => (
-                <tr
-                  key={c.id}
-                  className={`border-b border-farm-green-dark/6 last:border-0 ${i % 2 ? "bg-farm-warm/40" : ""}`}
-                >
+                <AdminTableRow key={c.id} index={i}>
                   <td className="px-5 py-4 font-medium text-farm-green-dark">
                     {c.name}
                     {c.is_admin && (
@@ -90,18 +85,9 @@ export default async function AdminCustomersPage() {
                       year: "numeric",
                     })}
                   </td>
-                </tr>
+                </AdminTableRow>
               ))}
-            {customers.length === 0 && (
-              <tr>
-                <td colSpan={6} className="px-5 py-10 text-center text-farm-sage">
-                  No customers yet.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      </AdminTable>
     </div>
   );
 }

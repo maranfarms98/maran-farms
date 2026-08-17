@@ -10,6 +10,7 @@ export const testimonials = [
     tamilReview:
       "மரான் பண்ணையின் ரெட் நேப்பியர் விரைவாக வேரூன்றி, சில வாரங்களில் பால் மகசூல் மேம்பட்டது.",
     source: "Google Review",
+    productId: "red-napier",
   },
   {
     id: 2,
@@ -22,6 +23,7 @@ export const testimonials = [
     tamilReview:
       "சிறந்த உயிர்வாழ்வு விகிதத்துடன் ஆரோக்கியமான ஒருநாள் குஞ்சுகள். வெளிப்படையான விலை மற்றும் பாதுகாப்பான பேக்கிங்.",
     source: "Verified Buyer",
+    productId: "day-old-chick",
   },
   {
     id: 3,
@@ -34,6 +36,7 @@ export const testimonials = [
     tamilReview:
       "குடும்பத்திற்காக குள்ள முயல் வாங்கினோம். அமைதியாகவும் ஆரோக்கியமாகவும் வந்தது. வாட்ஸ்அப்பில் வழிகாட்டினர்.",
     source: "WhatsApp Order",
+    productId: "dwarf-rabbit",
   },
   {
     id: 4,
@@ -46,6 +49,7 @@ export const testimonials = [
     tamilReview:
       "மொத்த சூப்பர் நேப்பியர் குச்சிகள் புதியதாகவும் சீராகவும் இருந்தன. மதுரைக்கு சரியான நேரத்தில் வந்தது.",
     source: "WhatsApp Chat",
+    productId: "super-napier",
   },
   {
     id: 5,
@@ -58,6 +62,7 @@ export const testimonials = [
     tamilReview:
       "நாட்டுக் குஞ்சுகள் எங்கள் முற்றத்தில் நன்றாகப் பழகின. முன்பதிவு முதல் டெலிவரி வரை தெளிவான தொடர்பு.",
     source: "Verified Buyer",
+    productId: "country-chick",
   },
   {
     id: 6,
