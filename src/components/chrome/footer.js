@@ -204,12 +204,29 @@ export function Footer({ categories = [] }) {
             <p className="text-sm text-farm-green-light/55">
               © {year} Maran Farms. Handcrafted for agricultural excellence.
             </p>
-            <Link
-              href="/privacy-policy"
-              className="focus-ring text-sm text-farm-green-light/55 underline-offset-2 hover:text-farm-ochre hover:underline"
+            <nav
+              aria-label="Legal"
+              className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-farm-green-light/55"
             >
-              Privacy Policy
-            </Link>
+              <Link
+                href="/privacy-policy"
+                className="focus-ring underline-offset-2 hover:text-farm-ochre hover:underline"
+              >
+                Privacy Policy
+              </Link>
+              <Link
+                href="/terms-of-service"
+                className="focus-ring underline-offset-2 hover:text-farm-ochre hover:underline"
+              >
+                Terms of Service
+              </Link>
+              <Link
+                href="/data-deletion"
+                className="focus-ring underline-offset-2 hover:text-farm-ochre hover:underline"
+              >
+                Data Deletion
+              </Link>
+            </nav>
           </div>
           <div className="flex gap-3">
             <a
