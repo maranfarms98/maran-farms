@@ -43,6 +43,15 @@ Required in each env file:
 - `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` / `NEXT_PUBLIC_RAZORPAY_KEY_ID`
 - `AUTH_SECRET` — different per environment (`openssl rand -base64 32`)
 
+WhatsApp OTP login (Meta Cloud API — required in production):
+
+- `WHATSAPP_TOKEN` — System User permanent access token (`whatsapp_business_messaging`)
+- `WHATSAPP_PHONE_NUMBER_ID` — sending phone number ID from Meta API Setup
+- `WHATSAPP_OTP_TEMPLATE` — approved AUTHENTICATION template name (copy-code)
+- `WHATSAPP_OTP_TEMPLATE_LANG` — optional; template language code (default `en`)
+
+Without those vars, staging/local logs the OTP to the server console. Production returns an error if WhatsApp is not configured.
+
 Order confirmation emails (optional until configured — orders still complete without them):
 
 - `RESEND_API_KEY` — Resend API key (server-only)

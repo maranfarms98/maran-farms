@@ -69,10 +69,10 @@ function LoginForm() {
         >
           <p className="mt-3 text-sm text-farm-sage">
             {step === "phone"
-              ? "Enter your phone number to continue"
+              ? "Enter your WhatsApp number to continue"
               : isNewUser
-                ? `New here — tell us your name, then verify the OTP sent to +91 ${phone}`
-                : `OTP sent to +91 ${phone}`}
+                ? `New here — tell us your name, then enter the OTP we sent on WhatsApp to +91 ${phone}`
+                : `OTP sent on WhatsApp to +91 ${phone}`}
           </p>
         </FarmPageIntro>
 

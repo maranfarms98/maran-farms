@@ -104,7 +104,8 @@ export default function PrivacyPolicyPage() {
                 <strong className="font-semibold text-farm-green-dark">
                   Account details
                 </strong>{" "}
-                — phone number and name when you sign in with OTP.
+                — phone number and name when you sign in with OTP sent on
+                WhatsApp.
               </Li>
               <Li>
                 <strong className="font-semibold text-farm-green-dark">
@@ -209,8 +210,9 @@ export default function PrivacyPolicyPage() {
                 <strong className="font-semibold text-farm-green-dark">
                   WhatsApp
                 </strong>{" "}
-                — when you contact us or place orders via WhatsApp, Meta&apos;s
-                terms and privacy policy apply to that channel.
+                — login OTP delivery and when you contact us or place orders via
+                WhatsApp. Meta&apos;s terms and privacy policy apply to that
+                channel.
               </Li>
             </Ul>
           </Section>

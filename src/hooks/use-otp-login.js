@@ -4,8 +4,7 @@ import { useCallback, useRef, useState } from "react";
 import { useAuth } from "@/context/auth-context";
 import { useToast } from "@/context/toast-context";
 import { isValidMobile, toPhoneInput } from "@/lib/phone";
-
-const OTP_LENGTH = 4;
+import { OTP_LENGTH } from "@/lib/otp";
 
 /**
  * Owns the phone → OTP login flow shared by the login page and the login modal.
@@ -75,7 +74,9 @@ export function useOtpLogin({ onSuccess } = {}) {
   const verifyOtp = useCallback(async () => {
     setError("");
     if (isNewUser && !name.trim()) return setError("Please enter your name");
-    if (otp.length < OTP_LENGTH) return setError("Enter the 4-digit OTP");
+    if (otp.length < OTP_LENGTH) {
+      return setError(`Enter the ${OTP_LENGTH}-digit OTP from WhatsApp`);
+    }
 
     setLoading(true);
     try {

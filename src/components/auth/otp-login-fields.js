@@ -3,6 +3,7 @@
 import { Spinner } from "@/components/ui/spinner";
 import { ErrorNote } from "@/components/ui/error-note";
 import { TamilCaption } from "@/components/ui/tamil-caption";
+import { OTP_LENGTH } from "@/lib/otp";
 
 const FIELD_CLASS =
   "h-12 rounded-2xl border border-farm-green-dark/15 bg-farm-warm px-4 text-farm-green-dark placeholder:text-farm-sage/60 focus:border-farm-green focus:outline-none";
@@ -77,15 +78,16 @@ export function OtpLoginFields({ login, showTamil = false }) {
           )}
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-farm-green-dark" htmlFor="login-otp">
-              OTP
+              WhatsApp OTP
             </label>
             <input
               ref={otpRef}
               id="login-otp"
               type="text"
               inputMode="numeric"
-              placeholder="4-digit OTP"
-              maxLength={4}
+              placeholder={`${OTP_LENGTH}-digit code`}
+              maxLength={OTP_LENGTH}
+              autoComplete="one-time-code"
               value={otp}
               onChange={(e) => setOtp(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && verifyOtp()}
@@ -111,7 +113,11 @@ export function OtpLoginFields({ login, showTamil = false }) {
         className="focus-ring mt-1 flex h-14 w-full items-center justify-center gap-2 rounded-full bg-farm-green text-button font-semibold text-farm-green-light transition hover:bg-farm-green-dark disabled:opacity-60"
       >
         {loading && <Spinner className="size-4" />}
-        {loading ? "Please wait…" : step === "phone" ? "Send OTP" : "Verify & Continue"}
+        {loading
+          ? "Please wait…"
+          : step === "phone"
+            ? "Send OTP on WhatsApp"
+            : "Verify & Continue"}
       </button>
     </>
   );

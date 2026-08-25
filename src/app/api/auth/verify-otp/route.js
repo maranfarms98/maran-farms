@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 import { signSession, SESSION_COOKIE_NAME, sessionCookieOptions } from "@/lib/auth/session";
+import { OTP_LENGTH } from "@/lib/otp";
 
 const ADMIN_PHONE = "9600267271";
 
@@ -11,6 +12,14 @@ export async function POST(request) {
   if (!phone || !otp) {
     return NextResponse.json(
       { error: "Phone and OTP are required" },
+      { status: 400 },
+    );
+  }
+
+  const trimmedOtp = String(otp).trim();
+  if (!new RegExp(`^\\d{${OTP_LENGTH}}$`).test(trimmedOtp)) {
+    return NextResponse.json(
+      { error: `Enter a valid ${OTP_LENGTH}-digit OTP` },
       { status: 400 },
     );
   }
@@ -53,20 +62,13 @@ export async function POST(request) {
     );
   }
 
-  const isAdmin = phone === ADMIN_PHONE;
-  const trimmedOtp = otp.trim();
-
-  // Admin must match the exact hardcoded OTP. For everyone else (testing
-  // phase, no real SMS provider wired up), any 4-digit code is accepted.
-  if (isAdmin) {
-    if (record.otp !== trimmedOtp) {
-      return NextResponse.json({ error: "Incorrect OTP" }, { status: 400 });
-    }
-  } else if (!/^\d{4}$/.test(trimmedOtp)) {
-    return NextResponse.json({ error: "Enter a valid 4-digit OTP" }, { status: 400 });
+  if (record.otp !== trimmedOtp) {
+    return NextResponse.json({ error: "Incorrect OTP" }, { status: 400 });
   }
 
   await supabase.from("otp_codes").delete().eq("phone", phone);
+
+  const isAdmin = phone === ADMIN_PHONE;
 
   let profile;
   if (existingProfile) {

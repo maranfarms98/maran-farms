@@ -116,10 +116,10 @@ export default function TermsOfServicePage() {
 
           <Section title="Accounts and login">
             <P>
-              Sign-in may use phone OTP and, where configured, Facebook Login
-              or similar providers. You are responsible for keeping access to
-              your phone and linked accounts secure. Do not share one-time
-              codes with anyone.
+              Sign-in may use phone OTP delivered via WhatsApp and, where
+              configured, Facebook Login or similar providers. You are
+              responsible for keeping access to your phone and linked accounts
+              secure. Do not share one-time codes with anyone.
             </P>
           </Section>
 

@@ -15,6 +15,15 @@ export function isValidMobile(phone) {
   return /^\d{10}$/.test(String(phone ?? ""));
 }
 
+/** E.164 for WhatsApp Cloud API (India): 91 + 10-digit mobile. */
+export function toWhatsAppE164(phone) {
+  const digits = normalizePhone(phone);
+  if (!isValidMobile(digits)) {
+    throw new Error(PHONE_ERROR);
+  }
+  return `91${digits}`;
+}
+
 /** For controlled phone inputs: digits only, capped at 10. */
 export function toPhoneInput(value) {
   return String(value ?? "").replace(/\D/g, "").slice(0, MOBILE_LENGTH);

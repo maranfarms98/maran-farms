@@ -43,10 +43,10 @@ export function LoginModal() {
           </h2>
           <p className="text-sm text-farm-sage">
             {login.step === "phone"
-              ? "Enter your phone number to continue"
+              ? "Enter your WhatsApp number to continue"
               : login.isNewUser
-              ? `New here — tell us your name, then verify the OTP`
-              : `OTP sent to +91 ${login.phone}`}
+                ? "New here — tell us your name, then enter the OTP from WhatsApp"
+                : `OTP sent on WhatsApp to +91 ${login.phone}`}
           </p>
         </div>
         <button

@@ -1,11 +1,21 @@
+import { randomInt } from "crypto";
 import { NextResponse } from "next/server";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 import { isValidMobile } from "@/lib/phone";
+import { OTP_LENGTH } from "@/lib/otp";
+import {
+  isWhatsAppOtpConfigured,
+  sendWhatsAppOtp,
+} from "@/lib/whatsapp-otp";
 
-const ADMIN_PHONE = "9600267271";
-const ADMIN_OTP = "1122";
-const MOCK_OTP = "1234";
 const RESEND_COOLDOWN_MS = 30 * 1000;
+const OTP_TTL_MS = 5 * 60 * 1000;
+
+function generateOtp() {
+  const min = 10 ** (OTP_LENGTH - 1);
+  const max = 10 ** OTP_LENGTH;
+  return String(randomInt(min, max));
+}
 
 export async function POST(request) {
   const { phone } = await request.json();
@@ -26,7 +36,7 @@ export async function POST(request) {
     .maybeSingle();
 
   if (existing) {
-    const issuedAt = new Date(existing.expires_at).getTime() - 5 * 60 * 1000;
+    const issuedAt = new Date(existing.expires_at).getTime() - OTP_TTL_MS;
     if (Date.now() - issuedAt < RESEND_COOLDOWN_MS) {
       return NextResponse.json(
         { error: "Please wait a few seconds before requesting another OTP" },
@@ -35,8 +45,8 @@ export async function POST(request) {
     }
   }
 
-  const otp = phone === ADMIN_PHONE ? ADMIN_OTP : MOCK_OTP;
-  const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+  const otp = generateOtp();
+  const expiresAt = new Date(Date.now() + OTP_TTL_MS).toISOString();
 
   const { error } = await supabase
     .from("otp_codes")
@@ -50,7 +60,33 @@ export async function POST(request) {
     );
   }
 
-  // In production, send the OTP via SMS here
+  if (isWhatsAppOtpConfigured()) {
+    try {
+      await sendWhatsAppOtp({ phone, otp });
+    } catch (err) {
+      await supabase.from("otp_codes").delete().eq("phone", phone);
+      console.error("[send-otp] WhatsApp delivery failed", err?.message || err);
+      return NextResponse.json(
+        {
+          error:
+            "Could not send OTP on WhatsApp. Check the number has WhatsApp, or try again.",
+        },
+        { status: 502 },
+      );
+    }
+  } else if (process.env.APP_ENV === "production") {
+    await supabase.from("otp_codes").delete().eq("phone", phone);
+    console.error("[send-otp] WhatsApp OTP env vars missing in production");
+    return NextResponse.json(
+      { error: "OTP delivery is not configured. Please try again later." },
+      { status: 503 },
+    );
+  } else {
+    // Staging / local without Meta credentials — OTP is stored; log for testing.
+    console.warn(
+      `[send-otp] WhatsApp not configured — OTP for ${phone}: ${otp}`,
+    );
+  }
 
   const { data: existingProfile } = await supabase
     .from("profiles")
