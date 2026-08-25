@@ -200,9 +200,17 @@ export function Footer({ categories = [] }) {
         </div>
 
         <div className="container-farm flex flex-col gap-4 border-t border-white/10 pt-6 pb-[calc(env(safe-area-inset-bottom,0px)+5.5rem)] sm:flex-row sm:items-center sm:justify-between md:pb-6">
-          <p className="text-sm text-farm-green-light/55">
-            © {year} Maran Farms. Handcrafted for agricultural excellence.
-          </p>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-4">
+            <p className="text-sm text-farm-green-light/55">
+              © {year} Maran Farms. Handcrafted for agricultural excellence.
+            </p>
+            <Link
+              href="/privacy-policy"
+              className="focus-ring text-sm text-farm-green-light/55 underline-offset-2 hover:text-farm-ochre hover:underline"
+            >
+              Privacy Policy
+            </Link>
+          </div>
           <div className="flex gap-3">
             <a
               href={INSTAGRAM_URL}

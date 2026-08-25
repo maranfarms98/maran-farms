@@ -21,6 +21,7 @@ export default async function sitemap() {
 
   return [
     entry("/", "weekly", 1),
+    entry("/privacy-policy", "yearly", 0.3),
     entry("/blog", "weekly", 0.8),
     ...categories.map((c) => entry(`/category/${c.slug}`, "weekly", 0.8)),
     ...products.map((p) => entry(`/product/${p.id}`, "weekly", 0.7)),
