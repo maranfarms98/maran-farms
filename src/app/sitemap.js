@@ -14,7 +14,7 @@ export default async function sitemap() {
   const posts = getAllBlogSlugs();
 
   const entry = (path, changeFrequency, priority) => ({
-    url: path === "/" ? `${site}/` : `${site}${path}`,
+    url: path === "/" ? site : `${site}${path}`,
     changeFrequency,
     priority,
   });

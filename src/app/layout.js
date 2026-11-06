@@ -4,7 +4,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Providers } from "@/components/chrome/providers";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getAllCategories } from "@/data/categories";
-import { localBusinessJsonLd } from "@/lib/schema";
+import { localBusinessJsonLd, websiteJsonLd } from "@/lib/schema";
 import { HOME_DESCRIPTION, HOME_TITLE } from "@/lib/seo";
 import { getSiteUrl } from "@/lib/site";
 import "./globals.css";
@@ -12,13 +12,15 @@ import "./globals.css";
 const outfit = Outfit({
   variable: "--font-outfit",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800", "900"],
+  weight: ["500", "600", "700"],
+  display: "swap",
 });
 
 const homeOg = {
@@ -62,6 +64,7 @@ export default async function RootLayout({ children }) {
       className={`${outfit.variable} ${playfair.variable} antialiased`}
     >
       <body className="flex min-h-vvh flex-col font-sans">
+        <JsonLd data={websiteJsonLd()} />
         <JsonLd data={localBusinessJsonLd()} />
         <Providers categories={categories}>{children}</Providers>
         <Analytics />

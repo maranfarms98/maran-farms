@@ -44,8 +44,8 @@ Order confirmation emails (optional until configured — orders still complete w
 
 - `RESEND_API_KEY` — Resend API key (server-only)
 - `ORDER_NOTIFY_EMAIL` — inbox that receives every new paid-order notification
-- `SITE_URL` — public site origin for admin links in emails (e.g. `https://maranfarms.in`)
-- `EMAIL_FROM` — optional From header; defaults to `Maran Farms <hello@maranfarms.in>`. Before the sending domain is verified in Resend, use `Maran Farms <onboarding@resend.dev>`.
+- `SITE_URL` — public site origin for admin links in emails (e.g. `https://www.maranfarms.com`)
+- `EMAIL_FROM` — optional From header; defaults to `Maran Farms <maranfarms98@gmail.com>`. Before the sending domain is verified in Resend, use `Maran Farms <onboarding@resend.dev>`.
 
 New databases: run [`supabase/schema.sql`](supabase/schema.sql) in the Supabase SQL Editor (includes optional `email` on `profiles` and `orders`, and `decrement_stock`).
 

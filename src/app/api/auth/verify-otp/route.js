@@ -4,7 +4,7 @@ import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 import { signSession, SESSION_COOKIE_NAME, sessionCookieOptions } from "@/lib/auth/session";
 import { OTP_LENGTH } from "@/lib/otp";
 
-const ADMIN_PHONE = "9600267271";
+const ADMIN_PHONE = "6380261643";
 
 export async function POST(request) {
   const { phone, otp, name } = await request.json();

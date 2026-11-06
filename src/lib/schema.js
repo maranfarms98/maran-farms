@@ -1,7 +1,6 @@
 import { DISTRICTS } from "@/data/districts";
 import { INSTAGRAM_JOURNEY_POSTS } from "@/data/instagram-posts";
 import { getProductGuide } from "@/data/product-guides";
-import { testimonials } from "@/data/testimonials";
 import { canonicalUrl, HOME_DESCRIPTION, productMetaDescription } from "@/lib/seo";
 import {
   CONTACT_EMAIL,
@@ -19,27 +18,12 @@ import {
   toAbsoluteUrl,
 } from "@/lib/site";
 
-function reviewNodes(list = testimonials) {
-  return list.map((t) => ({
-    "@type": "Review",
-    author: { "@type": "Person", name: t.name },
-    reviewBody: t.review,
-    reviewRating: {
-      "@type": "Rating",
-      ratingValue: String(t.rating),
-      bestRating: "5",
-    },
-  }));
-}
-
-export function aggregateRatingNode(list = testimonials) {
-  if (!list.length) return undefined;
-  const sum = list.reduce((acc, t) => acc + t.rating, 0);
+export function websiteJsonLd() {
   return {
-    "@type": "AggregateRating",
-    ratingValue: (sum / list.length).toFixed(1),
-    reviewCount: String(list.length),
-    bestRating: "5",
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE_NAME,
+    url: canonicalUrl("/"),
   };
 }
 
@@ -68,12 +52,10 @@ export function localBusinessJsonLd() {
     })),
     sameAs: [INSTAGRAM_URL, GOOGLE_PLACE_URL],
     openingHours: OPENING_HOURS,
-    aggregateRating: aggregateRatingNode(),
-    review: reviewNodes(),
   };
 }
 
-export function productJsonLd(product, extraReviews = []) {
+export function productJsonLd(product) {
   const url = canonicalUrl(`/product/${product.id}`);
   const node = {
     "@context": "https://schema.org",
@@ -95,10 +77,6 @@ export function productJsonLd(product, extraReviews = []) {
       itemCondition: "https://schema.org/NewCondition",
     },
   };
-  if (extraReviews.length) {
-    node.review = reviewNodes(extraReviews);
-    node.aggregateRating = aggregateRatingNode(extraReviews);
-  }
   return node;
 }
 
@@ -140,6 +118,3 @@ export function videoObjectJsonLd() {
   }));
 }
 
-export function reviewsForProduct(productId) {
-  return testimonials.filter((t) => t.productId === productId);
-}

@@ -231,9 +231,10 @@ export function Hero() {
       <div className="pointer-events-none absolute inset-0">
         <Image
           src="/images/home-hero.jpg"
-          alt=""
+          alt="Maran Farms fields in Pallamaruthapatti, Karur"
           fill
           priority
+          fetchPriority="high"
           className="object-cover object-center"
           sizes="100vw"
         />

@@ -1,4 +1,17 @@
+import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
+
+const CATALOG_REVALIDATE_SECONDS = 60;
+
+function publicCatalog(fn, key) {
+  return cache(
+    unstable_cache(fn, [key], {
+      revalidate: CATALOG_REVALIDATE_SECONDS,
+      tags: ["catalog"],
+    }),
+  );
+}
 
 function mapCategory(row) {
   return {
@@ -17,7 +30,7 @@ function mapCategory(row) {
   };
 }
 
-export async function getAllCategories() {
+export const getAllCategories = publicCatalog(async () => {
   const supabase = getSupabaseServerClient();
   if (!supabase) return [];
   const { data, error } = await supabase
@@ -29,9 +42,9 @@ export async function getAllCategories() {
     return [];
   }
   return data.map(mapCategory);
-}
+}, "categories-all");
 
-export async function getCategoryBySlug(slug) {
+export const getCategoryBySlug = publicCatalog(async (slug) => {
   const supabase = getSupabaseServerClient();
   if (!supabase) return null;
   const { data, error } = await supabase
@@ -44,9 +57,9 @@ export async function getCategoryBySlug(slug) {
     return null;
   }
   return data ? mapCategory(data) : null;
-}
+}, "category-by-slug");
 
-export async function getCategoryById(id) {
+export const getCategoryById = publicCatalog(async (id) => {
   const supabase = getSupabaseServerClient();
   if (!supabase) return null;
   const { data, error } = await supabase
@@ -59,4 +72,4 @@ export async function getCategoryById(id) {
     return null;
   }
   return data ? mapCategory(data) : null;
-}
+}, "category-by-id");

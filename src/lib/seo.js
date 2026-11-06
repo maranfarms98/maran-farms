@@ -5,7 +5,7 @@ import { getSiteUrl, SITE_NAME, toAbsoluteUrl } from "@/lib/site";
 export const HOME_TITLE =
   "Maran Farms | Napier Grass, Day-Old Chicks & Small Pets — Karur, Tamil Nadu";
 export const HOME_DESCRIPTION =
-  "Buy Napier grass sticks, farm-fresh day-old chicks, and healthy small pets from Maran Farms in Pallamaruthapatti, Karur. WhatsApp ordering and delivery across Tamil Nadu.";
+  "Maran Farms in Pallamaruthapatti, Karur grows Napier grass sticks, farm-fresh day-old chicks, and small pets. Order on WhatsApp for delivery across Tamil Nadu.";
 export const HOME_H1 =
   "Napier Plants, Farm-Fresh Chicks & Small Pets — Delivered Across Tamil Nadu";
 
@@ -13,7 +13,7 @@ export const DEFAULT_OG_IMAGE = "/images/logo.png";
 
 export function canonicalUrl(path = "/") {
   const normalized = path.startsWith("/") ? path : `/${path}`;
-  if (normalized === "/") return `${getSiteUrl()}/`;
+  if (normalized === "/") return getSiteUrl();
   return `${getSiteUrl()}${normalized.replace(/\/$/, "")}`;
 }
 

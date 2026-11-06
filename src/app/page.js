@@ -1,14 +1,22 @@
-import { FarmLocation } from "@/components/home/farm-location";
+import dynamic from "next/dynamic";
 import { FeaturedProducts } from "@/components/home/featured-products";
 import { HarvestPaths } from "@/components/home/harvest-paths";
 import { Hero } from "@/components/home/hero";
-import { InstagramSection } from "@/components/home/instagram-section";
-import { Testimonials } from "@/components/home/testimonials";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getAllCategories } from "@/data/categories";
 import { getFeaturedProducts } from "@/data/products";
 import { videoObjectJsonLd } from "@/lib/schema";
 import { HOME_DESCRIPTION, HOME_TITLE, pageMetadata } from "@/lib/seo";
+
+const FarmLocation = dynamic(() =>
+  import("@/components/home/farm-location").then((mod) => mod.FarmLocation),
+);
+const Testimonials = dynamic(() =>
+  import("@/components/home/testimonials").then((mod) => mod.Testimonials),
+);
+const InstagramSection = dynamic(() =>
+  import("@/components/home/instagram-section").then((mod) => mod.InstagramSection),
+);
 
 export const metadata = pageMetadata({
   title: HOME_TITLE,

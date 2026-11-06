@@ -1,11 +1,11 @@
-export const WHATSAPP_NUMBER = "919600267271";
-export const WHATSAPP_DISPLAY = "+91 96002 67271";
+export const WHATSAPP_NUMBER = "916380261643";
+export const WHATSAPP_DISPLAY = "+91 6380261643";
 export const INSTAGRAM_URL = "https://www.instagram.com/maran_farms";
-export const CONTACT_EMAIL = "hello@maranfarms.in";
+export const CONTACT_EMAIL = "maranfarms98@gmail.com";
 export const SITE_NAME = "Maran Farms";
-export const DEFAULT_SITE_URL = "https://maranfarms.in";
+export const DEFAULT_SITE_URL = "https://www.maranfarms.com";
 export const OPENING_HOURS = "Mo-Su 08:00-18:00";
-export const TELEPHONE_E164 = "+919600267271";
+export const TELEPHONE_E164 = "+916380261643";
 
 export const FARM_LOCALITY = "Pallamaruthapatti";
 export const FARM_LOCALITY_TA = "பள்ளமருதப்பட்டி";

@@ -55,7 +55,8 @@ const nextConfig = {
   // Wildcard covers any 192.168.x.x address without hardcoding IPs.
   allowedDevOrigins: ["192.168.*.*", "127.0.0.1"],
   images: {
-    qualities: [75, 90, 95, 100],
+    formats: ["image/avif", "image/webp"],
+    qualities: [75],
     remotePatterns: supabaseHost
       ? [
           {
@@ -72,6 +73,15 @@ const nextConfig = {
   },
   headers() {
     return [
+      {
+        source: "/images/:path*",
+        headers: [
+          {
+            key: "Cache-Control",
+            value: "public, max-age=604800, stale-while-revalidate=86400",
+          },
+        ],
+      },
       {
         source: "/images/:file*.mp4",
         headers: [

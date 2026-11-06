@@ -134,7 +134,6 @@ export function CategoryPageClient({ category, products, allCategories, crumbs }
                   src={cat.image || cat.heroImage}
                   alt={categoryImageAlt(cat.name)}
                   fill
-                  unoptimized
                   className="object-cover transition duration-500 group-hover:scale-105"
                   sizes="200px"
                 />

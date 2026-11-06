@@ -73,7 +73,7 @@ export default function TermsOfServicePage() {
               href="/"
               className="font-medium text-farm-green underline-offset-2 hover:text-farm-accent hover:underline"
             >
-              maranfarms.in
+              www.maranfarms.com
             </Link>{" "}
             and any related ordering or login flows (including Facebook or
             Instagram login where offered). By using our site or placing an

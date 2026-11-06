@@ -55,9 +55,8 @@ function PathPanel({ path, isActive, showDivider, motionAllowed, onActivate }) {
           src={path.image}
           alt={categoryImageAlt(path.name)}
           fill
-          unoptimized
           className="object-cover"
-          sizes="50vw"
+          sizes="(max-width:768px) 82vw, 50vw"
         />
       </motion.div>
 
@@ -163,7 +162,6 @@ export function HarvestPaths({ categories = [] }) {
               src={path.image}
               alt={categoryImageAlt(path.name)}
               fill
-              unoptimized
               className="object-cover"
               sizes="82vw"
             />

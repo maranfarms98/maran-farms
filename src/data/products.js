@@ -1,6 +1,18 @@
+import { cache } from "react";
+import { unstable_cache } from "next/cache";
 import { getSupabaseServerClient } from "@/lib/supabase/server";
 
+const CATALOG_REVALIDATE_SECONDS = 60;
 const PRODUCT_SELECT = "*, category:categories(name, slug)";
+
+function publicCatalog(fn, key) {
+  return cache(
+    unstable_cache(fn, [key], {
+      revalidate: CATALOG_REVALIDATE_SECONDS,
+      tags: ["catalog"],
+    }),
+  );
+}
 
 function mapProduct(row) {
   const inStock = !row.track_inventory || row.stock_qty > 0;
@@ -26,7 +38,7 @@ function mapProduct(row) {
   };
 }
 
-export async function getProductById(id) {
+export const getProductById = publicCatalog(async (id) => {
   const supabase = getSupabaseServerClient();
   if (!supabase) return null;
   const { data, error } = await supabase
@@ -39,9 +51,9 @@ export async function getProductById(id) {
     return null;
   }
   return data ? mapProduct(data) : null;
-}
+}, "product-by-id");
 
-export async function getProductsByCategory(categoryId) {
+export const getProductsByCategory = publicCatalog(async (categoryId) => {
   const supabase = getSupabaseServerClient();
   if (!supabase) return [];
   const { data, error } = await supabase
@@ -54,9 +66,9 @@ export async function getProductsByCategory(categoryId) {
     return [];
   }
   return data.map(mapProduct);
-}
+}, "products-by-category");
 
-export async function getFeaturedProducts() {
+export const getFeaturedProducts = publicCatalog(async () => {
   const supabase = getSupabaseServerClient();
   if (!supabase) return [];
   const { data, error } = await supabase
@@ -69,9 +81,9 @@ export async function getFeaturedProducts() {
     return [];
   }
   return data.map(mapProduct);
-}
+}, "products-featured");
 
-export async function getAllProducts() {
+export const getAllProducts = publicCatalog(async () => {
   const supabase = getSupabaseServerClient();
   if (!supabase) return [];
   const { data, error } = await supabase
@@ -83,20 +95,28 @@ export async function getAllProducts() {
     return [];
   }
   return data.map(mapProduct);
-}
+}, "products-all");
+
+const getRelatedProductsCached = publicCatalog(
+  async (categoryId, productId, limit) => {
+    const supabase = getSupabaseServerClient();
+    if (!supabase) return [];
+    const { data, error } = await supabase
+      .from("products")
+      .select(PRODUCT_SELECT)
+      .eq("category_id", categoryId)
+      .neq("id", productId)
+      .limit(limit);
+    if (error) {
+      console.error("[getRelatedProducts]", error);
+      return [];
+    }
+    return data.map(mapProduct);
+  },
+  "products-related",
+);
 
 export async function getRelatedProducts(product, limit = 3) {
-  const supabase = getSupabaseServerClient();
-  if (!supabase) return [];
-  const { data, error } = await supabase
-    .from("products")
-    .select(PRODUCT_SELECT)
-    .eq("category_id", product.categoryId)
-    .neq("id", product.id)
-    .limit(limit);
-  if (error) {
-    console.error("[getRelatedProducts]", error);
-    return [];
-  }
-  return data.map(mapProduct);
+  if (!product?.categoryId || !product?.id) return [];
+  return getRelatedProductsCached(product.categoryId, product.id, limit);
 }

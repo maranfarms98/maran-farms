@@ -73,7 +73,7 @@ export default function PrivacyPolicyPage() {
               href="/"
               className="font-medium text-farm-green underline-offset-2 hover:text-farm-accent hover:underline"
             >
-              maranfarms.in
+              www.maranfarms.com
             </Link>
             . This policy explains what personal information we collect, how we
             use it, and the choices you have.

@@ -112,7 +112,6 @@ export function SplashScreen() {
                 fill
                 className="object-cover"
                 sizes="64px"
-                priority
               />
             </motion.span>
 

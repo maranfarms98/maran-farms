@@ -9,7 +9,6 @@ import {
   breadcrumbJsonLd,
   faqPageJsonLd,
   productJsonLd,
-  reviewsForProduct,
 } from "@/lib/schema";
 import { pageMetadata, productMetaDescription, productPageTitle } from "@/lib/seo";
 
@@ -54,7 +53,7 @@ export default async function ProductPage({ params }) {
 
   return (
     <>
-      <JsonLd data={productJsonLd(product, reviewsForProduct(product.id))} />
+      <JsonLd data={productJsonLd(product)} />
       <JsonLd data={faqPageJsonLd(content.faqs)} />
       <JsonLd data={breadcrumbJsonLd(crumbs)} />
       <ProductPageClient
