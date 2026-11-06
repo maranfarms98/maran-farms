@@ -1,6 +1,6 @@
 import "server-only";
 import { Resend } from "resend";
-import { CONTACT_EMAIL, SITE_NAME } from "@/lib/site";
+import { CONTACT_EMAIL, getSiteUrl, SITE_NAME } from "@/lib/site";
 import { adminOrderEmail, customerOrderEmail } from "@/lib/emails/templates";
 
 function getFrom() {
@@ -30,7 +30,7 @@ export async function sendOrderPaidEmails(order) {
 
   const resend = new Resend(apiKey);
   const from = getFrom();
-  const siteUrl = process.env.SITE_URL?.trim() || null;
+  const siteUrl = getSiteUrl();
   const tasks = [];
 
   if (order.email) {

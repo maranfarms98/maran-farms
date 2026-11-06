@@ -23,13 +23,39 @@ export const GOOGLE_MAPS_URL = `https://www.google.com/maps/search/?api=1&query=
 export const GOOGLE_DIRECTIONS_URL = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(MAPS_QUERY)}`;
 export const GOOGLE_MAPS_EMBED_URL = `https://www.google.com/maps?q=${encodeURIComponent("Maran farms, karur Pallamaruthapatti")}&z=15&output=embed`;
 
-/** Public origin for canonicals, sitemap, and JSON-LD. Never the Vercel preview host. */
+/**
+ * Public origin for canonicals, sitemap, and JSON-LD.
+ * The old .in host and Vercel preview hosts are never used, so a stale
+ * SITE_URL cannot put maranfarms.in URLs in a sitemap served on .com.
+ */
+function publicOrigin(raw) {
+  if (!raw) return null;
+  try {
+    const url = new URL(raw.trim());
+    const host = url.hostname.toLowerCase();
+    if (
+      host === "maranfarms.in" ||
+      host === "www.maranfarms.in" ||
+      host.endsWith(".vercel.app")
+    ) {
+      return null;
+    }
+    if (host === "maranfarms.com") {
+      url.protocol = "https:";
+      url.hostname = "www.maranfarms.com";
+    }
+    return url.origin;
+  } catch {
+    return null;
+  }
+}
+
 export function getSiteUrl() {
-  const raw =
-    process.env.SITE_URL?.trim() ||
-    process.env.NEXT_PUBLIC_SITE_URL?.trim() ||
-    DEFAULT_SITE_URL;
-  return raw.replace(/\/$/, "");
+  return (
+    publicOrigin(process.env.SITE_URL) ||
+    publicOrigin(process.env.NEXT_PUBLIC_SITE_URL) ||
+    DEFAULT_SITE_URL
+  );
 }
 
 export function toAbsoluteUrl(path) {
