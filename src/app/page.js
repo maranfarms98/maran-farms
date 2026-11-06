@@ -4,8 +4,6 @@ import { HarvestPaths } from "@/components/home/harvest-paths";
 import { Hero } from "@/components/home/hero";
 import { InstagramSection } from "@/components/home/instagram-section";
 import { Testimonials } from "@/components/home/testimonials";
-// import { TrustDashboard } from "@/components/home/trust-dashboard";
-// import { WhatsAppSection } from "@/components/home/whatsapp-section";
 import { JsonLd } from "@/components/seo/json-ld";
 import { getAllCategories } from "@/data/categories";
 import { getFeaturedProducts } from "@/data/products";
@@ -33,10 +31,8 @@ export default async function HomePage() {
       <Hero />
       <HarvestPaths categories={categories} />
       <FeaturedProducts products={featuredProducts} />
-      {/* <TrustDashboard /> */}
       <FarmLocation />
       <Testimonials />
-      {/* <WhatsAppSection demoImage={featuredProducts[0]?.image} /> */}
       <InstagramSection />
     </>
   );

@@ -14,7 +14,7 @@ const MIME_BY_EXT = {
   avif: "image/avif",
 };
 
-const FALLBACK_ENV_FILES = [".env.staging"];
+const ENV_FILE = ".env";
 
 function applyEnvFile(filePath, { override = false } = {}) {
   const raw = readFileSync(filePath, "utf-8");
@@ -30,31 +30,23 @@ function applyEnvFile(filePath, { override = false } = {}) {
 }
 
 /**
- * Load local env files into process.env (does not override existing keys).
- * Prefer vars already set (e.g. by `scripts/with-env.mjs production`).
- * Otherwise fill from `.env.staging`.
+ * Load `.env` into process.env (does not override existing keys).
  */
 export function loadEnvLocal(projectRoot = join(__dirname, "../..")) {
-  for (const name of FALLBACK_ENV_FILES) {
-    const filePath = join(projectRoot, name);
-    if (!existsSync(filePath)) continue;
-    applyEnvFile(filePath);
-  }
+  const filePath = join(projectRoot, ENV_FILE);
+  if (!existsSync(filePath)) return;
+  applyEnvFile(filePath);
 }
 
 /**
- * Load `.env.<name>` and override existing keys.
- * Throws if the file is missing so prod scripts cannot silently hit staging.
+ * Load `.env` and override existing keys.
+ * Throws if the file is missing.
  */
-export function loadNamedEnv(name, projectRoot = join(__dirname, "../..")) {
-  if (name !== "staging" && name !== "production") {
-    throw new Error(`Unknown env "${name}". Use staging or production.`);
-  }
-  const fileName = `.env.${name}`;
-  const filePath = join(projectRoot, fileName);
+export function loadProjectEnv(projectRoot = join(__dirname, "../..")) {
+  const filePath = join(projectRoot, ENV_FILE);
   if (!existsSync(filePath)) {
     throw new Error(
-      `Missing ${fileName}. Create it in the project root with the ${name} Supabase keys.`,
+      "Missing .env. Create it in the project root with the production Supabase keys.",
     );
   }
   applyEnvFile(filePath, { override: true });

@@ -75,10 +75,3 @@ export function pageMetadata({
     },
   };
 }
-
-export function noindexMetadata(title = SITE_NAME) {
-  return {
-    title,
-    robots: { index: false, follow: false },
-  };
-}

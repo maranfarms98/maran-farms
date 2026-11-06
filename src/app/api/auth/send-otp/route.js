@@ -74,17 +74,12 @@ export async function POST(request) {
         { status: 502 },
       );
     }
-  } else if (process.env.APP_ENV === "production") {
+  } else {
     await supabase.from("otp_codes").delete().eq("phone", phone);
-    console.error("[send-otp] WhatsApp OTP env vars missing in production");
+    console.error("[send-otp] WhatsApp OTP env vars missing");
     return NextResponse.json(
       { error: "OTP delivery is not configured. Please try again later." },
       { status: 503 },
-    );
-  } else {
-    // Staging / local without Meta credentials — OTP is stored; log for testing.
-    console.warn(
-      `[send-otp] WhatsApp not configured — OTP for ${phone}: ${otp}`,
     );
   }
 

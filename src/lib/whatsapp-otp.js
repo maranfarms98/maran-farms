@@ -4,7 +4,7 @@ const GRAPH_API_VERSION = "v23.0";
 
 /**
  * Returns true when Meta Cloud API credentials for OTP delivery are present.
- * Without these, send-otp falls back to a staging/dev mock path.
+ * Without these, send-otp returns an error and does not deliver a code.
  */
 export function isWhatsAppOtpConfigured() {
   return Boolean(

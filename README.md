@@ -6,27 +6,15 @@ Tamil Nadu farm storefront based in Pallamaruthapatti, Karur — Napier plants, 
 
 - Node.js **22+** recommended (Node 20 works with a Supabase deprecation warning)
 - npm
-- Two env files: `.env.staging` (default) and `.env.production` (live DB)
+- One env file: `.env`
 
-## Environments
+## Environment
 
-The app always reads the same variable names (`NEXT_PUBLIC_SUPABASE_URL`, etc.). The **file** you load decides which database you hit.
+The app reads production variables (`NEXT_PUBLIC_SUPABASE_URL`, and the rest listed below). Local scripts load `.env`. Hosted deploys (Vercel) use the same names in the Production environment.
 
-| File | Used by | Database |
-|------|---------|----------|
-| `.env.staging` | `npm run dev`, `npm run seed` | Staging Supabase |
-| `.env.production` | `npm run dev:prod`, `npm run seed:prod` | Production Supabase |
+Create `.env` in the project root. Never commit it.
 
-Create **two Supabase projects** (staging + production). Copy the same schema (`supabase/schema.sql` + migrations) to both. Use Razorpay **test** keys on staging and **live** keys on production.
-
-Create `.env.staging` and `.env.production` in the project root with the variables listed below. Never commit those files.
-
-On Vercel (or similar), set the **same variable names** twice:
-
-- Production environment → `main` branch → production Supabase
-- Preview / Staging environment → `staging` branch → staging Supabase
-
-`NEXT_PUBLIC_*` is baked in at **build** time. After changing DB URLs, redeploy / rebuild.
+`NEXT_PUBLIC_*` is baked in at **build** time. After changing public URLs or keys, redeploy / rebuild.
 
 ## Setup
 
@@ -34,23 +22,23 @@ On Vercel (or similar), set the **same variable names** twice:
 npm install
 ```
 
-Required in each env file:
+Required in `.env`:
 
-- `APP_ENV` — `staging` or `production`
+- `APP_ENV` — `production`
 - `NEXT_PUBLIC_SUPABASE_URL`
 - `NEXT_PUBLIC_SUPABASE_ANON_KEY`
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` / `NEXT_PUBLIC_RAZORPAY_KEY_ID`
-- `AUTH_SECRET` — different per environment (`openssl rand -base64 32`)
+- `AUTH_SECRET` — `openssl rand -base64 32`
 
-WhatsApp OTP login (Meta Cloud API — required in production):
+WhatsApp OTP login (Meta Cloud API — required):
 
 - `WHATSAPP_TOKEN` — System User permanent access token (`whatsapp_business_messaging`)
 - `WHATSAPP_PHONE_NUMBER_ID` — sending phone number ID from Meta API Setup
 - `WHATSAPP_OTP_TEMPLATE` — approved AUTHENTICATION template name (copy-code)
 - `WHATSAPP_OTP_TEMPLATE_LANG` — optional; template language code (default `en`)
 
-Without those vars, staging/local logs the OTP to the server console. Production returns an error if WhatsApp is not configured.
+If those WhatsApp vars are missing, OTP login returns an error. Codes are not logged.
 
 Order confirmation emails (optional until configured — orders still complete without them):
 
@@ -59,24 +47,22 @@ Order confirmation emails (optional until configured — orders still complete w
 - `SITE_URL` — public site origin for admin links in emails (e.g. `https://maranfarms.in`)
 - `EMAIL_FROM` — optional From header; defaults to `Maran Farms <hello@maranfarms.in>`. Before the sending domain is verified in Resend, use `Maran Farms <onboarding@resend.dev>`.
 
-If the database was created before order emails, run `supabase/migrations/20260806_order_emails.sql` in the Supabase SQL Editor (adds optional `email` on `profiles` and `orders`).
+New databases: run [`supabase/schema.sql`](supabase/schema.sql) in the Supabase SQL Editor (includes optional `email` on `profiles` and `orders`, and `decrement_stock`).
 
-If paid orders log `Could not find the function public.decrement_stock`, run `supabase/migrations/20260806_decrement_stock.sql` in the SQL Editor (the app falls back to a direct stock update until that function exists).
+Existing databases:
 
-Optional — seed **staging** catalog data:
+- Phone orders: [`supabase/migrations/20260806_phone_orders.sql`](supabase/migrations/20260806_phone_orders.sql)
+- Stock decrement (service role only): [`supabase/migrations/20260817_decrement_stock_lockdown.sql`](supabase/migrations/20260817_decrement_stock_lockdown.sql). The app falls back to a direct stock update until `public.decrement_stock` exists.
 
-```bash
-npm run seed
-```
+`npm run seed` writes catalog data to the production database.
 
 ## Develop
 
 ```bash
-npm run dev          # staging DB (default)
-npm run dev:prod     # production DB — use carefully
+npm run dev
 ```
 
-Startup logs the active `APP_ENV` and Supabase hostname so you can confirm which DB is connected. Scripts fail if the matching `.env.staging` / `.env.production` file is missing.
+This loads `.env` and logs `APP_ENV` plus the Supabase hostname. The script fails if `.env` is missing. Login OTP sends real WhatsApp messages.
 
 - Local: http://localhost:3000
 - LAN: `http://<your-mac-ip>:3000` (server binds to `0.0.0.0`)
@@ -87,10 +73,9 @@ If LAN `/_next` assets return 403, add your current IP to `allowedDevOrigins` in
 
 Hosted deploys (Vercel) inject env vars automatically — use `npm run build`.
 
-Local builds against a specific DB:
+Local production build:
 
 ```bash
-npm run build:staging
 npm run build:prod
 npm start
 ```
@@ -99,11 +84,11 @@ npm start
 
 | Script | Purpose |
 |--------|---------|
-| `npm run dev` | Dev server → staging DB |
-| `npm run dev:prod` | Dev server → production DB |
+| `npm run dev` | Dev server using `.env` |
 | `npm run build` | Production build (host-provided env) |
-| `npm run build:staging` / `build:prod` | Local build with that env file |
+| `npm run build:prod` | Local production build using `.env` |
 | `npm start` | Serve production build |
 | `npm run lint` | ESLint |
-| `npm run seed` | Seed **staging** Supabase |
-| `npm run seed:prod` | Seed **production** Supabase |
+| `npm run seed` | Seed the production Supabase catalog |
+| `npm run migrate:images` | Rewrite catalog image paths to production Storage URLs |
+| `npm run preview:emails` | Write order-email HTML previews to `tmp/` |

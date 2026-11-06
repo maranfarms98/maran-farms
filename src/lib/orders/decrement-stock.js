@@ -15,7 +15,7 @@ export async function decrementStock(supabase, productId, qty) {
   // keep inventory moving in the meantime.
   if (error.code === "PGRST202") {
     console.warn(
-      "[decrementStock] RPC missing — using fallback update. Run supabase/migrations/20260806_decrement_stock.sql",
+      "[decrementStock] RPC missing — using fallback update. Run supabase/migrations/20260817_decrement_stock_lockdown.sql",
     );
     const { data: product, error: fetchError } = await supabase
       .from("products")

@@ -1,22 +1,21 @@
 /**
- * Load `.env.<staging|production>` then run a command.
+ * Load `.env` then run a command.
  * Fails if the env file is missing (unlike dotenv-cli, which continues).
  *
- *   node scripts/with-env.mjs staging node scripts/seed-supabase.mjs
+ *   node scripts/with-env.mjs node scripts/seed-supabase.mjs
  */
 import { spawn } from "node:child_process";
-import { loadNamedEnv } from "./lib/catalog-storage.mjs";
+import { loadProjectEnv } from "./lib/catalog-storage.mjs";
 
-const name = process.argv[2];
-const [cmd, ...cmdArgs] = process.argv.slice(3);
+const [cmd, ...cmdArgs] = process.argv.slice(2);
 
 if (!cmd) {
-  console.error("Usage: node scripts/with-env.mjs <staging|production> <command...>");
+  console.error("Usage: node scripts/with-env.mjs <command...>");
   process.exit(1);
 }
 
 try {
-  loadNamedEnv(name);
+  loadProjectEnv();
 } catch (err) {
   console.error(err.message);
   process.exit(1);
