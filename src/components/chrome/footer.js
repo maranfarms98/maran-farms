@@ -48,19 +48,13 @@ export function Footer({ categories = [] }) {
         <MotionReveal className="container-farm border-b border-white/10 py-12 md:py-16">
           <div className="grid gap-8 md:grid-cols-[1.2fr_1fr] md:items-end">
             <div>
-              <p className="text-eyebrow text-farm-ochre">Weekly Farm Diary</p>
+              <p className="text-eyebrow text-farm-ochre">Newsletter</p>
               <h2 className="font-heading mt-3 text-section text-white">
-                <Link href="/blog" className="focus-ring rounded-sm hover:text-farm-ochre">
-                  Stay connected with our fresh farm harvests.
-                </Link>
+                Stay connected with our fresh farm harvests.
               </h2>
               <p className="mt-3 max-w-md text-farm-green-light/75">
                 Occasional notes on fodder cycles, chick batches, and farm life
-                from Karur across Tamil Nadu.{" "}
-                <Link href="/blog" className="text-farm-ochre underline-offset-2 hover:underline">
-                  Read the farm diary
-                </Link>
-                .
+                from Karur across Tamil Nadu.
               </p>
             </div>
             <form onSubmit={onSubmit} className="flex min-w-0 gap-2">
@@ -126,19 +120,6 @@ export function Footer({ categories = [] }) {
                   </Link>
                 </li>
               ))}
-              <li>
-                <Link
-                  href="/blog"
-                  className="focus-ring group block rounded-lg"
-                >
-                  <span className="block text-white transition group-hover:text-farm-ochre">
-                    Farm Diary
-                  </span>
-                  <span className="text-xs text-farm-green-light/70">
-                    Guides & field notes
-                  </span>
-                </Link>
-              </li>
             </ul>
           </div>
 
