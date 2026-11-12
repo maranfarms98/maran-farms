@@ -64,10 +64,12 @@ export default function CheckoutPage() {
     if (!address.trim()) return setError("Please enter your delivery address");
 
     setLoading(true);
+    let opened = false;
     try {
       const scriptLoaded = await loadRazorpayScript();
       if (!scriptLoaded) {
         setError("Failed to load payment gateway. Check your connection.");
+        setLoading(false);
         return;
       }
 
@@ -86,6 +88,7 @@ export default function CheckoutPage() {
       const orderData = await res.json();
       if (!res.ok) {
         setError(orderData.error || "Failed to initiate payment");
+        setLoading(false);
         return;
       }
 
@@ -126,6 +129,8 @@ export default function CheckoutPage() {
             router.push("/account/orders");
           } catch {
             toast("Something went wrong. Contact support.");
+          } finally {
+            setLoading(false);
           }
         },
         modal: {
@@ -135,10 +140,11 @@ export default function CheckoutPage() {
 
       const rzp = new window.Razorpay(options);
       rzp.open();
+      opened = true;
     } catch {
       setError("Payment failed. Please try again.");
     } finally {
-      setLoading(false);
+      if (!opened) setLoading(false);
     }
   }, [address, email, lines, user, clearCart, toast, router]);
 

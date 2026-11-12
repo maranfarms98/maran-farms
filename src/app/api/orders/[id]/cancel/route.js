@@ -32,12 +32,20 @@ export async function PATCH(_request, { params }) {
     .from("orders")
     .update({ status: "cancelled" })
     .eq("id", id)
+    .eq("status", "pending")
     .select()
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error("[orders/[id]/cancel]", error);
     return NextResponse.json({ error: "Failed to cancel order" }, { status: 500 });
+  }
+
+  if (!data) {
+    return NextResponse.json(
+      { error: "Only pending orders can be cancelled" },
+      { status: 400 },
+    );
   }
 
   return NextResponse.json({ order: data });

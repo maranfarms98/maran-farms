@@ -50,7 +50,7 @@ export async function POST(request) {
 
   const { error } = await supabase
     .from("otp_codes")
-    .upsert({ phone, otp, expires_at: expiresAt });
+    .upsert({ phone, otp, expires_at: expiresAt, attempts: 0 });
 
   if (error) {
     console.error("[send-otp]", error);

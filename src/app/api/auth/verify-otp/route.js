@@ -1,10 +1,27 @@
+import crypto from "crypto";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 import { signSession, SESSION_COOKIE_NAME, sessionCookieOptions } from "@/lib/auth/session";
 import { OTP_LENGTH } from "@/lib/otp";
+import { isValidMobile, normalizePhone } from "@/lib/phone";
 
-const ADMIN_PHONE = "6380261643";
+const MAX_OTP_ATTEMPTS = 5;
+
+function adminPhoneSet() {
+  const raw = process.env.ADMIN_PHONES || "";
+  return new Set(
+    raw
+      .split(",")
+      .map((entry) => normalizePhone(entry))
+      .filter((phone) => isValidMobile(phone)),
+  );
+}
+
+function otpMatches(stored, provided) {
+  if (typeof stored !== "string" || stored.length !== provided.length) return false;
+  return crypto.timingSafeEqual(Buffer.from(stored), Buffer.from(provided));
+}
 
 export async function POST(request) {
   const { phone, otp, name } = await request.json();
@@ -43,7 +60,7 @@ export async function POST(request) {
 
   const { data: record } = await supabase
     .from("otp_codes")
-    .select("otp, expires_at")
+    .select("otp, expires_at, attempts")
     .eq("phone", phone)
     .maybeSingle();
 
@@ -62,13 +79,26 @@ export async function POST(request) {
     );
   }
 
-  if (record.otp !== trimmedOtp) {
+  if (!otpMatches(record.otp, trimmedOtp)) {
+    const attempts = Number(record.attempts) || 0;
+    const nextAttempts = attempts + 1;
+    if (nextAttempts >= MAX_OTP_ATTEMPTS) {
+      await supabase.from("otp_codes").delete().eq("phone", phone);
+      return NextResponse.json(
+        { error: "Too many incorrect attempts. Please request a new OTP." },
+        { status: 400 },
+      );
+    }
+    await supabase
+      .from("otp_codes")
+      .update({ attempts: nextAttempts })
+      .eq("phone", phone);
     return NextResponse.json({ error: "Incorrect OTP" }, { status: 400 });
   }
 
   await supabase.from("otp_codes").delete().eq("phone", phone);
 
-  const isAdmin = phone === ADMIN_PHONE;
+  const isAdmin = adminPhoneSet().has(normalizePhone(phone));
 
   let profile;
   if (existingProfile) {

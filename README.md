@@ -30,6 +30,7 @@ Required in `.env`:
 - `SUPABASE_SERVICE_ROLE_KEY`
 - `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` / `NEXT_PUBLIC_RAZORPAY_KEY_ID`
 - `AUTH_SECRET` — `openssl rand -base64 32`
+- `ADMIN_PHONES` — comma-separated 10-digit mobiles that become admin on OTP login. Server-only. A number is admin only after that person signs in again. If this is empty, nobody is granted admin.
 
 WhatsApp OTP login (Meta Cloud API — required):
 
@@ -53,6 +54,7 @@ Existing databases:
 
 - Phone orders: [`supabase/migrations/20260806_phone_orders.sql`](supabase/migrations/20260806_phone_orders.sql)
 - Stock decrement (service role only): [`supabase/migrations/20260817_decrement_stock_lockdown.sql`](supabase/migrations/20260817_decrement_stock_lockdown.sql). The app falls back to a direct stock update until `public.decrement_stock` exists.
+- OTP attempt cap: [`supabase/migrations/20261112_otp_attempts.sql`](supabase/migrations/20261112_otp_attempts.sql). Login verification expects `otp_codes.attempts`.
 
 `npm run seed` writes catalog data to the production database.
 

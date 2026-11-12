@@ -19,10 +19,17 @@ export default function LoginPage() {
   );
 }
 
+function safeRedirect(raw) {
+  if (!raw || !raw.startsWith("/") || raw.startsWith("//") || raw.includes("://")) {
+    return "/";
+  }
+  return raw;
+}
+
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectTo = searchParams.get("redirect") || "/";
+  const redirectTo = safeRedirect(searchParams.get("redirect"));
 
   const handleSuccess = useCallback(
     ({ isAdmin }) => {

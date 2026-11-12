@@ -1,8 +1,17 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
+import Razorpay from "razorpay";
 import { getSessionFromCookies } from "@/lib/auth/session";
 import { requireSupabaseAdminClient } from "@/lib/supabase/admin";
 import { finalizePaidOrder } from "@/lib/orders/finalize-paid-order";
+
+function signaturesMatch(expectedHex, provided) {
+  if (typeof provided !== "string") return false;
+  const expected = Buffer.from(expectedHex, "utf8");
+  const actual = Buffer.from(provided, "utf8");
+  if (expected.length !== actual.length) return false;
+  return crypto.timingSafeEqual(expected, actual);
+}
 
 export async function POST(request) {
   const session = await getSessionFromCookies();
@@ -26,7 +35,7 @@ export async function POST(request) {
     .update(body)
     .digest("hex");
 
-  if (expectedSignature !== razorpaySignature) {
+  if (!signaturesMatch(expectedSignature, razorpaySignature)) {
     return NextResponse.json(
       { error: "Payment verification failed" },
       { status: 400 },
@@ -37,13 +46,44 @@ export async function POST(request) {
 
   const { data: order, error: fetchError } = await supabase
     .from("orders")
-    .select("id, profile_id")
+    .select("id, profile_id, razorpay_order_id, total, status")
     .eq("id", dbOrderId)
     .eq("profile_id", session.id)
     .maybeSingle();
 
   if (fetchError || !order) {
     return NextResponse.json({ error: "Order not found" }, { status: 404 });
+  }
+
+  if (order.razorpay_order_id !== razorpayOrderId) {
+    return NextResponse.json(
+      { error: "Payment verification failed" },
+      { status: 400 },
+    );
+  }
+
+  try {
+    const razorpay = new Razorpay({
+      key_id: process.env.RAZORPAY_KEY_ID,
+      key_secret: process.env.RAZORPAY_KEY_SECRET,
+    });
+    const razorpayOrder = await razorpay.orders.fetch(razorpayOrderId);
+    const expectedPaise = Math.round(Number(order.total) * 100);
+    if (
+      Number(razorpayOrder.amount) !== expectedPaise ||
+      razorpayOrder.currency !== "INR"
+    ) {
+      return NextResponse.json(
+        { error: "Payment verification failed" },
+        { status: 400 },
+      );
+    }
+  } catch (err) {
+    console.error("[verify-payment] razorpay fetch", err);
+    return NextResponse.json(
+      { error: "Payment verification failed" },
+      { status: 400 },
+    );
   }
 
   const result = await finalizePaidOrder(supabase, dbOrderId, {

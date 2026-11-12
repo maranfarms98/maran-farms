@@ -6,6 +6,9 @@ import { decrementStock } from "@/lib/orders/decrement-stock";
  * Idempotent: if the order is already paid (or further along), returns success
  * without decrementing again.
  *
+ * The status claim happens before stock changes so a concurrent finalize or
+ * cancel cannot decrement twice or overwrite a paid row.
+ *
  * @param {import("@supabase/supabase-js").SupabaseClient} supabase
  * @param {string} orderId
  * @param {{ razorpayPaymentId?: string }} [extras]
@@ -31,10 +34,6 @@ export async function finalizePaidOrder(supabase, orderId, extras = {}) {
     return { ok: true, order, alreadyPaid: true };
   }
 
-  for (const item of order.items || []) {
-    await decrementStock(supabase, item.productId, item.quantity);
-  }
-
   const update = { status: "paid" };
   if (extras.razorpayPaymentId) {
     update.razorpay_payment_id = extras.razorpayPaymentId;
@@ -44,7 +43,7 @@ export async function finalizePaidOrder(supabase, orderId, extras = {}) {
     .from("orders")
     .update(update)
     .eq("id", orderId)
-    .eq("status", "pending") // guard against concurrent finalize
+    .eq("status", "pending")
     .select()
     .maybeSingle();
 
@@ -60,7 +59,22 @@ export async function finalizePaidOrder(supabase, orderId, extras = {}) {
       .select("*")
       .eq("id", orderId)
       .maybeSingle();
+    if (current?.status === "cancelled") {
+      return { ok: false, error: "Cannot mark a cancelled order as paid", status: 400 };
+    }
     return { ok: true, order: current || order, alreadyPaid: true };
+  }
+
+  for (const item of updated.items || []) {
+    const stock = await decrementStock(supabase, item.productId, item.quantity);
+    if (!stock.ok) {
+      console.error("[finalizePaidOrder] stock decrement failed", {
+        orderId,
+        productId: item.productId,
+        quantity: item.quantity,
+        error: stock.error,
+      });
+    }
   }
 
   // Fire-and-forget — never block or fail the paid transition.

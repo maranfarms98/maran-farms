@@ -58,7 +58,8 @@ create table profiles (
 create table otp_codes (
   phone text primary key,
   otp text not null,
-  expires_at timestamptz not null
+  expires_at timestamptz not null,
+  attempts integer not null default 0
 );
 
 create table orders (
