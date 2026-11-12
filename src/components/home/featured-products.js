@@ -62,7 +62,7 @@ export function FeaturedProducts({ products = [] }) {
 
         <div
           ref={scrollerRef}
-          className="hide-scrollbar mt-8 hidden snap-x snap-mandatory gap-4 overflow-x-auto pb-2 md:flex"
+          className="hide-scrollbar mt-8 hidden snap-x snap-mandatory gap-4 overflow-x-auto px-1 py-2 md:flex"
         >
           {products.map((p) => (
             <div

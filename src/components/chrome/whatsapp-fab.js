@@ -4,7 +4,6 @@ import { MessageCircle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useCart } from "@/context/cart-context";
 import { getGenericInquiryUrl } from "@/lib/whatsapp";
 import { useIsMobile } from "@/hooks/use-media";
 import { useMotionAllowed } from "@/components/motion/motion-provider";
@@ -12,7 +11,6 @@ import { useMotionAllowed } from "@/components/motion/motion-provider";
 export function WhatsAppFAB() {
   const pathname = usePathname();
   const isMobile = useIsMobile();
-  const { itemCount, hydrated } = useCart();
   const [pulse, setPulse] = useState(false);
   const motionAllowed = useMotionAllowed();
   const isProductPage = pathname?.startsWith("/product/");
@@ -39,7 +37,6 @@ export function WhatsAppFAB() {
   }, []);
 
   if (isMobile && isProductPage) return null;
-  if (hydrated && itemCount > 0) return null;
 
   const bottom = "calc(env(safe-area-inset-bottom, 0px) + 1.25rem)";
 

@@ -88,9 +88,6 @@ export function FarmLocation() {
                 className="pointer-events-none absolute inset-0 ring-1 ring-inset ring-farm-green-dark/10"
                 aria-hidden
               />
-              <p className="pointer-events-none absolute top-3 left-3 max-w-[calc(100%-1.5rem)] truncate rounded-full bg-farm-green-dark/90 px-3 py-1.5 font-heading text-xs text-[#f0d2a8] shadow-elevated sm:top-4 sm:left-4 sm:px-4 sm:py-2 sm:text-sm">
-                {SITE_NAME} · {FARM_CITY_TA}
-              </p>
             </div>
             <div className="flex items-center justify-between gap-3 border-t border-farm-green-dark/8 bg-farm-warm px-4 py-4 sm:px-5">
               <p className="min-w-0 text-sm text-farm-sage">

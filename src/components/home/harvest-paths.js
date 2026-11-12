@@ -151,12 +151,12 @@ export function HarvestPaths({ categories = [] }) {
       </div>
 
       {/* Mobile: horizontal snap gallery */}
-      <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-6 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <div className="flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 py-1 pb-6 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {paths.map((path) => (
           <Link
             key={path.slug}
             href={`/category/${path.slug}`}
-            className="relative h-[min(42vh,22rem)] w-[min(78vw,19rem)] shrink-0 snap-start overflow-hidden rounded-[1.25rem]"
+            className="relative h-[min(42vh,22rem)] w-[min(78vw,19rem)] shrink-0 snap-start overflow-hidden rounded-[1.25rem] border border-farm-green-dark/10"
           >
             <Image
               src={path.image}

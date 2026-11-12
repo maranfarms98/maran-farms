@@ -82,7 +82,7 @@ export function CategoryPageClient({ category, products, allCategories, crumbs }
     <>
       <section
         ref={heroRef}
-        className="relative min-h-[calc(var(--vvh)*0.4)] overflow-hidden md:min-h-[calc(var(--vvh)*0.5)]"
+        className="relative h-[28rem] overflow-hidden md:h-[32rem]"
       >
         <div data-cat-hero className="absolute inset-0 will-change-transform">
           <Image
@@ -98,7 +98,7 @@ export function CategoryPageClient({ category, products, allCategories, crumbs }
           className={`absolute inset-0 bg-gradient-to-t ${category.gradient} pointer-events-none`}
         />
         <div className="grain-overlay pointer-events-none absolute inset-0" />
-        <div className="relative z-10 container-farm flex min-h-[calc(var(--vvh)*0.4)] flex-col justify-end pb-10 pt-28 md:min-h-[calc(var(--vvh)*0.5)] md:pb-14">
+        <div className="relative z-10 container-farm flex h-full flex-col justify-end pb-10 pt-28 md:pb-14">
           {crumbs?.length ? (
             <div className="mb-6">
               <Breadcrumbs items={crumbs} tone="light" />
@@ -111,7 +111,7 @@ export function CategoryPageClient({ category, products, allCategories, crumbs }
           <TamilCaption tone="light" className="mt-2">
             {category.tamilName}
           </TamilCaption>
-          <p className="mt-3 max-w-xl text-farm-green-light/85">
+          <p className="mt-3 line-clamp-3 max-w-xl text-farm-green-light/85">
             {category.description}
           </p>
         </div>
@@ -119,14 +119,14 @@ export function CategoryPageClient({ category, products, allCategories, crumbs }
 
       <div className="container-farm py-6">
         <p className="mb-3 text-eyebrow text-farm-sage">Other categories</p>
-        <div className="hide-scrollbar flex gap-3 overflow-x-auto pb-1">
+        <div className="hide-scrollbar -mx-[1.125rem] flex snap-x snap-mandatory gap-3 overflow-x-auto px-[1.125rem] py-2 md:-mx-8 md:px-8">
           {allCategories.map((cat) => {
             const active = cat.slug === category.slug;
             return (
               <Link
                 key={cat.id}
                 href={`/category/${cat.slug}`}
-                className={`focus-ring group relative flex h-16 w-[min(200px,70vw)] shrink-0 items-end overflow-hidden rounded-2xl ${
+                className={`focus-ring group relative flex h-16 w-[min(200px,calc(100%-2.75rem))] shrink-0 snap-start items-end overflow-hidden rounded-2xl border border-white/80 ${
                   active ? "ring-2 ring-farm-accent ring-offset-2 ring-offset-farm-cream" : ""
                 }`}
               >

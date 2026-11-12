@@ -59,7 +59,6 @@ export function ProductPageClient({
 
   const inCart = cartQty > 0;
   const outOfStock = product.inStock === false;
-  const lineTotal = product.price * qty;
   const originNotes = Array.isArray(content.origin) ? content.origin : [];
 
   const share = async () => {
@@ -81,7 +80,7 @@ export function ProductPageClient({
   };
 
   return (
-    <div className="container-farm pt-24 pb-28 md:pt-28 md:pb-16">
+    <div className="container-farm pt-24 pb-16 md:pt-28">
       {crumbs?.length ? (
         <div className="mb-8">
           <Breadcrumbs items={crumbs} />
@@ -201,22 +200,22 @@ export function ProductPageClient({
                 href={getProductOrderUrl(product, qty)}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="focus-ring inline-flex h-12 flex-1 items-center justify-center gap-2 rounded-full bg-farm-green text-button font-semibold text-farm-green-light"
+                className="focus-ring inline-flex h-14 w-full items-center justify-center gap-2 rounded-full bg-farm-green text-base font-semibold text-farm-green-light sm:flex-1"
               >
-                <MessageCircle className="size-4" />
+                <MessageCircle className="size-5" />
                 {outOfStock ? "Ask availability on WhatsApp" : "Order on WhatsApp"}
               </Pressable>
               {!outOfStock && (
                 <Pressable
                   type="button"
                   onClick={handleAdd}
-                  className={`focus-ring inline-flex h-12 flex-1 items-center justify-center rounded-full border text-button font-semibold ${
+                  className={`focus-ring inline-flex h-14 w-full items-center justify-center rounded-full border text-base font-semibold sm:flex-1 ${
                     inCart
                       ? "border-farm-green bg-farm-green/10 text-farm-green"
                       : "border-farm-green-dark/15 bg-farm-cream text-farm-green-dark"
                   }`}
                 >
-                  {inCart ? "Review Order list" : "Add to Order list"}
+                  {inCart ? "View cart" : `Add ${qty} to cart`}
                 </Pressable>
               )}
             </div>
@@ -239,7 +238,7 @@ export function ProductPageClient({
 
       {/* Tabs */}
       <div className="mt-16 grid gap-8 lg:grid-cols-12">
-        <div className="hide-scrollbar flex gap-2 overflow-x-auto lg:col-span-3 lg:flex-col lg:overflow-visible">
+        <div className="hide-scrollbar -mx-1 flex gap-2 overflow-x-auto px-1 py-1 lg:col-span-3 lg:mx-0 lg:flex-col lg:overflow-visible lg:px-0">
           {TABS.map((t) => (
             <button
               key={t.id}
@@ -343,34 +342,6 @@ export function ProductPageClient({
         </section>
       )}
 
-      {/* Mobile sticky bar */}
-      <motion.div
-        initial={motionAllowed ? { y: 80, opacity: 0 } : false}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ type: "spring", stiffness: 380, damping: 32 }}
-        className="fixed inset-x-0 bottom-0 z-40 border-t border-farm-green-dark/10 bg-farm-cream/95 px-4 py-3 backdrop-blur-md md:hidden"
-        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.75rem)" }}
-      >
-        <div className="flex items-center justify-between gap-3">
-          <div className="min-w-0">
-            <p className="font-heading text-xl text-farm-green">
-              {formatPrice(outOfStock ? product.price : lineTotal)}
-            </p>
-            <p className="text-xs text-farm-sage">
-              {outOfStock ? "Out of Stock" : `Qty ${qty}`}
-            </p>
-          </div>
-          <a
-            href={getProductOrderUrl(product, qty)}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="focus-ring inline-flex h-12 shrink-0 items-center gap-2 rounded-full bg-farm-green px-4 text-sm font-semibold text-farm-green-light sm:px-5"
-          >
-            <MessageCircle className="size-4" />
-            {outOfStock ? "Ask availability" : "WhatsApp"}
-          </a>
-        </div>
-      </motion.div>
     </div>
   );
 }

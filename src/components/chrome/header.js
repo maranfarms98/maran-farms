@@ -17,7 +17,6 @@ import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { useCart } from "@/context/cart-context";
 import { useAuth } from "@/context/auth-context";
-import { formatPrice } from "@/lib/format";
 import { getGenericInquiryUrl } from "@/lib/whatsapp";
 import { Drawer } from "@/components/ui/drawer";
 import { Spinner } from "@/components/ui/spinner";
@@ -188,13 +187,7 @@ export function Header({ categories = [] }) {
   const [cartPulse, setCartPulse] = useState(false);
   const [menuPath, setMenuPath] = useState(pathname);
   const catalogRef = useRef(null);
-  const {
-    itemCount,
-    total,
-    pulse,
-    setOrderDrawerOpen,
-    hydrated,
-  } = useCart();
+  const { itemCount, pulse, setOrderDrawerOpen, hydrated } = useCart();
   const prevPulse = useRef(pulse);
   const motionAllowed = useMotionAllowed();
 
@@ -359,13 +352,14 @@ export function Header({ categories = [] }) {
           <motion.button
             type="button"
             onClick={() => setOrderDrawerOpen(true)}
+            aria-label={`Cart, ${hydrated ? itemCount : 0} ${itemCount === 1 ? "item" : "items"}`}
             animate={
               cartPulse && motionAllowed
                 ? { scale: [1, 1.08, 1], y: [0, -2, 0] }
                 : { scale: 1 }
             }
             transition={{ duration: 0.4 }}
-            className={`focus-ring inline-flex h-11 items-center gap-1.5 rounded-full px-2.5 text-sm font-semibold sm:gap-2 sm:px-4 ${
+            className={`focus-ring inline-flex h-11 items-center gap-2 rounded-full px-3 text-sm font-semibold sm:px-3.5 ${
               itemCount > 0
                 ? "bg-farm-accent text-white"
                 : transparent
@@ -373,19 +367,15 @@ export function Header({ categories = [] }) {
                   : "bg-farm-green/8 text-farm-green"
             }`}
           >
-            <ShoppingBag className="size-4" />
-            <span className="tabular-nums">{hydrated ? itemCount : 0}</span>
-            <span className="hidden min-[400px]:inline">
-              Item{itemCount === 1 ? "" : "s"}
-            </span>
-            {itemCount > 0 && (
-              <>
-                <span className="hidden h-4 w-px bg-current/30 sm:block" />
-                <span className="hidden tabular-nums sm:inline">
-                  {formatPrice(total)}
+            <span className="relative">
+              <ShoppingBag className="size-5" />
+              {hydrated && itemCount > 0 && (
+                <span className="absolute -top-2 -right-2 flex h-4 min-w-4 items-center justify-center rounded-full bg-white px-1 text-[0.65rem] font-bold text-farm-accent">
+                  {itemCount}
                 </span>
-              </>
-            )}
+              )}
+            </span>
+            <span>Cart</span>
           </motion.button>
 
           <a
